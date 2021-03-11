@@ -6,6 +6,9 @@
 
 .DS_Store
 
+#ignore config of database for local development
+srcs/app/srcs/config/database.yml
+
 /tmp
 # srcs/app/srcs/config/database.yml
 # Ignore bundler config.
