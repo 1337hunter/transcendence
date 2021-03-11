@@ -4,29 +4,40 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-DS_Store
+.DS_Store
 
 /tmp
-srcs/app/ruby/config/database.yml
+# srcs/app/srcs/config/database.yml
 # Ignore bundler config.
-/.bundle
+.bundle
 
 # Ignore all logfiles and tempfiles.
-srcs/app/ruby/node_modules/.cache
-srcs/app/ruby/log/*
-srcs/app/ruby/tmp
-!srcs/app/ruby/log/.keep
-!srcs/app/ruby/tmp/.keep
+srcs/app/srcs/node_modules/.cache
+srcs/app/srcs/log/*
+srcs/app/srcs/tmp/*
+!srcs/app/srcs/log/.keep
+!srcs/app/srcs/tmp/.keep
+
+# Ignore pidfiles, but keep the directory.
+srcs/app/srcs/tmp/pids/*
+!srcs/app/srcs/tmp/pids/
+!srcs/app/srcs/tmp/pids/.keep
 
 # Ignore uploaded files in development
-/storage/*
-!/storage/.keep
+srcs/app/srcs/storage/*
+!srcs/app/srcs/storage/.keep
 
-srcs/app/ruby/node_modules
-srcs/app/ruby/yarn-error.log
+srcs/app/srcs/node_modules
+srcs/app/srcs/yarn-error.log
+srcs/app/srcs/yarn-debug.log*
+srcs/app/srcs/.yarn-integrity
+srcs/app/srcs/public/packs
+srcs/app/srcs/public/packs-test
 
-/public/assets
-.byebug_history
+srcs/app/srcs/public/assets
+srcs/app/srcs/.byebug_history
 
 # Ignore master key for decrypting credentials and more.
-/config/master.key
+# /config/master.key
+
+.idea
