@@ -10,7 +10,7 @@ docker-compose up
 2. [Install Ruby on Rails](https://edgeguides.rubyonrails.org/getting_started.html#creating-a-new-rails-project-installing-rails)
 (you don't need to install SQLite3 because you already have PostgreSQL)
 > use rbenv so you can install Ruby 3.0.0 (https://gorails.com/setup)
-> also make sure npm is installed with node.js
+> and also make sure npm is installed in addition to node.js
 3. ```cd ./srcs/app/srcs```
 4. ```gem update```
 5. ```bundle install```
