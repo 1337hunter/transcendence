@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_135455) do
     t.string "intra", null: false
     t.string "password_digest", null: false
     t.string "nick"
+    t.string "mail"
     t.integer "wins"
     t.integer "loses"
     t.integer "elo"
