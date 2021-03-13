@@ -17,7 +17,7 @@ docker-compose up
 6. ```yarn install``` (you may encounter [syntax error if you got python3 instead of python2](https://stackoverflow.com/a/62018221))
 > you can check ```npm list``` and ```yarn list``` for installed node-modules and dependencies
 7. Comment out username, password and host in ```./srcs/app/srcs/config/database.yml```
-8. ```./bin/rake db:create``` (you may encounter [role does not exist](https://stackoverflow.com/a/16974197) and [insufficient rights](https://stackoverflow.com/a/31669921) errors)
+8. ```./bin/rake db:setup``` (you may encounter [role does not exist](https://stackoverflow.com/a/16974197) and [insufficient rights](https://stackoverflow.com/a/31669921) errors)
 9. ```./bin/rake db:migrate```
 10. Run development environment server: ```./bin/rails s```
 
