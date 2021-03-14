@@ -3,13 +3,13 @@ var ctx = canvas.getContext("2d");
 const CENTER_X = canvas.width / 2;
 const CENTER_Y = canvas.height / 2;
 const MAX_SCORE = 11
-var loop = true
-var	prepare = true
 var x = CENTER_X;
 var y = CENTER_Y;
 var ball_throw = 0 // this is for change side ball throw
-var dx = -3;
+var change_side = -1
+var dx = 3;
 var dy = 3;
+var	start_direction = dx
 var ballRadius = 4;
 var padHeight = 4
 var padWidth = 32
@@ -117,7 +117,6 @@ function checkStats() {
 	if (x < 0)
 	{
 		rightScore += 1
-		prepare = true
 		x = CENTER_X;
 		y = CENTER_Y;
 		ball_throw++
@@ -126,17 +125,20 @@ function checkStats() {
 	else if (x > canvas.width)
 	{
 		leftScore += 1
-		prepare = true
 		x = CENTER_X;
 		y = CENTER_Y;
 		ball_throw++
 	}
 	if (leftScore >= MAX_SCORE || rightScore >= MAX_SCORE)
-		loop = false
+	{
+        clearInterval(loopID) // the main loop breaks here
+        gameID = setInterval(drawGame, 10)
+    }
 	if (ball_throw === 2)
 	{
 		ball_throw = 0
-		dx = -dx
+		dx = change_side * start_direction
+		change_side *= -1
 	}
 }
 
@@ -438,10 +440,6 @@ function draw() {
 	drawRightPad()
 	x += dx;
 	y += dy;
-	if (loop === false) {
-		clearInterval(loopID)
-		gameID = setInterval(drawGame, 10)
-	}
 }
 
 function start() 
@@ -459,12 +457,13 @@ function start()
 	else
 	{
 		clearInterval(startID)
-		loopID = setInterval(draw, 10);
+		loopID = setInterval(draw, 10); //main loop
 	}
 }
 
 if (getRandomInt(10)  < 5) {
+	change_side *= -1
 	dx = -dx
 }
-//here main loop starts
+//here the 'start' loop starts. the  main loop starts inside
 var startID = setInterval(start, 10);
