@@ -4,17 +4,18 @@ window.onload = (event) => {
 };
 
 function pong(canvas) {
+	var canvas = document.getElementById("pongCanvas");
 	var ctx = canvas.getContext("2d");
 	const CENTER_X = canvas.width / 2;
 	const CENTER_Y = canvas.height / 2;
 	const MAX_SCORE = 11
-	var loop = true
-	var	prepare = true
 	var x = CENTER_X;
 	var y = CENTER_Y;
 	var ball_throw = 0 // this is for change side ball throw
-	var dx = -3;
+	var change_side = -1
+	var dx = 3;
 	var dy = 3;
+	var	start_direction = dx
 	var ballRadius = 4;
 	var padHeight = 4
 	var padWidth = 32
@@ -122,7 +123,6 @@ function pong(canvas) {
 		if (x < 0)
 		{
 			rightScore += 1
-			prepare = true
 			x = CENTER_X;
 			y = CENTER_Y;
 			ball_throw++
@@ -131,17 +131,20 @@ function pong(canvas) {
 		else if (x > canvas.width)
 		{
 			leftScore += 1
-			prepare = true
 			x = CENTER_X;
 			y = CENTER_Y;
 			ball_throw++
 		}
 		if (leftScore >= MAX_SCORE || rightScore >= MAX_SCORE)
-			loop = false
+		{
+			clearInterval(loopID) // the main loop breaks here
+			gameID = setInterval(drawGame, 10)
+		}
 		if (ball_throw === 2)
 		{
 			ball_throw = 0
-			dx = -dx
+			dx = change_side * start_direction
+			change_side *= -1
 		}
 	}
 
@@ -226,7 +229,7 @@ function pong(canvas) {
 		drawSquare(430 + gameShift, 120)
 		drawSquare(440 + gameShift, 110)
 		drawSquare(450 + gameShift, 100)
-		drawRect(450 + gameShift, 100, 10, 90) //E
+		drawRect(450 + gameShift, 100, 10, 90) //E 
 		drawRect(500 + gameShift, 100, 10, 90)
 		drawRect(500 + gameShift, 100, 60, 10)
 		drawRect(500 + gameShift, 140, 60, 10)
@@ -412,13 +415,13 @@ function pong(canvas) {
 			dy = -dy
 		else if ((y + dy == leftPadY || y + dy == leftPadY + padWidth) && x + dx > rightPadX && x + dx < (rightPadX + padHeight + 2))
 			dy = -dy
-		//bounce from pad
+		//bounce from pad 
 		if ((x + dx < leftPadX + padHeight && x + dx > leftPadX && y > leftPadY &&
 			y < leftPadY + padWidth) || (x + dx > rightPadX && x + dx < (rightPadX + padHeight + 2) &&
 			y > rightPadY && y < rightPadY + padWidth))
 			dx = -dx
 		if (leftUpBtn) {
-			leftPadY -= 7;
+		   leftPadY -= 7;
 			if (leftPadY < 0)
 				leftPadY = 0
 		}
@@ -429,7 +432,7 @@ function pong(canvas) {
 		}
 
 		if (rightUpBtn) {
-			rightPadY -= 7;
+		   rightPadY -= 7;
 			if (rightPadY < 0)
 				rightPadY = 0
 		}
@@ -443,13 +446,9 @@ function pong(canvas) {
 		drawRightPad()
 		x += dx;
 		y += dy;
-		if (loop === false) {
-			clearInterval(loopID)
-			gameID = setInterval(drawGame, 10)
-		}
 	}
 
-	function start()
+	function start() 
 	{
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		startTime -= 10
@@ -464,13 +463,14 @@ function pong(canvas) {
 		else
 		{
 			clearInterval(startID)
-			loopID = setInterval(draw, 10);
+			loopID = setInterval(draw, 10); //main loop
 		}
 	}
 
 	if (getRandomInt(10)  < 5) {
+		change_side *= -1
 		dx = -dx
 	}
-	//here main loop starts
+	//here the 'start' loop starts. the  main loop starts inside
 	var startID = setInterval(start, 10);
 }
