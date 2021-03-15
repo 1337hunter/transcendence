@@ -6,7 +6,7 @@ environment.plugins.append('Provide',
         $: 'jquery/src/jquery',
         jQuery: 'jquery/src/jquery',
         Popper: ['popper.js', 'default'],
-        _: 'underscore'
+        "_": 'underscore'
     })
     )
 module.exports = environment
