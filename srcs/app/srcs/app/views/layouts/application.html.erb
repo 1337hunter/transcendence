@@ -12,6 +12,11 @@
   </head>
 
   <body>
+  <% if user_signed_in? %>
+    Here should be navbar mb and main window, in which everything will happen
+    <br>
+    <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+  <% end %>
     <%= yield %>
   </body>
 </html>

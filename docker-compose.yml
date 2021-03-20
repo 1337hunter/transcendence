@@ -14,6 +14,9 @@ services:
   ruby:
     build: ./srcs/app/
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    environment:
+      FT_ID: 853c5e05db71a696aae8cbd27b3ef78c9c362927fc04e08a64cb20c820ece08d
+      FT_SECRET: 3bcb34b46c42fc508f47fa2ba2d40167bdf539923636097bf0de6a46d81ba66c
     ports:
       - "3000:3000"
     depends_on:
