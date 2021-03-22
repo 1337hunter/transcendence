@@ -6,9 +6,11 @@
 import Rails from "@rails/ujs"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
-require("underscore")
-require("backbone")
+
 require("jquery")
+let _ = require("underscore")
+let Backbone = require("backbone")
+window._ = _;
 
 Rails.start()
 ActiveStorage.start()

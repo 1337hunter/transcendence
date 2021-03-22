@@ -32,7 +32,7 @@ gem 'rqrcode'
 gem 'omniauth'
 gem 'omniauth-marvin', '~> 1.0.2'
 # gem to generate code for backbone 1.4.0
-gem 'rails-backbone', git: "https://github.com/thefullarcticfox/backbone-rails", :tag => 'v1.4.0'
+# gem 'rails-backbone', git: "https://github.com/thefullarcticfox/backbone-rails", :tag => 'v1.4.0'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
