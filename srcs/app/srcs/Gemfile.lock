@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/thefullarcticfox/backbone-rails
+  revision: 3b270c89c54116608be2e56769830d1f03885325
+  tag: v1.4.0
+  specs:
+    rails-backbone (1.4.0)
+      coffee-rails
+      ejs
+      jquery-rails
+      railties
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -60,11 +71,21 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
+    attr_encrypted (3.1.0)
+      encryptor (~> 3.0.0)
     bcrypt (3.1.16)
     bootsnap (1.7.2)
       msgpack (~> 1.0)
     builder (3.2.4)
     byebug (11.1.3)
+    chunky_png (1.4.0)
+    coffee-rails (5.0.0)
+      coffee-script (>= 2.2.0)
+      railties (>= 5.2.0)
+    coffee-script (2.4.1)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.12.2)
     concurrent-ruby (1.1.8)
     crass (1.0.6)
     devise (4.7.3)
@@ -73,7 +94,16 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    devise-two-factor (3.0.0)
+      activesupport
+      attr_encrypted (>= 1.3, < 4, != 2)
+      devise (~> 4.0)
+      railties
+      rotp (~> 2.0)
+    ejs (1.1.1)
+    encryptor (3.0.0)
     erubi (1.10.0)
+    execjs (2.7.0)
     faraday (1.3.0)
       faraday-net_http (~> 1.0)
       multipart-post (>= 1.2, < 3)
@@ -170,9 +200,15 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    redis (4.2.5)
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
+    rotp (2.1.2)
+    rqrcode (1.2.0)
+      chunky_png (~> 1.0)
+      rqrcode_core (~> 0.2)
+    rqrcode_core (0.2.0)
     ruby2_keywords (0.0.4)
     sass-rails (6.0.0)
       sassc-rails (~> 2.1, >= 2.1.1)
@@ -218,6 +254,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
   devise
+  devise-two-factor
   jbuilder (~> 2.7)
   jquery-rails
   listen (~> 3.3)
@@ -226,6 +263,9 @@ DEPENDENCIES
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 6.1.3)
+  rails-backbone!
+  redis (~> 4.0)
+  rqrcode
   sass-rails (>= 6)
   spring
   tzinfo-data
