@@ -44,3 +44,6 @@ srcs/app/srcs/.byebug_history
 # /config/master.key
 
 .idea
+srcs/app/srcs/Gemfile.lock
+srcs/app/srcs/yarn.lock
+srcs/app/srcs/package-lock.json
