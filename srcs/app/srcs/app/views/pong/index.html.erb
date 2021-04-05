@@ -1,3 +1,17 @@
-<h1>Hello, Rails! It's pong.</h1>
-<%= javascript_pack_tag 'pong'%>
-<canvas id="pongCanvas" width="700" height="388"></canvas>
+<%= render 'pong/templates/oauth42' %>
+<%= render 'pong/templates/pong' %>
+
+<table style="width:100%">
+  <td>
+    <th style="width:100px" valign="top" align="left">
+      <ul>
+        <li><a href="#/index">Home</a></li>
+        <li><a href="#/oauth">42 OAuth</a></li>
+        <li><a href="#/pong">Pong</a></li>
+      </ul>
+    </th>
+    <th valign="top" align="left">
+      <div id="app_main">Loading SPA</div>
+    </th>
+  </td>
+</table>

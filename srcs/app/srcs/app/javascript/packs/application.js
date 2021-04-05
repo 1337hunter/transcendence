@@ -6,11 +6,17 @@
 import Rails from "@rails/ujs"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
+let $ = require("jquery");
+let _ = require("underscore");
+let Backbone = require("backbone");
 
-require("jquery")
-let _ = require("underscore")
-let Backbone = require("backbone")
-window._ = _;
+import MainSPA from "./main_spa";
 
 Rails.start()
 ActiveStorage.start()
+window._ = _;
+
+// load on DOM ready
+$(function () {
+    new MainSPA;
+});
