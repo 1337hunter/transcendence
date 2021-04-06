@@ -4,23 +4,19 @@
 
 <table style="width:100%">
   <td>
-    <th style="width:100px" valign="top" align="left">
+    <th style="width:150px" valign="top" align="left">
       <ul>
         <% if !user_signed_in? %>
           <%= button_to "Sign in with 42", user_marvin_omniauth_authorize_path, class: "oauth42" %>
         <% else %>
           <%= render 'pong/templates/nav' %>
-          <%= button_to "Sign out", destroy_user_session_path, :method => :delete %>
-        <% end %>
-        <% if user_signed_in? %>
-          <li><a href="#/pong">Pong</a></li>
-          <li><a href="#/index">Home</a></li>
-          <li><a href="#/users">Users</a></li>
         <% end %>
       </ul>
     </th>
+    <div>
     <th valign="top" align="left">
       <div id="app_main">Loading SPA</div>
     </th>
+    </div>
   </td>
 </table>
