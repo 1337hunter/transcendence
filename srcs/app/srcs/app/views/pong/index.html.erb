@@ -2,16 +2,14 @@
 <%= render 'pong/templates/pong' %>
 <%= render 'pong/templates/users' %>
 
+<% if !user_signed_in? %>
+  <%= button_to "Sign in with 42", user_marvin_omniauth_authorize_path, class: "oauth42" %>
+<% else %>
+  <%= render 'pong/templates/nav' %>
+<% end %>
 <table style="width:100%">
   <td>
     <th style="width:150px" valign="top" align="left">
-      <ul>
-        <% if !user_signed_in? %>
-          <%= button_to "Sign in with 42", user_marvin_omniauth_authorize_path, class: "oauth42" %>
-        <% else %>
-          <%= render 'pong/templates/nav' %>
-        <% end %>
-      </ul>
     </th>
     <div>
     <th valign="top" align="left">
