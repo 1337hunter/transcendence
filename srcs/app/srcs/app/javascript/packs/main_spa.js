@@ -12,7 +12,7 @@ let AppRouter = Backbone.Router.extend({
     },
     routes: {
         "oauth"     : "oauth",
-        "index"     : "pong",
+        "index"     : "users",
         "pong"      : "pong",
         "users"     : "users",
         ".*"        : "pong"
