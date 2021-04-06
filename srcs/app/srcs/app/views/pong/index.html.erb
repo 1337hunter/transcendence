@@ -1,5 +1,6 @@
 <%= render 'pong/templates/oauth42' %>
 <%= render 'pong/templates/pong' %>
+<%= render 'pong/templates/users' %>
 
 <table style="width:100%">
   <td>
@@ -8,6 +9,9 @@
         <li><a href="#/index">Home</a></li>
         <li><a href="#/oauth">42 OAuth</a></li>
         <li><a href="#/pong">Pong</a></li>
+        <% if user_signed_in? %>
+        <li><a href="#/users">Users</a></li>
+        <% end %>
       </ul>
     </th>
     <th valign="top" align="left">

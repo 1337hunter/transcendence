@@ -1,9 +1,8 @@
 <script type="text/template" id="oauth42-template">
-  <h1>Hello, Rails! It's 42 API OAuth.</h1>
+  <h1>42 API OAuth</h1>
   <% if user_signed_in? %>
-    Here should be navbar mb and main window, in which everything will happen
-    <br>
     <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
-  <% end %>
-  <%= link_to "Sign in with 42", user_marvin_omniauth_authorize_path, class: "oauth42" %>
+    <% else %>
+    <%= link_to "Sign in with 42", user_marvin_omniauth_authorize_path, class: "oauth42" %>
+    <% end %>
 </script>
