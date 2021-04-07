@@ -1,5 +1,5 @@
 <% if !user_signed_in? %>
-  <%= button_to "Sign in with 42", user_marvin_omniauth_authorize_path, class: "oauth42" %>
+  <%= render 'pong/templates/login' %>  
 <% else %>
   <%= render 'pong/templates/nav' %>
   <%= render 'pong/templates/oauth42' %>
@@ -17,5 +17,4 @@
     </div>
   </td>
   </table>
-
   <% end %>

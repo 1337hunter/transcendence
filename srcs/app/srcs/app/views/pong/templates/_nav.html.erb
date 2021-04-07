@@ -1,5 +1,4 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav">
       <li class="nav-item active">
         <a class="nav-link" href="#/index">Home</a>
@@ -11,11 +10,10 @@
         <a class="nav-link" href="#/users">Users</a>
       </li>
     </ul>
-    <ul class="nav-bar ms-auto mb3 mb-lg-0">
-        <li class="nav-item">
+    <ul class="nav-bar ms-auto mb3 mb-lg-0" style="list-style-type:none">
+      <li class="nav-item">
         <%= link_to "Sign out", destroy_user_session_path, class: "nav-link", :method => :delete %>
       </li>
-      </ul>
-  </div>
+    </ul>
 </nav>
 
