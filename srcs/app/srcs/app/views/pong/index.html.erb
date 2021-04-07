@@ -1,24 +1,22 @@
 <% if !user_signed_in? %>
-  <%= render 'pong/templates/login' %>  
+  <%= render 'pong/templates/login' %>
 <% else %>
   <%= render 'pong/templates/nav' %>
   <%= render 'pong/templates/home' %>
   <%= render 'pong/templates/oauth42' %>
   <%= render 'pong/templates/pong' %>
   <%= render 'pong/templates/settings' %>
-  
-  
+
+
   <%= render 'pong/templates/users' %>
 
   <table style="width:100%">
-  <td>
-    <th style="width:150px" valign="top" align="left">
-    </th>
-    <div>
+  <td style="padding: 10px">
+    <th style="width:10px" valign="top" align="left"></th>
     <th valign="top" align="left">
       <div id="app_main">Loading SPA</div>
     </th>
-    </div>
+    <th style="width:10px" valign="top" align="left"></th>
   </td>
   </table>
 <% end %>
