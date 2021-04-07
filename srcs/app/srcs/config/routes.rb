@@ -1,9 +1,15 @@
 Rails.application.routes.draw do
-  root "pong#index"
-  get "/pong", to: "pong#index"
-  get "/api/settings", to: "settings#index"
+  root 'pong#index'
 
-  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
+  namespace :api do
+    resources :users
+    resources :settings
+  end
+
+  get '/pong', to: 'pong#index'
+  get '/settings', to: 'settings#index'
+
+  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   devise_scope :user do
     delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session_path
   end
