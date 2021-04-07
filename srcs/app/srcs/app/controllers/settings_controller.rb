@@ -1,8 +1,8 @@
-class SettingsController < ApplicationController
+class Api::SettingsController < ApplicationController
     def index
-        users = User.all
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        print(users)
-        print("!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+        @user = current_user
+        respond_to do |format|
+            format.json { render json: @user, :only => [:nickname, :email] }    
+        end
     end
 end

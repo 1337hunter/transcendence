@@ -6,14 +6,17 @@ const SettingsView = {};
 $(function () {
 	SettingsView.View = Backbone.View.extend({
 		template: _.template($('#settings-template').html()),
+		tagName: "ul",
 		events: {},
 		initialize: function () {
-			this.listenTo(this.model, 'reset', this.addAll);
-			this.listenTo(this.model, 'sync', this.render);
 			this.model.fetch();
+			this.listenTo(this.model, 'sync', this.render);
+			
+			//this.listenTo(this.model, 'reset', this.addAll);
+			
 		},
 		render: function () {
-			this.$el.html(this.template());
+			this.$el.html(this.template(this.model.toJSON()));
 			return this;
 		}
 	});
