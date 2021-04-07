@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
+import UserCollection from "../models/users";
 
 const UsersView = {};
 
@@ -21,6 +22,7 @@ $(function () {
 		template: _.template($('#users-template').html()),
 		events: {},
 		initialize: function () {
+		    this.collection = new UserCollection;
             this.listenTo(this.collection, 'reset', this.addAll);
             this.listenTo(this.collection, 'sync', this.render);
             this.collection.fetch();

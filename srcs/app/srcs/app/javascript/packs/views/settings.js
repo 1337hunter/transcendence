@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
+import SettingsModel from "../models/settings";
 
 const SettingsView = {};
 
@@ -8,8 +9,9 @@ $(function () {
 		template: _.template($('#settings-template').html()),
 		events: {},
 		initialize: function () {
-			this.listenTo(this.model, 'sync', this.onsync);
+			this.model = new SettingsModel;
 			this.fetched = false;
+			this.listenTo(this.model, 'sync', this.onsync);
 			this.model.fetch();
 		},
 		onsync: function () {

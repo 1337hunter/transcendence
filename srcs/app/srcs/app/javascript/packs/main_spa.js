@@ -1,18 +1,18 @@
 import Backbone from "backbone";
-import UserCollection from "./models/users"
 import PongView from "./views/pong";
 import OauthView from "./views/oauth";
 import UsersView from "./views/users"
 import HomeView from "./views/home";
 import SettingsView from "./views/settings";
-import SettingsModel from "./models/settings"
 import pong_game from "./pong_game";
 
 let AppRouter = Backbone.Router.extend({
     initialize: function() {
-        this.el = $("#app_main");
-        this.userscollection = new UserCollection;
-        this.settings = new SettingsModel;
+        this.main = {};
+        this.chat = {};
+
+        this.main.el = $("#app_main");
+        this.chat.el = $("#app_chat");
     },
     routes: {
         "oauth"     : "oauth",
@@ -23,25 +23,25 @@ let AppRouter = Backbone.Router.extend({
         ".*"        : "pong" // 404
     },
     home: function () {
-        this.view = new HomeView.View();
-        this.el.html(this.view.render().el);
+        this.main.view = new HomeView.View();
+        this.main.el.html(this.main.view .render().el);
     },
     pong: function () {
-        this.view = new PongView.View();
-        this.el.html(this.view.render().el);
+        this.main.view = new PongView.View();
+        this.main.el.html(this.main.view .render().el);
         pong_game();
     },
     play: function () {
-        this.view = new OauthView.View();
-        this.el.html(this.view.render().el);
+        this.main.view  = new OauthView.View();
+        this.main.el.html(this.main.view .render().el);
     },
     settings: function () {
-        this.view = new SettingsView.View({model: this.settings});
-        this.el.html(this.view.render().el);
+        this.main.view  = new SettingsView.View();
+        this.main.el.html(this.main.view .render().el);
     },
     users: function () {
-        this.view = new UsersView.View({collection: this.userscollection});
-        this.el.html(this.view.render().el);
+        this.main.view  = new UsersView.View();
+        this.main.el.html(this.main.view .render().el);
     }
 });
 
