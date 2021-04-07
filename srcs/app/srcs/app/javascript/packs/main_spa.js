@@ -3,7 +3,9 @@ import UserCollection from "./models/users"
 import PongView from "./views/pong";
 import OauthView from "./views/oauth";
 import UsersView from "./views/users"
+import SettingsView from "./views/settings";
 import pong_game from "./pong_game";
+
 
 let AppRouter = Backbone.Router.extend({
     initialize: function() {
@@ -13,8 +15,9 @@ let AppRouter = Backbone.Router.extend({
     routes: {
         "oauth"     : "oauth",
         "index"     : "users",
-        "pong"      : "pong",
+        "play"      : "pong",
         "users"     : "users",
+        "settings"  : "settings",
         ".*"        : "pong"
     },
     pong: function () {
@@ -22,8 +25,12 @@ let AppRouter = Backbone.Router.extend({
         this.el.html(this.view.render().el);
         pong_game();
     },
-    oauth: function () {
+    play: function () {
         this.view = new OauthView.View();
+        this.el.html(this.view.render().el);
+    },
+    settings: function () {
+        this.view = new UsersView.View({collection: this.userscollection});
         this.el.html(this.view.render().el);
     },
     users: function () {
