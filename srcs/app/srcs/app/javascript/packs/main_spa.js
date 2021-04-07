@@ -8,8 +8,6 @@ import SettingsView from "./views/settings";
 import SettingsModel from "./models/settings"
 import pong_game from "./pong_game";
 
-
-
 let AppRouter = Backbone.Router.extend({
     initialize: function() {
         this.el = $("#app_main");
@@ -39,7 +37,7 @@ let AppRouter = Backbone.Router.extend({
     },
     settings: function () {
         this.view = new SettingsView.View({model: this.settings});
-        this.el.html(this.view.render().el);
+//      this.el.html(this.view.render().el);
     },
     users: function () {
         this.view = new UsersView.View({collection: this.userscollection});
