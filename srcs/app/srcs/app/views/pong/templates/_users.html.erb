@@ -1,11 +1,14 @@
 <script type="text/template" id="singleuser-template">
+  <td><label><%%= id %></label></td>
   <td><label><%%= nickname %></label></td>
   <td><label><%%= email %></label></td>
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
 </script>
 
 <script type="text/template" id="users-template">
   <h1>Users</h1>
-  <table id="users-table">
-    <tr><th>Nickname</th><th>Email</th></tr>
+  <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
+    <tr><th>Id</th><th>Nickname</th><th>Email</th><th>Wins</th><th>Loses</th></tr>
   </table>
 </script>
