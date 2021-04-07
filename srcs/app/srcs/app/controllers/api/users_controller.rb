@@ -1,4 +1,5 @@
 class Api::UsersController < ApplicationController
+  before_action :authenticate_user!
   # GET /api/users.json
   def index
     @users = User.all
