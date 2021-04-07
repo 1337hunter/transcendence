@@ -37,7 +37,7 @@ let AppRouter = Backbone.Router.extend({
     },
     settings: function () {
         this.view = new SettingsView.View({model: this.settings});
-//      this.el.html(this.view.render().el);
+        this.el.html(this.view.render().el);
     },
     users: function () {
         this.view = new UsersView.View({collection: this.userscollection});
