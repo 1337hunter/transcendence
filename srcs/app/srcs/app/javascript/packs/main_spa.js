@@ -3,6 +3,7 @@ import UserCollection from "./models/users"
 import PongView from "./views/pong";
 import OauthView from "./views/oauth";
 import UsersView from "./views/users"
+import HomeView from "./views/home";
 import SettingsView from "./views/settings";
 import pong_game from "./pong_game";
 
@@ -14,11 +15,15 @@ let AppRouter = Backbone.Router.extend({
     },
     routes: {
         "oauth"     : "oauth",
-        "index"     : "users",
+        "index"     : "home",
         "play"      : "pong",
         "users"     : "users",
         "settings"  : "settings",
-        ".*"        : "pong"
+        ".*"        : "pong" // 404
+    },
+    home: function () {
+        this.view = new HomeView.View();
+        this.el.html(this.view.render().el);
     },
     pong: function () {
         this.view = new PongView.View();
@@ -30,7 +35,8 @@ let AppRouter = Backbone.Router.extend({
         this.el.html(this.view.render().el);
     },
     settings: function () {
-        this.view = new UsersView.View({collection: this.userscollection});
+        console.log("TRY TO INIT SETTINGS");
+        this.view = new SettingsView.View();
         this.el.html(this.view.render().el);
     },
     users: function () {

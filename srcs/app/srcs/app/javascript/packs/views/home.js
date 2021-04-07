@@ -1,11 +1,11 @@
 import Backbone from "backbone";
 import _ from "underscore";
 
-const SettingsView = {};
+const HomeView = {};
 
 $(function () {
-	SettingsView.View = Backbone.View.extend({
-		template: _.template($('#settings-template').html()),
+	HomeView.View = Backbone.View.extend({
+		template: _.template($('#home-template').html()),
 		events: {},
 		render: function () {
 			this.$el.html(this.template());
@@ -14,4 +14,4 @@ $(function () {
 	});
 });
 
-export default SettingsView;
+export default HomeView;
