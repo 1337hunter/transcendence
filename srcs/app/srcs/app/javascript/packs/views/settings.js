@@ -8,11 +8,12 @@ $(function () {
 		template: _.template($('#settings-template').html()),
 		events: {},
 		initialize: function () {
+			this.el = $("#app_main");
 			this.listenTo(this.model, 'sync', this.render);
 			this.model.fetch();
 		},
 		render: function () {
-			$("#app_main").html(this.template(this.model.toJSON()));
+			this.el.html(this.template(this.model.toJSON()));
 //			this.$el.html(this.template(this.model.toJSON()));
 			return this;
 		}
