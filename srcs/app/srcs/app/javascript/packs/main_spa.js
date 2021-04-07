@@ -5,13 +5,16 @@ import OauthView from "./views/oauth";
 import UsersView from "./views/users"
 import HomeView from "./views/home";
 import SettingsView from "./views/settings";
+import SettingsModel from "./models/settings"
 import pong_game from "./pong_game";
+
 
 
 let AppRouter = Backbone.Router.extend({
     initialize: function() {
         this.el = $("#app_main");
         this.userscollection = new UserCollection;
+        this.settings = new SettingsModel;
     },
     routes: {
         "oauth"     : "oauth",
@@ -35,8 +38,7 @@ let AppRouter = Backbone.Router.extend({
         this.el.html(this.view.render().el);
     },
     settings: function () {
-        console.log("TRY TO INIT SETTINGS");
-        this.view = new SettingsView.View();
+        this.view = new SettingsView.View({model: this.settings});
         this.el.html(this.view.render().el);
     },
     users: function () {
