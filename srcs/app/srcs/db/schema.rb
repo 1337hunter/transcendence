@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 2021_04_08_002624) do
 
   create_table "users", force: :cascade do |t|
     t.string "displayname"
+    t.binary "avatar"
     t.integer "wins", default: 0
     t.integer "loses", default: 0
     t.integer "elo", default: 0

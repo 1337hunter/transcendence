@@ -1,3 +1,6 @@
+include Api::UsersHelper
+require "open-uri"
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -11,6 +14,7 @@ class User < ApplicationRecord
       user.password = Devise.friendly_token[0, 20]
       user.nickname = auth.info.nickname
       user.displayname = user.nickname
+      user.avatar = URI.open(user_gravatar(auth.info.email, user.nickname)).read
     end
   end
 end

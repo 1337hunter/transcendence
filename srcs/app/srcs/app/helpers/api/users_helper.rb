@@ -1,7 +1,7 @@
 module Api::UsersHelper
-    def user_gravatar
-        gravatar_id = Digest::MD5::hexdigest(current_user.email.downcase)
+    def user_gravatar(email, nickname)
+        gravatar_id = Digest::MD5::hexdigest(email.downcase)
         gravatar_url = "http://secure.gravatar.com/avatar/#{gravatar_id}?d=identicon"
-        image_tag(gravatar_url, alt: current_user.nickname, class: "gravatar")
+        #image_tag(gravatar_url, alt: nickname)
     end
 end

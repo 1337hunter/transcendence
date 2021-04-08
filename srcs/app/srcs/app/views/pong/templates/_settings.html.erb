@@ -2,9 +2,9 @@
   <h1>Settings</h1><br></br>
   <div class="row">
   <aside class="col-md-4">
-    <section class="user_info">
+    <section class="user_avatar">
       <h1>
-        <%= user_gravatar %>
+        <%= ('<img src="data:image/jpg;base64,%s">' % Base64.encode64(current_user.avatar)).html_safe %>
       </h1>
     </section>
   </aside>
@@ -15,5 +15,3 @@
   <label for="email">Email</label><br></br>
   <input type="text" name="email" id="email" value="<%%= email %>" >
 </script>
-
-<!--onblur="getProductqty(this)"-->
