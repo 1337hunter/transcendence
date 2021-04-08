@@ -14,18 +14,28 @@ $(function () {
         tagName: "tr",
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'error', this.onerror);
         },
         updateOnEnter: function (e) {
-            if (e.keyCode === 13)
-                this.model.save({displayname: $('#displayname').val()},
-                    {patch: true, success: this.onsuccess, error: this.onerror});
-        },
-        onsuccess: function () {
-            app_alert('success', 'Displayname has been changed');
+            if (e.keyCode !== 13) return;
+
+            let newdisplayname = $('#displayname').val();
+            if (this.model.get('displayname') !== newdisplayname)
+            {
+                e.preventDefault();
+                e.stopPropagation();
+                this.model.save({displayname: newdisplayname},
+                    {patch: true, success: this.onsuccess});
+            }
         },
         onerror: function (model, response) {
             response.responseJSON.base.forEach(errmsg =>
                 app_alert('danger', errmsg));
+            this.model.attributes = this.model.previousAttributes();
+            this.render();
+        },
+        onsuccess: function () {
+            app_alert('success', 'Displayname has been changed');
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
@@ -38,16 +48,20 @@ $(function () {
 		events: {},
 		initialize: function () {
 		    this.collection = new UserCollection;
+		    this.listenTo(this.collection, 'add', this.addOne);
             this.listenTo(this.collection, 'reset', this.addAll);
-            this.listenTo(this.collection, 'sync', this.render);
-            this.collection.fetch();
+//          this.listenTo(this.collection, 'sync', this.render);
+            this.collection.fetch({error: this.onerror});
         },
 		addOne: function (user) {
             let view = new UsersView.SingleUserView({model: user});
             this.$("tbody").append(view.render().el);
         },
         addAll: function () {
-            this.collection.each(this.addOne, this)
+            this.collection.each(this.addOne, this);
+        },
+        onerror: function (model, response) {
+		    app_alert('danger', 'Users fetch from API failed');
         },
 		render: function () {
 			this.$el.html(this.template());
