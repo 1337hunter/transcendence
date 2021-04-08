@@ -2,9 +2,10 @@
   <h1>Settings</h1><br></br>
   <div class="row">
   <aside class="col-md-4">
-    <section class="user_avatar">
+    <section">
       <h1>
-        <%= ('<img src="data:image/jpg;base64,%s">' % Base64.encode64(current_user.avatar)).html_safe %>
+        <%= ('<input type="image" class="user_avatar" src="data:image/jpg;base64,%s">' % Base64.encode64(current_user.avatar)).html_safe %>
+        <input type="file" class="upload_user_avatar" style="display: none;" />
       </h1>
     </section>
   </aside>

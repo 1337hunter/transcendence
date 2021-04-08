@@ -23,6 +23,17 @@ input:-webkit-autofill:active
     -webkit-text-fill-color: rgb(255, 255, 255) !important;
 }
 
+.home {
+    background-image: url(stars.gif);
+    position: relative;
+    width: 100%;
+    line-height: 20vh;
+    height: 90vh;
+    background-repeat: no-repeat;
+    background-position: center;    
+    background-size: cover;
+}
+
 body {
     background: black;
     color: rgb(236, 236, 236);

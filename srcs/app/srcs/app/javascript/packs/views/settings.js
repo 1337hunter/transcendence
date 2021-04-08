@@ -9,7 +9,9 @@ $(function () {
 		template: _.template($('#settings-template').html()),
 		events:{
 			'blur input#email' : 'input',
-			'blur input#displayname' : 'input'
+			'blur input#displayname' : 'input',
+			'click .user_avatar' : 'update_avatar',
+			'click .upload_user_avatar' : 'upload_avatar'
 		},
 		initialize: function () {
 			this.model = new SettingsModel;
@@ -29,6 +31,16 @@ $(function () {
 		input: function (input)
 		{
 			this.model.save({displayname: $('#displayname').val().trim(), email: $('#email').val().trim()});
+		},
+		update_avatar: function () {
+			$(".upload_user_avatar").click();
+		},
+		upload_avatar: function (event) {
+			var input = $(".upload_user_avatar");
+			var file = input.val();
+			console.log(file);
+
+			
 		}
 	});
 });
