@@ -1,5 +1,14 @@
 <script type="text/template" id="settings-template">
   <h1>Settings</h1><br></br>
+  <div class="row">
+  <aside class="col-md-4">
+    <section class="user_info">
+      <h1>
+        <%= user_gravatar %>
+      </h1>
+    </section>
+  </aside>
+  </div><br></br>
   <label for="displayname">Display name</label><br></br>
   <input type="text" name="displayname" id="displayname" value="<%%= displayname %>" >
   <br></br>
