@@ -7,10 +7,20 @@ const UsersView = {};
 $(function () {
 	UsersView.SingleUserView = Backbone.View.extend({
         template: _.template($('#singleuser-template').html()),
-        events: {},
+        events: {
+            "keypress #displayname" : "updateOnEnter"
+        },
         tagName: "tr",
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);
+        },
+        updateOnEnter: function (e) {
+            if (e.keyCode === 13)
+                this.model.save({displayname: $('#displayname').val()},
+                    {patch: true, success: this.onsuccess});
+        },
+        onsuccess: function (e) {
+            console.log("displayname successfully changed to " + e.attributes.displayname);
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
