@@ -1,7 +1,11 @@
 include Api::UsersHelper
-require "open-uri"
+require 'open-uri'
 
 class User < ApplicationRecord
+  validates :email, uniqueness: true, presence: true
+  validates :displayname, uniqueness: true, presence: true
+  validates_with UserValidator
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
