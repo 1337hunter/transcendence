@@ -14,6 +14,16 @@
  *= require_self
  */
 
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active
+{
+    -webkit-box-shadow: 0 0 0 30px black inset !important;
+    -webkit-text-fill-color: rgb(255, 255, 255) !important;
+}
+
  body {
     background: black;
     color: rgb(236, 236, 236);
