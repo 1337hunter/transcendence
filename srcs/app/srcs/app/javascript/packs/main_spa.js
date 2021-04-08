@@ -9,9 +9,10 @@ import pong_game from "./pong_game";
 let AppRouter = Backbone.Router.extend({
     initialize: function() {
         this.main = {};
-        this.chat = {};
-
         this.main.el = $("#app_main");
+
+        //  placeholder for chatrooms element
+        this.chat = {};
         this.chat.el = $("#app_chat");
     },
     routes: {
@@ -24,24 +25,24 @@ let AppRouter = Backbone.Router.extend({
     },
     home: function () {
         this.main.view = new HomeView.View();
-        this.main.el.html(this.main.view .render().el);
+        this.main.el.html(this.main.view.render().el);
     },
     pong: function () {
         this.main.view = new PongView.View();
-        this.main.el.html(this.main.view .render().el);
+        this.main.el.html(this.main.view.render().el);
         pong_game();
     },
     play: function () {
-        this.main.view  = new OauthView.View();
-        this.main.el.html(this.main.view .render().el);
+        this.main.view = new OauthView.View();
+        this.main.el.html(this.main.view.render().el);
     },
     settings: function () {
-        this.main.view  = new SettingsView.View();
-        this.main.el.html(this.main.view .render().el);
+        this.main.view = new SettingsView.View();
+        this.main.el.html(this.main.view.render().el);
     },
     users: function () {
-        this.main.view  = new UsersView.View();
-        this.main.el.html(this.main.view .render().el);
+        this.main.view = new UsersView.View();
+        this.main.el.html(this.main.view.render().el);
     }
 });
 
