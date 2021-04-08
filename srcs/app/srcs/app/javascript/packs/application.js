@@ -10,13 +10,9 @@ let $ = require("jquery");
 let _ = require("underscore");
 let Backbone = require("backbone");
 
-import MainSPA from "./main_spa";
-
 Rails.start()
 ActiveStorage.start()
-window._ = _;
 
-// load on DOM ready
 $(function () {
-    new MainSPA;
+    $('.alert').delay(2000).fadeOut(function() { $(this).remove(); });
 });

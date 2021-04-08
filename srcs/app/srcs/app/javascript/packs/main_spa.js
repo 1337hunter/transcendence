@@ -56,4 +56,9 @@ class MainSPA {
     }
 }
 
+// load on DOM ready
+$(function () {
+    new MainSPA;
+});
+
 export default MainSPA;

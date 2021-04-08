@@ -22,3 +22,10 @@
   </td>
   </table>
 <% end %>
+
+<div class="alerts-block">
+  <% flash.reverse_each do |type, msg| %>
+    <%= content_tag :li, class: "alert alert-#{%w[success notice].include?(type) ? 'success' : 'danger'}" do %>
+      <%= msg %><% end %>
+  <% end %>
+</div>
