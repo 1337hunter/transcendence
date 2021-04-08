@@ -19,11 +19,12 @@ let AppRouter = Backbone.Router.extend({
         this.chat.el = $("#app_chat");
     },
     routes: {
-        "oauth"     : "oauth",
+        ""          : "home",
         "index"     : "home",
+        "oauth"     : "oauth",
         "play"      : "pong",
-        "users"     : "users",
         "settings"  : "settings",
+        "users"     : "users",
         ".*"        : "pong" // 404
     },
     home: function () {
