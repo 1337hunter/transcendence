@@ -1,5 +1,6 @@
 class Api::UsersController < ApplicationController
-  #  before_action :authenticate_user!
+  skip_before_action :verify_authenticity_token
+  before_action :authenticate_user!
   before_action :define_filters
   before_action :find_user, only: %i[show update destroy]
 
@@ -17,9 +18,9 @@ class Api::UsersController < ApplicationController
   # PATCH/PUT /api/users/id.json
   def update
     if @user.update(user_params)
-      render :show, status: :ok, location: @user
+      render json: @user, status: :ok
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: null, status: :unprocessable_entity
     end
   end
 
@@ -41,7 +42,7 @@ class Api::UsersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def user_params
-    params.require(:user).permit(@filters)
+    params.require(:user).permit(%i[displayname])
   end
 
 end
