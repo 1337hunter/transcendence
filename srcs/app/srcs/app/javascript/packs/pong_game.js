@@ -1,4 +1,4 @@
-export default function pong_game(canvas) {
+export default function pong_game() {
     var canvas = document.getElementById("pongCanvas");
     var ctx = canvas.getContext("2d");
     const CENTER_X = canvas.width / 2;

@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import UserCollection from "../models/users";
+import app_alert from "../helpers/app_alert";
 
 const UsersView = {};
 
@@ -19,11 +20,12 @@ $(function () {
                 this.model.save({displayname: $('#displayname').val()},
                     {patch: true, success: this.onsuccess, error: this.onerror});
         },
-        onsuccess: function (model) {
-            console.log("displayname successfully changed to " + model.attributes.displayname);
+        onsuccess: function () {
+            app_alert('success', 'Displayname has been changed');
         },
         onerror: function (model, response) {
-            response.responseJSON.base.forEach(errmsg => console.error(errmsg));
+            response.responseJSON.base.forEach(errmsg =>
+                app_alert('danger', errmsg));
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));

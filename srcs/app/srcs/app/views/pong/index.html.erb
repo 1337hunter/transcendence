@@ -24,6 +24,7 @@
 <% end %>
 
 <div class="alerts-block">
+  <div id="app-alerts"></div>
   <% flash.reverse_each do |type, msg| %>
     <%= content_tag :li, class: "alert alert-#{%w[success notice].include?(type) ? 'success' : 'danger'}" do %>
       <%= msg %><% end %>

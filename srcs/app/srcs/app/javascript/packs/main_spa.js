@@ -4,7 +4,10 @@ import OauthView from "./views/oauth";
 import UsersView from "./views/users"
 import HomeView from "./views/home";
 import SettingsView from "./views/settings";
+import AlertsView from "./views/alerts";
 import pong_game from "./pong_game";
+
+const MainSPA = {};
 
 let AppRouter = Backbone.Router.extend({
     initialize: function() {
@@ -46,8 +49,9 @@ let AppRouter = Backbone.Router.extend({
     }
 });
 
-class MainSPA {
+class BackboneSPA {
     constructor() {
+        this.app_alerts = new AlertsView.View;
         this.router = new AppRouter;
         console.log(this.router);
         if (Backbone.History.started === false) {
@@ -58,7 +62,7 @@ class MainSPA {
 
 // load on DOM ready
 $(function () {
-    new MainSPA;
+    MainSPA.SPA = new BackboneSPA;
 });
 
 export default MainSPA;
