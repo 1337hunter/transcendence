@@ -29,7 +29,7 @@ input:-webkit-autofill:active
     left: 0px;
     width: 100%;
     line-height: 20vh;
-    height: 93%;
+    height: 92.5%;
     
     background-repeat: no-repeat;
     background-position: center;    
@@ -52,7 +52,7 @@ table #users-table th, table #users-table tr {
 }
 
 .navbar  {
-    height: 80px;
+    height: 65px;
     padding-left: 5%;
     padding-right: 5%;
 }
