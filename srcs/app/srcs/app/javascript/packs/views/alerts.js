@@ -11,6 +11,7 @@ $(function () {
         },
         render: function() {
             this.$el.html(this.template(JSON.parse(this.json)));
+            this.$el.hide().fadeIn();
             this.$el.delay(2000).fadeOut(function() { this.remove(); });
             return this;
         }

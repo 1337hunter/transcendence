@@ -45,7 +45,9 @@ $(function () {
 
 	UsersView.View = Backbone.View.extend({
 		template: _.template($('#users-template').html()),
-		events: {},
+		events: {
+		    "click #refresh-button" :   "refresh"
+        },
 		initialize: function () {
 		    this.collection = new UserCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
@@ -59,6 +61,11 @@ $(function () {
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
+        },
+        refresh: function () {
+            this.collection.fetch({
+                success: function () {app_alert('success', 'Up to date');},
+                error: this.onerror});
         },
         onerror: function (model, response) {
 		    app_alert('danger', 'Users fetch from API failed');
