@@ -29,8 +29,11 @@ $(function () {
             }
         },
         onerror: function (model, response) {
-            response.responseJSON.base.forEach(errmsg =>
-                app_alert('danger', errmsg));
+            if (response.responseJSON === undefined) {
+                app_alert('danger', 'No response from API');
+            } else
+                response.responseJSON.base.forEach(errmsg =>
+                    app_alert('danger', errmsg));
             this.model.attributes = this.model.previousAttributes();
             this.render();
         },
