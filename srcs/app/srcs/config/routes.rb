@@ -7,8 +7,8 @@ Rails.application.routes.draw do
   end
 
   get '/pong', to: 'pong#index'
-  get '*unmatched_route', to: 'application#raise_not_found'
-  
+  #get '*unmatched_route', to: 'application#raise_not_found'
+
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   devise_scope :user do
     delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session_path
