@@ -14,6 +14,7 @@ $(function () {
         tagName: "tr",
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
         },
         updateOnEnter: function (e) {
@@ -29,7 +30,7 @@ $(function () {
             }
         },
         onerror: function (model, response) {
-            if (response.responseJSON == undefined) //  true for null too
+            if (response.responseJSON == null) //  true for undefined too
                 app_alert('danger', 'No response from API');
             else
                 response.responseJSON.base.forEach(errmsg =>
@@ -54,8 +55,6 @@ $(function () {
 		initialize: function () {
 		    this.collection = new UserCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
-            this.listenTo(this.collection, 'reset', this.addAll);
-//          this.listenTo(this.collection, 'sync', this.render);
             this.collection.fetch({error: this.onerror});
         },
 		addOne: function (user) {
