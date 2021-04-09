@@ -1,9 +1,10 @@
 import Backbone from "backbone";
-import PongView from "./views/pong";
-import OauthView from "./views/oauth";
-import UsersView from "./views/users"
 import HomeView from "./views/home";
+import PongView from "./views/pong";
 import SettingsView from "./views/settings";
+import ChatView from "./views/chat";
+import UsersView from "./views/users"
+import OauthView from "./views/oauth";
 import AlertsView from "./views/alerts";
 import pong_game from "./pong_game";
 
@@ -46,7 +47,7 @@ let AppRouter = Backbone.Router.extend({
         this.main.el.html(this.main.view.render().el);
     },
     chat: function () {
-        this.main.view = new SettingsView.View();
+        this.main.view = new ChatView.View();
         this.main.el.html(this.main.view.render().el);
     },
     users: function () {
