@@ -37,7 +37,7 @@ class Api::UsersController < ApplicationController
 
   # DRY filters for json responses
   def define_filters
-    @filters = %i[id nickname email wins loses displayname]
+    @filters = %i[id nickname email wins loses displayname avatar_url avatar_default_url]
   end
 
   # Only allow a list of trusted parameters through.

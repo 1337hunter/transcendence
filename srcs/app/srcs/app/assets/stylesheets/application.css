@@ -30,9 +30,9 @@ input:-webkit-autofill:active
     width: 100%;
     line-height: 20vh;
     height: 92.5%;
-    
+
     background-repeat: no-repeat;
-    background-position: center;    
+    background-position: center;
     background-size: cover;
 }
 
@@ -93,5 +93,5 @@ table #users-table th, table #users-table tr {
     list-style: none;
     margin-bottom: 0;
     margin-top: .8em;
-    /*border: none;*/
+    border: none;
 }
