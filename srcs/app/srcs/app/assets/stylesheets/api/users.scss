@@ -3,14 +3,14 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
 .button-sm {
-  width: 20px;
-  height: 20px;
   background: none;
   border: none;
   margin: 5px;
 }
 
-#refresh-button svg {
+svg {
+  width: 20px;
+  height: 20px;
   fill: #F7F7F7;
 }
 
