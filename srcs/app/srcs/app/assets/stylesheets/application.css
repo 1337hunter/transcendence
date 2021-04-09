@@ -51,6 +51,10 @@ table #users-table th, table #users-table tr {
     padding: 10px;
 }
 
+table #users-table img {
+    margin: 2px;
+}
+
 .navbar  {
     height: 65px;
     padding-left: 5%;
