@@ -3,16 +3,21 @@
   <div class="row">
   <aside class="col-md-4">
     <section>
-      <h1>
-        <%= ('<input type="image" class="user_avatar" src="data:image/jpg;base64,%s">' % Base64.encode64(current_user.avatar)).html_safe %>
-        <input type="file" class="upload_user_avatar" style="display: none;" />
-      </h1>
+        <% begin %>
+          <%= image_tag current_user.avatar_url, size: "100x100 ", class: "user_avatar"%><br></br>
+        <% rescue %>
+          <%= image_tag current_user.avatar_default_url, size: "100x100 ", class: "user_avatar"%><br></br>
+        <% end %>
+        <!--<input type="file" id="upload_user_avatar" style="display: none;" />-->
+        <input type="text" class="upload_user_avatar" placeholder="Image URL" >
     </section>
   </aside>
   </div><br></br>
+  <div>
   <label for="displayname">Display name</label><br></br>
   <input type="text" name="displayname" id="displayname" value="<%%= displayname %>" >
   <br></br>
   <label for="email">Email</label><br></br>
   <input type="text" name="email" id="email" value="<%%= email %>" >
+  </div>
 </script>

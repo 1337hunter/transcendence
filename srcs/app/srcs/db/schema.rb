@@ -31,6 +31,8 @@ ActiveRecord::Schema.define(version: 2021_04_08_160903) do
     t.string "provider"
     t.string "uid"
     t.binary "avatar"
+    t.string "avatar_url"
+    t.string "avatar_default_url"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

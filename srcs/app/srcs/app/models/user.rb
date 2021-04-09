@@ -19,6 +19,8 @@ class User < ApplicationRecord
       user.nickname = auth.info.nickname
       user.displayname = user.nickname
       user.avatar = URI.open(user_gravatar(auth.info.email, user.nickname)).read
+      user.avatar_url = user_gravatar(auth.info.email, user.nickname)
+      user.avatar_default_url = user_gravatar(auth.info.email, user.nickname)
     end
   end
 end

@@ -10,8 +10,15 @@ class Api::SettingsController < ApplicationController
 
     def update
         @user = current_user
-        @user.update_attribute(:displayname, params[:displayname])
-        @user.update_attribute(:email, params[:email])
+        if (params.has_key?(:displayname))
+            @user.update_attribute(:displayname, params[:displayname])
+        end
+        if (params.has_key?(:email))
+            @user.update_attribute(:email, params[:email])
+        end
+        if (params.has_key?(:avatar_url))
+            @user.update_attribute(:avatar_url, params[:avatar_url])
+        end
         @user.save
     end
 end
