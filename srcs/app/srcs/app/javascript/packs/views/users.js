@@ -29,9 +29,9 @@ $(function () {
             }
         },
         onerror: function (model, response) {
-            if (response.responseJSON === undefined) {
+            if (response.responseJSON == undefined) //  true for null too
                 app_alert('danger', 'No response from API');
-            } else
+            else
                 response.responseJSON.base.forEach(errmsg =>
                     app_alert('danger', errmsg));
             this.model.attributes = this.model.previousAttributes();
