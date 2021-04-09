@@ -17,13 +17,17 @@
   <ul id="navbar-right-items" class="navbar-nav ms-auto mb3 mb-lg-0">
     <li class="nav-item">
       <% begin %>
-        <%= image_tag current_user.avatar_url, size: "40x40", class: "user_icon"%><br></br>
+        <%= link_to '#/settings' do %>
+          <%= image_tag current_user.avatar_url, href: "#/settings", size: "40x40", class: "user_icon"%><br></br>
+        <% end %>
       <% rescue %>
-        <%= image_tag current_user.avatar_default_url, size: "40x40", class: "user_icon"%><br></br>
+        <%= link_to '#/settings' do %>
+          <%= image_tag current_user.avatar_default_url, href: "#/settings",  size: "40x40", class: "user_icon"%><br></br>
+        <% end %>
       <% end %>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#/index"><%= current_user.nickname %></a>
+      <a class="nav-link" href="#/settings"><%= current_user.nickname %></a>
     </li>
     <li class="nav-item">
       <%= link_to "Sign out", destroy_user_session_path, class: "nav-link", :method => :delete %>

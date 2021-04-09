@@ -23,6 +23,7 @@ let AppRouter = Backbone.Router.extend({
         "index"     : "home",
         "oauth"     : "oauth",
         "play"      : "pong",
+        "chat"      : "chat",
         "settings"  : "settings",
         "users"     : "users",
         ".*"        : "pong" // 404
@@ -41,6 +42,10 @@ let AppRouter = Backbone.Router.extend({
         this.main.el.html(this.main.view.render().el);
     },
     settings: function () {
+        this.main.view = new SettingsView.View();
+        this.main.el.html(this.main.view.render().el);
+    },
+    chat: function () {
         this.main.view = new SettingsView.View();
         this.main.el.html(this.main.view.render().el);
     },
