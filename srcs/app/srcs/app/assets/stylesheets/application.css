@@ -51,9 +51,14 @@ table #users-table th, table #users-table tr {
     padding: 10px;
 }
 
-.navbar {
+.navbar  {
+    height: 80px;
     padding-left: 5%;
     padding-right: 5%;
+}
+
+#navbar-right-items {
+    margin-top: 3.5%;
 }
 
 .navbar.navbar-expand {
@@ -66,6 +71,14 @@ table #users-table th, table #users-table tr {
 
 .navbar.navbar-expand li a:hover {
     color: #b6bbff;
+}
+
+.user_icon {
+    background-size: cover;
+    display: block;
+    border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
 }
 
 .alerts-block {
