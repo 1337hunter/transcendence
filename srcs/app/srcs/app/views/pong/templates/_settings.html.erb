@@ -4,9 +4,9 @@
   <aside class="col-md-4">
     <section>
         <% begin %>
-          <%= image_tag current_user.avatar_url, size: "100x100 ", class: "user_avatar"%><br></br>
+          <%= image_tag current_user.avatar_url, size: "100x100", class: "user_avatar"%><br></br>
         <% rescue %>
-          <%= image_tag current_user.avatar_default_url, size: "100x100 ", class: "user_avatar"%><br></br>
+          <%= image_tag current_user.avatar_default_url, size: "100x100", class: "user_avatar"%><br></br>
         <% end %>
         <!--<input type="file" id="upload_user_avatar" style="display: none;" />-->
         <input type="text" class="upload_user_avatar" placeholder="Image URL" >
