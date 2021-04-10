@@ -5,7 +5,7 @@
     <section>
       <img class="user_avatar" width="100px" height="100px"
            style="margin-bottom: 10px" src="<%%= avatar_url %>"
-           onerror="this.error = null; this.src = '<%%= avatar_default_url %>';">
+           onerror="this.error = null; this.src = '/assets/avatar_default.jpg';">
         <%# begin %>
           <%#= image_tag current_user.avatar_url, size: "100x100", class: "user_avatar"%>
         <%# rescue %>
