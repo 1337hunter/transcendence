@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import _ from "underscore";
 import UserCollection from "../models/users";
 import app_alert from "../helpers/app_alert";
+import Utils from "../helpers/utils";
 
 const UsersView = {};
 
@@ -45,6 +46,9 @@ $(function () {
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
+            let model = this.model;
+            this.$('.user_icon').on("error",
+                function () { Utils.replaceavatar(this, model); });
             return this;
         }
     });

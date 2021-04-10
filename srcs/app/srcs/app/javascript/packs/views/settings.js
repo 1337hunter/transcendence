@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import SettingsModel from "../models/settings";
+import Utils from "../helpers/utils";
 
 const SettingsView = {};
 
@@ -25,8 +26,12 @@ $(function () {
 			this.render();
 		},
 		render: function () {
-			if (this.fetched === true)
+			if (this.fetched === true) {
 				this.$el.html(this.template(this.model.toJSON()));
+				let model = this.model;
+				this.$('.user_icon').on("error",
+					function () { Utils.replaceavatar(this, model); });
+			}
 			return this;
 		},
 		input_email: function (input)
@@ -55,7 +60,7 @@ $(function () {
 			data.append('file', input[0].files[0]);
 			console.log(data);
 			if (data) {
-				alert("name: " + data.name + "n" +"type: " + data.type + "n" +"size: " + data.size + " bytesn" + "starts with: " + contents);	
+				alert("name: " + data.name + "n" +"type: " + data.type + "n" +"size: " + data.size + " bytesn" + "starts with: " + contents);
 				data.onload = function(e) {
 					var contents = e.target.result;
 				}
@@ -67,4 +72,4 @@ $(function () {
 	});
 });
 
-export default SettingsView;	
+export default SettingsView;
