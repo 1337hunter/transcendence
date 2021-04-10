@@ -3,10 +3,7 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 //<%= ('<input type="image" src="data:image/jpg;base64,%s">' % Base64.encode64(current_user.avatar)).html_safe %>
 
-
-
-
-#displayname
+.displayname, #displayname
 {
     border: 0;
     border: none;

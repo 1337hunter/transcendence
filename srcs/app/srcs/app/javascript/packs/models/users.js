@@ -7,7 +7,8 @@ let UserModel = Backbone.Model.extend({
 
 let UserCollection = Backbone.Collection.extend({
     model: UserModel,
-    url: '/api/users'
+    url: '/api/users',
+    comparator: 'id'
 });
 
 export default UserCollection;

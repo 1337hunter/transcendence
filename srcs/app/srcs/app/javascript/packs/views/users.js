@@ -9,7 +9,7 @@ $(function () {
 	UsersView.SingleUserView = Backbone.View.extend({
         template: _.template($('#singleuser-template').html()),
         events: {
-            "keypress #displayname" : "updateOnEnter"
+            "keypress .displayname" : "updateOnEnter"
         },
         tagName: "tr",
         initialize: function () {
@@ -33,8 +33,9 @@ $(function () {
             if (response.responseJSON == null) //  true for undefined too
                 app_alert('danger', 'No response from API');
             else
-                response.responseJSON.base.forEach(errmsg =>
-                    app_alert('danger', errmsg));
+                Object.values(response.responseJSON).forEach((val) =>
+                    val.toString().split(',').forEach((msg) =>
+                        app_alert('danger', msg)));
             this.model.attributes = this.model.previousAttributes();
             this.render();
         },
@@ -43,7 +44,7 @@ $(function () {
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
-            this.input = this.$('#displayname');
+            this.input = this.$('.displayname');
             return this;
         }
     });
@@ -56,11 +57,12 @@ $(function () {
 		initialize: function () {
 		    this.collection = new UserCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
-            this.collection.fetch({error: this.onerror});
+		    this.listenTo(this.collection, 'reset', this.addAll);
+            this.collection.fetch({reset: true, error: this.onerror});
         },
 		addOne: function (user) {
-            let view = new UsersView.SingleUserView({model: user});
-            this.$("tbody").append(view.render().el);
+            user.view = new UsersView.SingleUserView({model: user});
+            this.$("tbody").append(user.view.render().el);
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
@@ -70,7 +72,7 @@ $(function () {
                 success: function () {app_alert('success', 'Up to date');},
                 error: this.onerror});
         },
-        onerror: function (model, response) {
+        onerror: function () {
 		    app_alert('danger', 'Users fetch from API failed');
         },
 		render: function () {
