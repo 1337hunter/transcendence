@@ -29,7 +29,7 @@ $(function () {
 			if (this.fetched === true) {
 				this.$el.html(this.template(this.model.toJSON()));
 				let model = this.model;
-				this.$('.user_icon').on("error",
+				this.$('.user_avatar').on("error",
 					function () { Utils.replaceavatar(this, model); });
 			}
 			return this;
