@@ -19,6 +19,7 @@ class Api::SettingsController < ApplicationController
         if (params.has_key?(:avatar_url))
             @user.update_attribute(:avatar_url, params[:avatar_url])
         end
-        @user.save
+        # notice! @user.update_attribute skips model validation
+        # @user.save    # repeats transaction
     end
 end
