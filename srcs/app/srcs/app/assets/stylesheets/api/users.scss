@@ -17,3 +17,17 @@ svg {
 #refresh-button svg:hover {
   fill: darkseagreen;
 }
+
+table #users-table th, table #users-table tr {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+table #users-table img {
+  margin: 2px;
+}
+
+.displayname:focus {
+  background: #00000e;
+}
