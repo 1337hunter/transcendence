@@ -4,7 +4,7 @@ class Api::SettingsController < ApplicationController
     def index
         @user = current_user
         respond_to do |format|
-            format.json { render json: @user, :only => [:id, :displayname, :email] }    
+            format.json { render json: @user, :only => [:id, :displayname, :email, :avatar_url, :avatar_default_url] }
         end
     end
 
