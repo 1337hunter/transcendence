@@ -29,18 +29,18 @@ $(function () {
 			if (this.fetched === true) {
 				this.$el.html(this.template(this.model.toJSON()));
 				let model = this.model;
-				this.$('.user_icon').on("error",
+				this.$('.user_avatar').on("error",
 					function () { Utils.replaceavatar(this, model); });
 			}
 			return this;
 		},
 		input_email: function (input)
 		{
-			this.model.save({email: $('#email').val().trim()});
+			this.model.save({email: $('#email').val().trim()}, {patch: true});
 		},
 		input_displayname: function (input)
 		{
-			this.model.save({displayname: $('#displayname').val().trim()});
+			this.model.save({displayname: $('#displayname').val().trim()}, {patch: true});
 		},
 		update_avatar: function () {
 			this.$el.addClass('edit_url');
@@ -48,7 +48,8 @@ $(function () {
 		},
 		update_avatar_close: function () {
 			if ($('.upload_user_avatar').val().trim()) {
-				this.model.save({avatar_url: $('.upload_user_avatar').val().trim()});
+				this.model.save({avatar_url: $('.upload_user_avatar').val().trim()},
+					{patch: true});
 			}
 			this.$el.removeClass('edit_url');
 			this.render();

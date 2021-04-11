@@ -1,4 +1,7 @@
 <script type="text/template" id="singleuser-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
   <td>
     <img class="user_icon" width="30px" height="30px" src="<%%= avatar_url %>">
   </td>
@@ -14,6 +17,6 @@
   <h1>Users <button type="button" class="button-sm" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
   <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
-    <tr><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Wins</th><th>Loses</th><th>Display name</th></tr>
+    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Wins</th><th>Loses</th><th>Display name</th></tr>
   </table>
 </script>
