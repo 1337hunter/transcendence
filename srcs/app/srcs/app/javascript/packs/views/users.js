@@ -1,7 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import UserCollection from "../models/users";
-import app_alert from "../helpers/app_alert";
 import Utils from "../helpers/utils";
 
 const UsersView = {};
@@ -32,16 +31,14 @@ $(function () {
         },
         onerror: function (model, response) {
             if (response.responseJSON == null) //  true for undefined too
-                app_alert('danger', 'No response from API');
+                Utils.app_alert('danger', {msg: 'No response from API'});
             else
-                Object.values(response.responseJSON).forEach((val) =>
-                    val.toString().split(',').forEach((msg) =>
-                        app_alert('danger', msg)));
+                Utils.app_alert('danger', {json: response.responseJSON});
             this.model.attributes = this.model.previousAttributes();
             this.render();
         },
         onsuccess: function () {
-            app_alert('success', 'Displayname has been changed');
+            Utils.app_alert('success', {msg: 'Displayname has been changed'});
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
@@ -73,11 +70,11 @@ $(function () {
         },
         refresh: function () {
             this.collection.fetch({
-                success: function () {app_alert('success', 'Up to date');},
+                success: function () {Utils.app_alert('success', {msg: 'Up to date'});},
                 error: this.onerror});
         },
         onerror: function () {
-		    app_alert('danger', 'Users fetch from API failed');
+            Utils.app_alert('danger', {msg: 'Users fetch from API failed'});
         },
 		render: function () {
 			this.$el.html(this.template());
