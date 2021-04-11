@@ -31,3 +31,9 @@ table #users-table img {
 .displayname:focus {
   background: #00000e;
 }
+
+table #users-table .admin-icon svg {
+  fill: darkorange;
+  display: block;
+  padding: 1.5px;
+}

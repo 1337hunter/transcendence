@@ -98,4 +98,5 @@ table #users-table img {
     margin-bottom: 0;
     margin-top: .8em;
     border: none;
+    width: fit-content;
 }
