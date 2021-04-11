@@ -17,10 +17,15 @@ class Api::UsersController < ApplicationController
 
   # PATCH/PUT /api/users/id.json
   def update
-    if @user.update(user_params)
-      render json: @user, only: @filters, status: :ok
+    if current_user.admin? || current_user == @user
+      if @user.update(user_params)
+        render json: @user, only: @filters, status: :ok
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
     else
-      render json: @user.errors, status: :unprocessable_entity
+      @user.errors.add :base, 'You have no permission'
+      render json: @user.errors, status: :forbidden
     end
   end
 
