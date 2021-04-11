@@ -1,9 +1,10 @@
+include Api::UsersHelper
+require 'open-uri'
+
 class User < ApplicationRecord
-  include Api::UsersHelper
-  require 'open-uri'
   include ActiveModel::Validations
-  validates :email, presence: true, uniqueness: { case_sensitive: false }
-  validates :displayname, presence: true, uniqueness: { case_sensitive: false }
+  validates :email, uniqueness: { case_sensitive: false }, presence: true
+  validates :displayname, uniqueness: { case_sensitive: false }, presence: true
   validates_with UserValidator
 
   # Include default devise modules. Others available are:
