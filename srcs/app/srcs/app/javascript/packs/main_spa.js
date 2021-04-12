@@ -1,10 +1,10 @@
 import Backbone from "backbone";
+import Users from "./models/users";
 import HomeView from "./views/home";
 import PongView from "./views/pong";
 import SettingsView from "./views/settings";
 import ChatView from "./views/chat";
 import UsersView from "./views/users"
-import OauthView from "./views/oauth";
 import AlertsView from "./views/alerts";
 import pong_game from "./pong_game";
 
@@ -12,6 +12,10 @@ const MainSPA = {};
 
 let AppRouter = Backbone.Router.extend({
     initialize: function() {
+        //  this can be useful if we want to make navbar update on any settings change
+        this.currentuser = new Users.CurrentUserModel;
+        this.currentuser.fetch();
+
         this.main = {};
         this.main.el = $("#app_main");
 
@@ -39,7 +43,7 @@ let AppRouter = Backbone.Router.extend({
         pong_game();
     },
     play: function () {
-        this.main.view = new OauthView.View();
+        this.main.view = new TwoFactorView.View();
         this.main.el.html(this.main.view.render().el);
     },
     settings: function () {

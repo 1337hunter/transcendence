@@ -1,8 +1,8 @@
-<script type="text/template" id="oauth42-template">
-  <h1>42 API OAuth</h1>
+<script type="text/template" id="2fa-template">
+  <h1>Two Factor Auth</h1>
   <% if user_signed_in? %>
     <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
     <% else %>
     <%= link_to "Sign in with 42", user_marvin_omniauth_authorize_path, class: "oauth42" %>
-    <% end %>
+  <% end %>
 </script>

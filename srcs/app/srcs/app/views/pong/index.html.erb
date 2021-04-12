@@ -1,9 +1,9 @@
 <% if !user_signed_in? %>
   <%= render 'pong/templates/login' %>
 <% else %>
+  <%= render 'pong/templates/2fa' %>
   <%= render 'pong/templates/nav' %>
   <%= render 'pong/templates/home' %>
-  <%= render 'pong/templates/oauth42' %>
   <%= render 'pong/templates/pong' %>
   <%= render 'pong/templates/settings' %>
   <%= render 'pong/templates/chat' %>
