@@ -9,9 +9,10 @@ Rails.application.routes.draw do
 
   get '/pong', to: 'pong#index'
 
-  # we still have the /users/sign_in route
-  # will fix later (https://stackoverflow.com/a/13837899)
-  devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+  devise_for :users, controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks',
+    sessions: 'users/sessions'
+  }
   devise_scope :user do
     delete 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session_path
   end

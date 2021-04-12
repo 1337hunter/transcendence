@@ -12,7 +12,7 @@ class User < ApplicationRecord
   devise :rememberable, :validatable, :omniauthable,
          omniauth_providers: [:marvin]
   devise :two_factor_authenticatable,
-         otp_secret_encryption_key: ENV['OTP_SECRETKEY']
+         otp_secret_encryption_key: ENV['OTP_SECRETKEY']  # 32 bytes is ok
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
