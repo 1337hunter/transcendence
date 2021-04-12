@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import SettingsModel from "../models/settings";
+import TwoFactorView from "./two-factor";
 import Utils from "../helpers/utils";
 
 const SettingsView = {};
@@ -14,6 +15,7 @@ $(function () {
 			'blur input.upload_user_avatar' : 'update_avatar_close',
 			'click .user_avatar' : 'update_avatar',
 			'click #upload_user_avatar' : 'upload_avatar_url',
+			'click #2fa-button' : 'open_2fa'
 		},
 		initialize: function () {
 			this.model = new SettingsModel;
@@ -53,6 +55,16 @@ $(function () {
 			}
 			this.$el.removeClass('edit_url');
 			this.render();
+		},
+		open_2fa: function () {
+			if (this.otpview) {
+				this.otpview.remove();
+				this.otpview = null;
+			}
+			else {
+				this.otpview = new TwoFactorView.View();
+				this.$('.two-factor-body').html(this.otpview.render().el);
+			}
 		}
 		/*upload_avatar: function (event) {
 			var input = $("#upload_user_avatar");
