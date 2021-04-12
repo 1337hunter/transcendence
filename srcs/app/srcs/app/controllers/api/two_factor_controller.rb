@@ -4,7 +4,7 @@ class Api::TwoFactorController < ApplicationController
   before_action :define_user
 
   def index
-    render generate_qrcode
+    render @user.otp_qrcode.html_safe
   end
 
   def create
@@ -22,12 +22,5 @@ class Api::TwoFactorController < ApplicationController
 
   def define_user
     @user = current_user
-  end
-
-  def generate_qrcode
-    issuer = 'ft_transcendence'
-    label = "#{issuer}:#{@user.email}"
-    qrcode = RQRCode::QRCode.new(@user.otp_provisioning_uri(label, issuer: issuer))
-    qrcode.as_svg(module_size: 4)
   end
 end

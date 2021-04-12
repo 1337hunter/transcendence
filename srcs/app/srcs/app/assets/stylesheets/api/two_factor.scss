@@ -1,3 +1,16 @@
 // Place all the styles related to the Api/TwoFactor controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+div.qrcode {
+  background: white;
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+  margin: 10px;
+}
+
+div.qrcode svg {
+  width: fit-content;
+  height: fit-content;
+}

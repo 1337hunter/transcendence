@@ -25,4 +25,10 @@ class User < ApplicationRecord
       user.avatar_default_url = user_gravatar(auth.info.email, user.nickname)
     end
   end
+
+  def otp_qrcode
+    issuer = 'ft_transcendence'
+    qrcode = RQRCode::QRCode.new(otp_provisioning_uri(email, issuer: issuer))
+    qrcode.as_svg(module_size: 4)
+  end
 end
