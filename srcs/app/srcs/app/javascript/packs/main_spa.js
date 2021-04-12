@@ -42,10 +42,6 @@ let AppRouter = Backbone.Router.extend({
         this.main.el.html(this.main.view.render().el);
         pong_game();
     },
-    play: function () {
-        this.main.view = new TwoFactorView.View();
-        this.main.el.html(this.main.view.render().el);
-    },
     settings: function () {
         this.main.view = new SettingsView.View();
         this.main.el.html(this.main.view.render().el);
