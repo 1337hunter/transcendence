@@ -1,14 +1,19 @@
 import Backbone from "backbone";
 
-//  need route for this url in routes.rb pointing to rails controller
-let UserModel = Backbone.Model.extend({
+const Users = {};
+
+Users.CurrentUserModel = Backbone.Model.extend({
+    url: '/api/users/current'
+});
+
+Users.UserModel = Backbone.Model.extend({
     urlRoot: '/api/users'
 });
 
-let UserCollection = Backbone.Collection.extend({
-    model: UserModel,
+Users.UserCollection = Backbone.Collection.extend({
+    model: Users.UserModel,
     url: '/api/users',
     comparator: 'id'
 });
 
-export default UserCollection;
+export default Users;

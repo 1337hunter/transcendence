@@ -1,6 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
-import UserCollection from "../models/users";
+import Users from "../models/users";
 import Utils from "../helpers/utils";
 
 const UsersView = {};
@@ -56,7 +56,7 @@ $(function () {
 		    "click #refresh-button" :   "refresh"
         },
 		initialize: function () {
-		    this.collection = new UserCollection;
+		    this.collection = new Users.UserCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
 		    this.listenTo(this.collection, 'reset', this.addAll);
             this.collection.fetch({reset: true, error: this.onerror});
