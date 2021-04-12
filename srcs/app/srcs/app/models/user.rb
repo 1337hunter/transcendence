@@ -9,9 +9,10 @@ class User < ApplicationRecord
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: [:marvin]
+  devise :rememberable, :validatable, :omniauthable,
+         omniauth_providers: [:marvin]
+  devise :two_factor_authenticatable,
+         otp_secret_encryption_key: ENV['OTP_SECRETKEY']
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
