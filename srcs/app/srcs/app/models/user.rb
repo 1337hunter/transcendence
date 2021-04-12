@@ -28,7 +28,11 @@ class User < ApplicationRecord
 
   def otp_qrcode
     issuer = 'ft_transcendence'
-    qrcode = RQRCode::QRCode.new(otp_provisioning_uri(email, issuer: issuer))
+    begin
+      qrcode = RQRCode::QRCode.new(otp_provisioning_uri(email, issuer: issuer))
+    rescue  # no secret key
+      qrcode = RQRCode::QRCode.new('otpauth://{type}/{label}?{parameters}')
+    end
     qrcode.as_svg(module_size: 4)
   end
 end
