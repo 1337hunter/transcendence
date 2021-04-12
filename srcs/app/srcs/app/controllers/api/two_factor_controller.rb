@@ -19,7 +19,7 @@ class Api::TwoFactorController < ApplicationController
   end
 
   def create
-    if params['otp'] == @user.current_otp
+    if @user.validate_and_consume_otp!(params['otp'])
       @user.update(otp_required_for_login: true)
       render json: {
         otp_required_for_login: @user.otp_required_for_login,
@@ -32,7 +32,7 @@ class Api::TwoFactorController < ApplicationController
   end
 
   def destroy
-    if params['otp'] == @user.current_otp
+    if @user.validate_and_consume_otp!(params['otp'])
       @user.update(otp_required_for_login: false)
       render json: {base: '2FA Disabled'}, status: :ok
     else
