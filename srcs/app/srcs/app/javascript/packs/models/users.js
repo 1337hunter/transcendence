@@ -6,6 +6,10 @@ Users.CurrentUserModel = Backbone.Model.extend({
     url: '/api/users/current'
 });
 
+Users.TwoFactorModel = Backbone.Model.extend({
+    url: '/api/2fa'
+});
+
 Users.UserModel = Backbone.Model.extend({
     urlRoot: '/api/users'
 });

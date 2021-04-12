@@ -7,10 +7,14 @@ div.qrcode {
   width: fit-content;
   height: fit-content;
   padding: 10px;
-  margin: 10px;
+  margin: 20px;
 }
 
 div.qrcode svg {
   width: fit-content;
   height: fit-content;
+}
+
+div.two-factor-header {
+  margin-top: 20px;
 }

@@ -16,10 +16,21 @@
   </aside>
   </div><br>
   <div>
-  <label for="displayname">Display name</label><br></br>
-  <input type="text" name="displayname" id="displayname" value="<%%= displayname %>" >
-  <br></br>
-  <label for="email">Email</label><br></br>
-  <input type="text" name="email" id="email" value="<%%= email %>" >
+    <label for="displayname">Display name</label><br></br>
+    <input type="text" name="displayname" id="displayname" value="<%%= displayname %>" >
+    <br></br>
+    <label for="email">Email</label><br></br>
+    <input type="text" name="email" id="email" value="<%%= email %>" >
   </div>
+  <div class="two-factor-header">
+    <p>Two Factor Authentification</p>
+    <p>
+      <%%= otp_required_for_login ?
+        '<button type="button" class="btn btn-danger" id="2fa-enable">Disable 2FA</button>' :
+        '<button type="button" class="btn btn-dark" id="2fa-disable">Enable 2FA</button>' %>
+    </p>
+  </div>
+</script>
+
+<script type="text/template" id="settings-2fa-template">
 </script>
