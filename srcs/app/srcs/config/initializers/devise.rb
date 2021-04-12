@@ -21,6 +21,7 @@ Devise.setup do |config|
   # config.secret_key = '4ba3c3b711d98a8045540235f94377b4ec6a9e719179774f9c29a35643d339bb4637b3b70f9800babf28f72225882e9e8c7b59204f482eebb253df2c1833b1cf'
 
   config.omniauth :marvin, ENV["FT_ID"], ENV["FT_SECRET"]
+  config.otp_secret_encryption_key = ENV['OTP_SECRETKEY']
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
   # config.parent_controller = 'DeviseController'
