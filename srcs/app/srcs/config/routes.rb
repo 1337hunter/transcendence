@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   namespace :api do
     resources :users
     resources :settings
+    resources :two_factor, path: '2fa'
     resources :chat
   end
 

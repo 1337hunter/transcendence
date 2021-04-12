@@ -1,2 +1,2 @@
-class ChatController < ApplicationController
+class Api::ChatController < ApplicationController
 end
