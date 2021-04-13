@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     resources :settings
     get '2fa', to: 'two_factor#index'
     post '2fa', to: 'two_factor#create'
-    delete '2fa', to: 'two_factor#destroy'
+    put '2fa', to: 'two_factor#update'
     resources :chat
   end
 

@@ -44,7 +44,7 @@ let AppRouter = Backbone.Router.extend({
     },
     settings: function () {
         this.main.view = new SettingsView.View();
-        this.main.el.html(this.main.view.render().el);
+        this.main.el.html(this.main.view.el);
     },
     chat: function () {
         this.main.view = new ChatView.View();

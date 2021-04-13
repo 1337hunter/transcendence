@@ -28,4 +28,14 @@ export default class Utils {
                 val.toString().split(',').forEach((msg) =>
                     Utils.app_alert('danger', {msg: msg})));
     };
+
+    static ajax(url, http, data) {
+        return new Promise(((resolve, reject) => {
+            $.ajax(url, {
+                type: http,
+                data: data,
+                headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')}
+            }).done(resolve).fail(reject);
+        }));
+    }
 }

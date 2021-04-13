@@ -33,7 +33,7 @@ class Api::TwoFactorController < ApplicationController
     end
   end
 
-  def destroy
+  def update
     if @user.validate_and_consume_otp!(params['otp'])
       @user.update(otp_required_for_login: false)
       render json: {base: '2FA Disabled'}, status: :ok

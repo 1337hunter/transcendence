@@ -19,21 +19,14 @@ $(function () {
 		},
 		initialize: function () {
 			this.model = new SettingsModel;
-			this.fetched = false;
-			this.listenTo(this.model, 'sync', this.onsync);
+			this.listenTo(this.model, 'sync', this.render);
 			this.model.fetch();
 		},
-		onsync: function () {
-			this.fetched = true;
-			this.render();
-		},
 		render: function () {
-			if (this.fetched === true) {
-				this.$el.html(this.template(this.model.toJSON()));
-				let model = this.model;
-				this.$('.user_avatar').on("error",
-					function () { Utils.replaceavatar(this, model); });
-			}
+			this.$el.html(this.template(this.model.toJSON()));
+			let model = this.model;
+			this.$('.user_avatar').on("error",
+				function () { Utils.replaceavatar(this, model); });
 			return this;
 		},
 		input_email: function (input)
@@ -63,7 +56,7 @@ $(function () {
 			}
 			else {
 				this.otpview = new TwoFactorView.View();
-				this.$('.two-factor-body').html(this.otpview.render().el);
+				this.$('.two-factor-body').html(this.otpview.el);
 			}
 		}
 		/*upload_avatar: function (event) {
