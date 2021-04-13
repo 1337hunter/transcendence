@@ -4,10 +4,10 @@ Rails.application.routes.draw do
   namespace :api do
     resources :users
     resources :settings
+    resources :rooms
     get '2fa', to: 'two_factor#index'
     post '2fa', to: 'two_factor#create'
     put '2fa', to: 'two_factor#update'
-    resources :chat
   end
 
   get '/pong', to: 'pong#index'
