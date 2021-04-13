@@ -60,7 +60,7 @@ class BackboneSPA {
     constructor() {
         this.app_alerts = new AlertsView.View;
         this.router = new AppRouter;
-        console.log(this.router);
+        //console.log(this.router);
         if (Backbone.History.started === false) {
             Backbone.history.start();
         }
