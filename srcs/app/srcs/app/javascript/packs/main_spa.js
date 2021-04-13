@@ -17,11 +17,7 @@ let AppRouter = Backbone.Router.extend({
         this.currentuser.fetch();
 
         this.main = {};
-        this.main.el = $("#app_main");
-
-        //  placeholder for chatrooms element
-        this.chat = {};
-        this.chat.el = $("#app_chat");
+        this.main.el = $(".app_main");
     },
     routes: {
         ""          : "home",

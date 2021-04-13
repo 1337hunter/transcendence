@@ -45,6 +45,11 @@ body {
     color: rgb(236, 236, 236);
 }
 
+div.app_main {
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
 table #users-table th, table #users-table tr {
     text-align: center;
     vertical-align: middle;

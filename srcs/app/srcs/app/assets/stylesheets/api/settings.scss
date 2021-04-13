@@ -63,7 +63,6 @@ th.edit_url .upload_user_avatar {
 }
 
 table.settings {
-  margin-top: 20px;
 }
 
 table.settings th {
@@ -73,4 +72,8 @@ table.settings th {
 
 table.settings input.form-control {
   border: none;
+}
+
+input.input-otp {
+  width: fit-content;
 }

@@ -37,7 +37,10 @@ class Api::TwoFactorController < ApplicationController
     return unless @user.otp_required_for_login?
     if @user.validate_and_consume_otp!(params['otp'])
       @user.update(otp_required_for_login: false)
-      render json: {base: '2FA Disabled'}, status: :ok
+      render json: {
+        id: @user.id,
+        otp_required_for_login: @user.otp_required_for_login,
+      }, status: :ok
     else
       @user.errors.add :otp, 'Bad OTP'
       render json: @user.errors, status: :forbidden

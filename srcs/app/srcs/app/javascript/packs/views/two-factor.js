@@ -13,6 +13,7 @@ $(function () {
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch();
         },
+        tagName: 'tbody',
         events: {
             "keypress .input-otp" : "inputOTP"
         },
