@@ -19,7 +19,7 @@ $(function () {
 		},
 		initialize: function () {
 			this.model = new SettingsModel;
-			this.listenTo(this.model, 'sync', this.render);
+			this.listenTo(this.model, 'change', this.render);
 			this.model.fetch();
 		},
 		render: function () {
@@ -55,7 +55,7 @@ $(function () {
 				this.otpview = null;
 			}
 			else {
-				this.otpview = new TwoFactorView.View();
+				this.otpview = new TwoFactorView.View(this.model);
 				this.$('.two-factor-body').html(this.otpview.el);
 			}
 		}

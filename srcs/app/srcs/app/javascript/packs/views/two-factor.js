@@ -8,10 +8,11 @@ const TwoFactorView = {};
 $(function () {
     TwoFactorView.View = Backbone.View.extend({
         template: _.template($('#settings-2fa-template').html()),
-        initialize: function () {
+        initialize: function (settings) {
             this.model = new Users.TwoFactorModel;
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch();
+            this.settings = settings;
         },
         events: {
             "keypress .input-otp" : "inputOTP"
@@ -20,6 +21,7 @@ $(function () {
             if (e.keyCode !== 13) return;
             this.model.save({otp: this.input.val()},
                 {success: this.onsuccess, error: this.onerror});
+            this.settings.fetch();
         },
         onsuccess: function (response) {
             Utils.app_alert('success', {json: response.responseJSON});
