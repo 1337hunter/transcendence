@@ -1,14 +1,14 @@
 import Backbone from "backbone";
 import _ from "underscore";
 
-const ChatView = {};
+const RoomsView = {};
 
 $(function () {
-	ChatView.View = Backbone.View.extend({
+	RoomsView.View = Backbone.View.extend({
 		initialize: function () {
 			
 		},
-		template: _.template($('#chat-template').html()),
+		template: _.template($('#rooms-template').html()),
 		events: {},
 		render: function () {
 			this.$el.html(this.template());
@@ -21,4 +21,4 @@ $(function () {
 	});
 });
 
-export default ChatView;
+export default RoomsView;
