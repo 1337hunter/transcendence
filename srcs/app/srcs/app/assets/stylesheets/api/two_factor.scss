@@ -6,13 +6,12 @@ div.qrcode {
   background: white;
   width: fit-content;
   height: fit-content;
-  padding: 10px;
-  margin: 20px;
 }
 
 div.qrcode svg {
   width: auto;
   height: auto;
+  margin: 10px;
 }
 
 div.two-factor-header {

@@ -3,32 +3,40 @@
 // You can use Sass (SCSS) here: https://sass-lang.com/
 //<%= ('<input type="image" src="data:image/jpg;base64,%s">' % Base64.encode64(current_user.avatar)).html_safe %>
 
-.displayname, #displayname
-{
-    border: 0;
-    border: none;
-    outline: none;
-    background-color: rgb(0, 0, 3);
-    color: white;
+input.form-control {
+  background-color: rgb(0, 0, 3);
+  color: white;
+  box-shadow: inset 0px 0px 0px 0px red;
+  outline: none !important;
 }
 
-#email
-{
-    border: 0;
-    border: none;
-    outline: none;
-    background-color: rgb(0, 0, 3);
-    color: white;
+input.form-control:disabled {
+  border-color: rgb(180, 185, 252);
+  background-color: rgb(0, 0, 3);
+  color: white;
 }
 
-.user_avatar
-{
+input.form-control:hover {
+  border-color: rgb(180, 185, 252);
+  background-color: rgb(0, 0, 3);
+  color: white;
+  background-clip: padding-box;
+}
+
+input.form-control:focus {
+  border-color: rgb(180, 185, 252);
+  background-color: rgb(0, 0, 3);
+  color: white;
+  box-shadow: inset 0 1px 1px rgba(180, 185, 252, 0.075), 0 0 15px rgba(180, 185, 252, 0.6);
+}
+
+.user_avatar {
     border: 0;
     border: none;
     outline: none;
 }
-#upload_user_avatar
-{
+
+#upload_user_avatar {
     border: 0;
     border: none;
     outline: none;
@@ -45,11 +53,20 @@
     display:  none; /* Hides input box*/
 }
 
-.edit_url .upload_user_avatar {
+th.edit_url .upload_user_avatar {
     border: 0;
     border: none;
     outline: none;
     background-color: rgb(0, 0, 3);
     color: white;
     display: block; /* Shows input text box when .editing*/
-  }
+}
+
+table.settings th {
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+table.settings th.table-avatar {
+  width: 300px;
+}

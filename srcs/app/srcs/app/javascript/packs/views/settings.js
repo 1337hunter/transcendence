@@ -38,7 +38,7 @@ $(function () {
 			this.model.save({displayname: $('#displayname').val().trim()}, {patch: true});
 		},
 		update_avatar: function () {
-			this.$el.addClass('edit_url');
+			this.$('.table-avatar').addClass('edit_url');
 			$('.upload_user_avatar').focus();
 		},
 		update_avatar_close: function () {
@@ -46,7 +46,7 @@ $(function () {
 				this.model.save({avatar_url: $('.upload_user_avatar').val().trim()},
 					{patch: true});
 			}
-			this.$el.removeClass('edit_url');
+			this.$('.table-avatar').addClass('edit_url');
 			this.render();
 		},
 		open_2fa: function () {
@@ -55,7 +55,7 @@ $(function () {
 				this.otpview = null;
 			}
 			else {
-				this.otpview = new TwoFactorView.View(this.model);
+				this.otpview = new TwoFactorView.View();
 				this.$('.two-factor-body').html(this.otpview.el);
 			}
 		}

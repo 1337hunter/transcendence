@@ -2,16 +2,16 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
-.button-sm {
+button.button-sm {
   background: none;
   border: none;
   margin: 5px;
 }
 
-svg {
+button.button-sm svg {
+  fill: #F7F7F7;
   width: 20px;
   height: 20px;
-  fill: #F7F7F7;
 }
 
 #refresh-button svg:hover {
@@ -26,10 +26,6 @@ table #users-table th, table #users-table tr {
 
 table #users-table img {
   margin: 2px;
-}
-
-.displayname:focus {
-  background: #00000e;
 }
 
 table #users-table .admin-icon svg {

@@ -29,17 +29,18 @@ class Api::TwoFactorController < ApplicationController
       }, status: :ok
     else
       @user.errors.add :otp, 'Bad OTP'
-      render json: @user.errors, status: :unprocessable_entity
+      render json: @user.errors, status: :forbidden
     end
   end
 
   def update
+    return unless @user.otp_required_for_login?
     if @user.validate_and_consume_otp!(params['otp'])
       @user.update(otp_required_for_login: false)
       render json: {base: '2FA Disabled'}, status: :ok
     else
       @user.errors.add :otp, 'Bad OTP'
-      render json: @user.errors, status: :unprocessable_entity
+      render json: @user.errors, status: :forbidden
     end
   end
 

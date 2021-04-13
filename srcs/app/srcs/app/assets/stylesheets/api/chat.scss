@@ -39,29 +39,29 @@
 
 .message {
     width: 50%;
-    word-wrap: break-word;          
+    word-wrap: break-word;
 }
 
 
 #rooms-container {
     width: 50%;
-    margin-left: 50%;   
+    margin-left: 50%;
 }
 
 .new-chat-input {
     position: absolute;
     bottom: 5.5%;
-    width: 30%; 
+    width: 30%;
 }
 
-#create-room { 
+#create-room {
     background-color: rgb(0, 0, 3);
     color: white;
     box-shadow: inset 0px 0px 0px 0px red;
     outline: none !important;
 }
 
-#room-password { 
+#room-password {
     background-color: rgb(0, 0, 3);
     color: white;
     box-shadow: inset 0px 0px 0px 0px red;
