@@ -1,8 +1,7 @@
 import consumer from "./consumer"
 
-let chat = consumer.subscriptions.create("ChatChannel", {
+consumer.subscriptions.create("ChatChannel", {
   initialized() {
-    console.log("Chat initialized...")
   },
 
   connected() {
@@ -19,5 +18,3 @@ let chat = consumer.subscriptions.create("ChatChannel", {
     console.log(data)
   }
 });
-
-export default chat;
