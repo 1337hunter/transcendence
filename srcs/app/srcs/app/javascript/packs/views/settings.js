@@ -50,14 +50,18 @@ $(function () {
 			this.render();
 		},
 		open_2fa: function () {
-			if (this.otpview) {
-				this.otpview.remove();
-				this.otpview = null;
-			}
+			if (this.otpview)
+				this.close_2fa();
 			else {
 				this.otpview = new TwoFactorView.View();
 				this.$('.two-factor-body').html(this.otpview.el);
+				this.listenTo(this.otpview.model, 'success', this.close_2fa);
 			}
+		},
+		close_2fa: function () {
+			this.otpview.remove();
+			this.stopListening();
+			this.otpview = null;
 		}
 		/*upload_avatar: function (event) {
 			var input = $("#upload_user_avatar");

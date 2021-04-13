@@ -8,7 +8,7 @@ const TwoFactorView = {};
 $(function () {
     TwoFactorView.View = Backbone.View.extend({
         template: _.template($('#settings-2fa-template').html()),
-        initialize: function (settings) {
+        initialize: function () {
             this.model = new Users.TwoFactorModel;
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch();
@@ -21,10 +21,14 @@ $(function () {
             this.model.save({otp: this.input.val()},
                 {success: this.onsuccess, error: this.onerror});
         },
-        onsuccess: function (response) {
-            Utils.app_alert('success', {json: response.responseJSON});
+        onsuccess: function (model, response) {
+            if (response.responseJSON == null) //  true for undefined too
+                Utils.app_alert('success', {msg: 'Success'});
+            else
+                Utils.app_alert('success', {json: response.responseJSON});
+            model.trigger('success');
         },
-        onerror: function (response) {
+        onerror: function (model, response)  {
             if (response.responseJSON == null) //  true for undefined too
                 Utils.app_alert('danger', {msg: 'No response from API'});
             else
