@@ -6,6 +6,7 @@ class Api::TwoFactorController < ApplicationController
   def index
     if @user.otp_required_for_login?
       render json: {
+        id: @user.id,
         otp_required_for_login: @user.otp_required_for_login,
         otp_qrcode: ''
       }
@@ -22,6 +23,7 @@ class Api::TwoFactorController < ApplicationController
     if @user.validate_and_consume_otp!(params['otp'])
       @user.update(otp_required_for_login: true)
       render json: {
+        id: @user.id,
         otp_required_for_login: @user.otp_required_for_login,
         otp_qrcode: @user.otp_qrcode.html_safe
       }, status: :ok

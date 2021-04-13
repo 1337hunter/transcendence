@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   namespace :api do
     resources :users
     resources :settings
-    resources :two_factor, path: '2fa'
+    get '2fa', to: 'two_factor#index'
+    post '2fa', to: 'two_factor#create'
+    delete '2fa', to: 'two_factor#destroy'
     resources :chat
   end
 
