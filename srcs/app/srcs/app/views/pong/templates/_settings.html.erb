@@ -1,20 +1,10 @@
 <script type="text/template" id="settings-template">
   <h1>Settings</h1>
   <table class="settings"><tr>
-    <th>
-      <p>
-        <label for="displayname">Display name</label>
-        <input type="text" class="form-control" name="displayname" id="displayname" value="<%%= displayname %>" >
-      </p>
-      <p>
-        <label for="email">Email</label>
-        <input type="text" class="form-control" name="email" id="email" value="<%%= email %>" >
-      </p>
-    </th>
     <th class="table-avatar">
       <aside class="col-md-4">
         <section>
-          <img class="user_avatar" width="150px" height="150px"
+          <img class="user_avatar" width="100px" height="100px"
                src="<%%= avatar_url %>" style="margin-bottom: 10px">
             <%# begin %>
               <%#= image_tag current_user.avatar_url, size: "100x100", class: "user_avatar"%>
@@ -24,11 +14,24 @@
             <!--<input type="file" id="upload_user_avatar" style="display: none;" />-->
             <p>
               <input type="text" class="form-control upload_user_avatar"
-                     placeholder="Image URL" style="width: 20ch">
+                     placeholder="Image URL" style="width: auto">
             </p>
         </section>
       </aside>
-    </th></tr>
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <p>
+        <label for="displayname">Display name</label>
+        <input type="text" class="form-control" name="displayname" id="displayname" value="<%%= displayname %>" >
+      </p>
+      <p>
+        <label for="email">Email</label>
+        <input type="text" class="form-control" name="email" id="email" value="<%%= email %>" >
+      </p>
+    </td>
+  </tr>
   </table>
   <div class="two-factor-header">
     <p>Two Factor Authentification
