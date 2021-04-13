@@ -21,11 +21,11 @@ $(function () {
             this.model.save({otp: this.input.val()},
                 {success: this.onsuccess, error: this.onerror});
         },
-        onsuccess: function (model, response) {
-            if (response.responseJSON == null) //  true for undefined too
-                Utils.app_alert('success', {msg: 'Success'});
+        onsuccess: function (model) {
+            if (model.get('otp_required_for_login')) //  true for undefined too
+                Utils.app_alert('success', {msg: '2FA Enabled'});
             else
-                Utils.app_alert('success', {json: response.responseJSON});
+                Utils.app_alert('success', {msg: '2FA Disabled'});
             model.trigger('success');
         },
         onerror: function (model, response)  {
