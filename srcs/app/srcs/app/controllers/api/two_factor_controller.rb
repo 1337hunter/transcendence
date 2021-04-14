@@ -22,6 +22,7 @@ class Api::TwoFactorController < ApplicationController
   end
 
   def create
+    return if @user.otp_required_for_login?
     if @user.validate_and_consume_otp!(params['otp'])
       @user.otp_required_for_login = true
       @user.otp_validated = true
@@ -53,6 +54,7 @@ class Api::TwoFactorController < ApplicationController
   end
 
   def validate
+    return if @user.otp_validated? || !@user.otp_required_for_login?
     if @user.validate_and_consume_otp!(params['otp'])
       @user.otp_validated = true
       @user.save

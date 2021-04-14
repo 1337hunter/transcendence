@@ -27,4 +27,5 @@ class Api::SettingsController < ApplicationController
           [:id, :displayname, :email, :avatar_url, :avatar_default_url]
         # notice! @user.update_attribute skips model validation
         # @user.save    # repeats transaction
+    end
 end
