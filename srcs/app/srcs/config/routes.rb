@@ -10,9 +10,6 @@ Rails.application.routes.draw do
     resources :users
     resources :settings
     resources :rooms
-    get '2fa', to: 'two_factor#index'
-    post '2fa', to: 'two_factor#create'
-    put '2fa', to: 'two_factor#update'
   end
 
   get '/pong', to: 'pong#index'
