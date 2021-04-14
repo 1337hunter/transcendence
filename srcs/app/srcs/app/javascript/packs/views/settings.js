@@ -23,6 +23,8 @@ $(function () {
 			this.model.fetch();
 		},
 		render: function () {
+			if (this.otpview)
+				this.close_2fa();
 			this.$el.html(this.template(this.model.toJSON()));
 			let model = this.model;
 			this.$('.user_avatar').on("error",
