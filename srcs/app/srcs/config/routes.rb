@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   namespace :api do
     get 'settings/2fa', to: 'two_factor#status'
     post 'settings/2fa', to: 'two_factor#enable'
-    put 'settings/2fa', to: 'two_factor#disable'
+    patch 'settings/2fa', to: 'two_factor#disable'
     resources :users
     resources :settings
     resources :rooms

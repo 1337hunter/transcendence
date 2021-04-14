@@ -20,7 +20,8 @@ $(function () {
         },
         inputOTP: function (e) {
             if (e.keyCode !== 13) return;
-            this.model.save({otp: this.input.val()}, {success: this.onsuccess});
+            this.model.save({otp: this.input.val()},
+                {patch:true, success: this.onsuccess});
         },
         onsuccess: function (model) {
             if (model.get('otp_required_for_login'))
