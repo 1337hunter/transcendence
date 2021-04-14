@@ -1,8 +1,10 @@
 
 <script type="text/template" id="room-template">
-  <div class="card-body">
-    <lable><%%= name %></lable>
-  </div>
+  <a href="#/room_<%%= id %>> 
+    <div class="card-body">
+     <p><%%= name %></p> 
+    </div>
+  </a>
 </script>
 
 <script type="text/template" id="rooms-template">
@@ -22,7 +24,7 @@
     <lable>Create new chat</lable>
     <table>
       <tr>
-        <td><input class="form-control" type="text" id="create-room" placeholder="Chat name"></td>
+        <td><input class="form-control" type="text" id="room-name" placeholder="Chat name"></td>
         <td><input class="form-control" type="text" id="room-password" placeholder="Chat password"></td>
       </tr>
     <table>

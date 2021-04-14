@@ -27,11 +27,13 @@ $(function () {
 		initialize: function () {
 			this.collection = new Rooms.RoomCollection;
 			this.listenTo(this.collection, 'add', this.addOne);
-		    this.listenTo(this.collection, 'reset', this.addAll);
+		    //this.listenTo(this.collection, 'reset', this.addAll);
 			this.collection.fetch();
 		},
 		template: _.template($('#rooms-template').html()),
-		events: {},
+		events: {
+			'click #create-room-btn' : 'create_room'
+		},
 		render: function () {
 			this.$el.html(this.template());
 			var $this = this;
@@ -43,12 +45,44 @@ $(function () {
 		},
 		addOne: function (room) {
             room.view = new RoomsView.RoomView({model: room});
-			console.log(room);
             this.$("#rooms").append(room.view.render().el);
         },
         addAll: function () {
-            this.collection.each(this.addOne, this);
-        }
+			var $this = this;
+			// this.collection.fetch({
+			// 	success: function() { //model, resp, options){
+			$this.collection.each($this.addOne, $this);
+				// }
+			// });
+            
+        },
+		create_room: function () {
+			var mod = new Rooms.RoomModel;
+			var $this = this;
+			if ($('#room-name').val().trim()) {
+				this.collection.create({id: mod.cid, name: $('#room-name').val().trim(),
+					password: $('#room-password').val().trim(), private: $('#is_private').prop("checked")}, {
+						wait: true,
+						success: function() { 						//model, resp, options){
+							$this.collection.fetch({
+								success: function() {
+									$this.render();
+								}
+							})
+						},
+						error: function () {
+							Utils.app_alert('danger', {msg: 'Can\'t create chat room'});
+						}
+			});
+		}
+			var $this = this;
+			// this.collection.fetch({wait: true,
+			// 	success: function() {
+			// 		$this.render();
+			// 	},
+			// 	error: function(){}
+			// });
+		}
 	});
 });
 

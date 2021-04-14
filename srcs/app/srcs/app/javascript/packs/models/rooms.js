@@ -4,6 +4,7 @@ const Rooms = {};
 
 
 Rooms.RoomModel = Backbone.Model.extend({
+    idAttribute: 'id',
     urlRoot: '/api/rooms'
 });
 
