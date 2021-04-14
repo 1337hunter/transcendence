@@ -11,6 +11,7 @@ $(function () {
         initialize: function () {
             this.model = new Users.TwoFactorModel;
             this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'error', this.onerror);
             this.model.fetch();
         },
         tagName: 'tbody',
@@ -19,11 +20,10 @@ $(function () {
         },
         inputOTP: function (e) {
             if (e.keyCode !== 13) return;
-            this.model.save({otp: this.input.val()},
-                {success: this.onsuccess, error: this.onerror});
+            this.model.save({otp: this.input.val()}, {success: this.onsuccess});
         },
         onsuccess: function (model) {
-            if (model.get('otp_required_for_login')) //  true for undefined too
+            if (model.get('otp_required_for_login'))
                 Utils.app_alert('success', {msg: '2FA Enabled'});
             else
                 Utils.app_alert('success', {msg: '2FA Disabled'});
