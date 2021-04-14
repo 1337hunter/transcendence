@@ -55,6 +55,7 @@ $(function () {
 			else {
 				this.otpview = new TwoFactorView.View();
 				this.$('.two-factor-body').html(this.otpview.el);
+				this.$('#2fa-button').html('Hide');
 				this.listenTo(this.otpview.model, 'success', this.close_2fa);
 			}
 		},
@@ -62,6 +63,7 @@ $(function () {
 			this.otpview.remove();
 			this.stopListening();
 			this.otpview = null;
+			this.$('#2fa-button').html('Show');
 		}
 		/*upload_avatar: function (event) {
 			var input = $("#upload_user_avatar");
