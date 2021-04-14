@@ -12,7 +12,7 @@
 # this doesn't seem to work that good because
 # you can still fail 2fa otp verification multiple times
 # before it desides the code is right. i'm setting it just in case
-Devise.otp_allowed_drift = 1
+Devise.otp_allowed_drift = 15
 
 Devise.setup do |config|
   config.warden do |manager|
