@@ -12,7 +12,9 @@
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application' %>
     <% if user_signed_in? %>
-      <%= javascript_pack_tag 'main_spa' %>
+      <% if current_user.otp_validated || !current_user.otp_required_for_login %>
+        <%= javascript_pack_tag 'main_spa' %>
+      <% end %>
     <% end %>
   </head>
 

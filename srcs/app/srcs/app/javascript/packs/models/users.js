@@ -7,7 +7,7 @@ Users.CurrentUserModel = Backbone.Model.extend({
 });
 
 Users.TwoFactorModel = Backbone.Model.extend({
-    url: '/api/2fa'
+    url: '/api/settings/2fa'
 });
 
 Users.UserModel = Backbone.Model.extend({

@@ -4,4 +4,8 @@ module ApplicationHelper
       raw file.read
     end
   end
+
+  def check_2fa!
+    redirect_to root_path if current_user.otp_required_for_login && !current_user.otp_validated
+  end
 end

@@ -1,3 +1,10 @@
-<script type="text/template" id="2fa-template">
-  <h1>Two Factor Auth</h1>
-</script>
+<div class="login-button-container">
+  <div class="login-button-vertical-center">
+    <%= form_with url: two_factor_validate_path, method: :post do |form| %>
+      <%= form.text_field :otp, class: "form-control input-otp", style: "text-align: center; width: 100px;", placeholder: "2FA OTP" %>
+      <%= form.submit "Confirm", class: "btn btn-outline-light", style: "width: 100px;" %>
+    <% end %>
+    <br>
+    <%= button_to "Sign out", destroy_user_session_path, class: "btn btn-outline-danger", style: "width: 100px;", :method => :delete %>
+  </div>
+</div>

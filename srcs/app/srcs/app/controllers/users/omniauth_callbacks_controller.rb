@@ -4,12 +4,19 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.persisted?
       if @user.banned?
-        flash[:danger] = 'You are banned.'
+        set_flash_message(:danger, :banned) if is_navigational_format?
         return redirect_to root_path
       end
-      sign_in_and_redirect @user, event: :authentication
+      @user.update(otp_validated: false)
+
+      sign_in_and_redirect @user, :event => :authentication
       set_flash_message(:notice, :success, kind: '42') if is_navigational_format?
-      set_flash_message(:info, :admin) if is_navigational_format? && @user.admin
+
+      if (@user.otp_required_for_login)
+        set_flash_message(:warning, :otp_required) if is_navigational_format?
+      else
+        set_flash_message(:info, :admin) if is_navigational_format? && @user.admin
+      end
     else
       session['devise.marvin_data'] = request.env['omniauth.auth']
       redirect_to root_path

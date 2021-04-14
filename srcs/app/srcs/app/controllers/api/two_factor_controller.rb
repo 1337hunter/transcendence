@@ -1,6 +1,8 @@
 class Api::TwoFactorController < ApplicationController
+  include ApplicationHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
+  before_action :check_2fa!, except: %i[validate]
   before_action :define_user
 
   def index
@@ -21,7 +23,9 @@ class Api::TwoFactorController < ApplicationController
 
   def create
     if @user.validate_and_consume_otp!(params['otp'])
-      @user.update(otp_required_for_login: true)
+      @user.otp_required_for_login = true
+      @user.otp_validated = true
+      @user.save
       render json: {
         id: @user.id,
         otp_required_for_login: @user.otp_required_for_login,
@@ -36,7 +40,8 @@ class Api::TwoFactorController < ApplicationController
   def update
     return unless @user.otp_required_for_login?
     if @user.validate_and_consume_otp!(params['otp'])
-      @user.update(otp_required_for_login: false)
+      @user.otp_required_for_login = false
+      @user.save
       render json: {
         id: @user.id,
         otp_required_for_login: @user.otp_required_for_login,
@@ -45,6 +50,17 @@ class Api::TwoFactorController < ApplicationController
       @user.errors.add :otp, 'Bad OTP'
       render json: @user.errors, status: :forbidden
     end
+  end
+
+  def validate
+    if @user.validate_and_consume_otp!(params['otp'])
+      @user.otp_validated = true
+      @user.save
+      flash[:info] = 'You are an admin.' if @user.admin
+    else
+      flash[:danger] = 'Bad OTP'
+    end
+    redirect_to root_path
   end
 
   private

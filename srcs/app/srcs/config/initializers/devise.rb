@@ -8,6 +8,12 @@
 #
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
+
+# this doesn't seem to work that good because
+# you can still fail 2fa otp verification multiple times
+# before it desides the code is right. i'm setting it just in case
+Devise.otp_allowed_drift = 1
+
 Devise.setup do |config|
   config.warden do |manager|
     manager.default_strategies(:scope => :user).unshift :two_factor_authenticatable
@@ -22,7 +28,6 @@ Devise.setup do |config|
 
   config.omniauth :marvin, ENV["FT_ID"], ENV["FT_SECRET"]
   config.otp_secret_encryption_key = ENV['OTP_SECRETKEY']
-  # config.otp_allowed_drift = 20
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
   # config.parent_controller = 'DeviseController'
