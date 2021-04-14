@@ -2,7 +2,7 @@ class Api::TwoFactorController < ApplicationController
   include ApplicationHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
-  before_action :check_2fa!, except: %i[validate]
+  before_action :check_2fa, except: %i[validate]
   before_action :define_user
 
   def index
@@ -54,7 +54,7 @@ class Api::TwoFactorController < ApplicationController
   end
 
   def validate
-    return if @user.otp_validated? || !@user.otp_required_for_login?
+    return if user_validated_2fa?
     if @user.validate_and_consume_otp!(params['otp'])
       @user.otp_validated = true
       @user.save

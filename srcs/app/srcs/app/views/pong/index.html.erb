@@ -1,7 +1,7 @@
-<% if !user_signed_in? %>
+<% unless user_signed_in? %>
   <%= render 'pong/templates/login' %>
 <% else %>
-  <% if current_user.otp_required_for_login && !current_user.otp_validated %>
+  <% unless user_validated_2fa? %>
     <%= render 'pong/templates/2fa' %>
   <% else %>
     <%= render 'pong/templates/nav' %>

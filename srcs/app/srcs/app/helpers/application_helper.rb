@@ -5,7 +5,12 @@ module ApplicationHelper
     end
   end
 
-  def check_2fa!
-    redirect_to root_path if current_user.otp_required_for_login && !current_user.otp_validated
+  def user_validated_2fa?
+    return false unless defined?(current_user)
+    current_user.otp_validated? || !current_user.otp_required_for_login?
+  end
+
+  def check_2fa
+    redirect_to root_path unless user_validated_2fa?
   end
 end
