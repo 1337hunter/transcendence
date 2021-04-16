@@ -1,4 +1,5 @@
 class Api::RoomsController < ApplicationController
+    before_action :authenticate_user!
     skip_before_action :verify_authenticity_token
 
     def index
@@ -12,17 +13,8 @@ class Api::RoomsController < ApplicationController
     def update
         @room = Room.new
         if (params.has_key?(:name))
-            @room.name = params[:name]#.update(displayname: params[:displayname])
-            puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            puts params[:name]
-            puts "<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-            
-            # if params[:name] == 123:
-            #     @room.errors.add :base, 'You have no permission'
-            #     render json: @room.errors, status: :forbidden
-            # else
+            @room.name = params[:name]
             render json: @room, status: :ok
-            # end
         end
         @room.save
     end

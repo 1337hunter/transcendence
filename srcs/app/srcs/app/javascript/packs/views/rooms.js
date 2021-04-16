@@ -1,6 +1,7 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import Rooms from "../models/rooms";
+import Utils from "../helpers/utils";
 
 const RoomsView = {};
 
@@ -48,13 +49,7 @@ $(function () {
             this.$("#rooms").append(room.view.render().el);
         },
         addAll: function () {
-			var $this = this;
-			// this.collection.fetch({
-			// 	success: function() { //model, resp, options){
-			$this.collection.each($this.addOne, $this);
-				// }
-			// });
-            
+			this.collection.each(this.addOne, this);
         },
 		create_room: function () {
 			var mod = new Rooms.RoomModel;
