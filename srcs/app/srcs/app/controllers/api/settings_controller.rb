@@ -2,7 +2,7 @@ class Api::SettingsController < ApplicationController
     include ApplicationHelper
     skip_before_action :verify_authenticity_token
     before_action :authenticate_user!
-    before_action :check_2fa!
+    before_action :check_2fa
 
     def index
         @user = current_user

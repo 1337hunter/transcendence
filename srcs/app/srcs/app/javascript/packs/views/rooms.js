@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Rooms from "../models/rooms";
 import Utils from "../helpers/utils";
+import Messages from "../models/messages";
 
 const RoomsView = {};
 
@@ -33,7 +34,8 @@ $(function () {
 		},
 		template: _.template($('#rooms-template').html()),
 		events: {
-			'click #create-room-btn' : 'create_room'
+			'click #create-room-btn' : 'create_room',
+			'click #send-msg-btn' : 'send_msg',
 		},
 		render: function () {
 			this.$el.html(this.template());
@@ -77,6 +79,10 @@ $(function () {
 			// 	},
 			// 	error: function(){}
 			// });
+		},
+		send_msg: function () {
+			var mes = new Messages.MessageModel;
+			mes.save({content: $('#chat-input').val().trim()}, {patch: 	});
 		}
 	});
 });

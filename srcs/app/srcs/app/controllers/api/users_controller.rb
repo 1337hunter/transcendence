@@ -2,7 +2,7 @@ class Api::UsersController < ApplicationController
   include ApplicationHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
-  before_action :check_2fa!
+  before_action :check_2fa
   before_action :define_filters
   before_action :find_user, only: %i[show update destroy]
 

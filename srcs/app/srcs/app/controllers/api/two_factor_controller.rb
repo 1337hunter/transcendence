@@ -2,10 +2,10 @@ class Api::TwoFactorController < ApplicationController
   include ApplicationHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
-  before_action :check_2fa!, except: %i[validate]
+  before_action :check_2fa, except: %i[validate]
   before_action :define_user
 
-  def index
+  def status
     if @user.otp_required_for_login?
       render json: {
         id: @user.id,
@@ -21,7 +21,7 @@ class Api::TwoFactorController < ApplicationController
     end
   end
 
-  def create
+  def enable
     return if @user.otp_required_for_login?
     if @user.validate_and_consume_otp!(params['otp'])
       @user.otp_required_for_login = true
@@ -30,7 +30,7 @@ class Api::TwoFactorController < ApplicationController
       render json: {
         id: @user.id,
         otp_required_for_login: @user.otp_required_for_login,
-        otp_qrcode: @user.otp_qrcode.html_safe
+        otp_qrcode: ''
       }, status: :ok
     else
       @user.errors.add :otp, 'Bad OTP'
@@ -38,7 +38,7 @@ class Api::TwoFactorController < ApplicationController
     end
   end
 
-  def update
+  def disable
     return unless @user.otp_required_for_login?
     if @user.validate_and_consume_otp!(params['otp'])
       @user.otp_required_for_login = false
@@ -54,7 +54,7 @@ class Api::TwoFactorController < ApplicationController
   end
 
   def validate
-    return if @user.otp_validated? || !@user.otp_required_for_login?
+    return if user_validated_2fa?
     if @user.validate_and_consume_otp!(params['otp'])
       @user.otp_validated = true
       @user.save

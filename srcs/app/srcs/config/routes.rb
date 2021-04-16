@@ -4,12 +4,13 @@ Rails.application.routes.draw do
   post '2fa', to: 'api/two_factor#validate', as: 'two_factor_validate'
 
   namespace :api do
-    get 'settings/2fa', to: 'two_factor#index'
-    post 'settings/2fa', to: 'two_factor#create'
-    put 'settings/2fa', to: 'two_factor#update'
+    get 'settings/2fa', to: 'two_factor#status'
+    post 'settings/2fa', to: 'two_factor#enable'
+    patch 'settings/2fa', to: 'two_factor#disable'
     resources :users
     resources :settings
     resources :rooms
+    resources :messages
   end
 
   get '/pong', to: 'pong#index'

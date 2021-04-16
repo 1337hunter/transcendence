@@ -43,10 +43,10 @@
 
 <script type="text/template" id="settings-2fa-template">
   <th style="width: 300px">
-    <p>2FA is <%%= otp_required_for_login ? '<el class="alert alert-success">Enabled</div>' :
-                                            '<el class="alert alert-danger">Disabled</div>' %></p>
+    <p>2FA is <%%= otp_required_for_login ? '<span class="alert alert-success">Enabled</span>' :
+                                            '<span class="alert alert-danger">Disabled</span>' %></p>
     <p <%%= otp_required_for_login ? 'style="display:none;"' : '' %>>
-      To enable 2FA you need to install an Authentificator App
+      To enable 2FA you need to install an Authenticator App
       on your phone and scan the QR Code
     </p>
     <p>

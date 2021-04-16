@@ -23,6 +23,8 @@ $(function () {
 			this.model.fetch();
 		},
 		render: function () {
+			if (this.otpview)
+				this.close_2fa();
 			this.$el.html(this.template(this.model.toJSON()));
 			let model = this.model;
 			this.$('.user_avatar').on("error",
@@ -55,6 +57,7 @@ $(function () {
 			else {
 				this.otpview = new TwoFactorView.View();
 				this.$('.two-factor-body').html(this.otpview.el);
+				this.$('#2fa-button').html('Hide');
 				this.listenTo(this.otpview.model, 'success', this.close_2fa);
 			}
 		},
@@ -62,6 +65,7 @@ $(function () {
 			this.otpview.remove();
 			this.stopListening();
 			this.otpview = null;
+			this.$('#2fa-button').html('Show');
 		}
 		/*upload_avatar: function (event) {
 			var input = $("#upload_user_avatar");
