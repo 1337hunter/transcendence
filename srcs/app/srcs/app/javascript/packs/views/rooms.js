@@ -82,7 +82,7 @@ $(function () {
 		},
 		send_msg: function () {
 			var mes = new Messages.MessageModel;
-			mes.save({content: $('#chat-input').val().trim()}, {patch: 	});
+			mes.save({content: $('#chat-input').val().trim()}, {patch: true});
 		}
 	});
 });
