@@ -27,6 +27,7 @@ let AppRouter = Backbone.Router.extend({
         "rooms"     : "rooms",
         "settings"  : "settings",
         "users"     : "users",
+        "admin"     : "users",
         ".*"        : "pong" // 404???
     },
     home: function () {
