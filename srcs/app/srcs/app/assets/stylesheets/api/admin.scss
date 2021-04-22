@@ -1,0 +1,22 @@
+// Place all the styles related to the api/admin controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+table#admin-table th {
+  vertical-align: top;
+  padding-top: 10px;
+}
+
+table#admin-table th#admin-nav {
+  padding-top: 20px;
+  padding-right: 20px;
+}
+
+button.nav-link {
+  text-align: left;
+  color: dimgray;
+}
+
+button.nav-link.active {
+  background-color: indigo !important;
+}

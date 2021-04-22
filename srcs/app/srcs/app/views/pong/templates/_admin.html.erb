@@ -1,0 +1,36 @@
+<script type="text/template" id="singleuser-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon" width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <td><label><%%= id %></label></td>
+  <td><label><%%= nickname %></label></td>
+  <td><label><%%= email %></label></td>
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
+  <td><input class="form-control displayname" value="<%%= displayname %>"
+             style="text-align: center;width: 17ch;border: none; padding: 1px"></td>
+</script>
+
+<script type="text/template" id="admin-template">
+  <table id="admin-table">
+    <tr>
+      <th id="admin-nav">
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <button class="nav-link active" id="v-pills-users-tab" data-bs-toggle="pill" type="button" role="tab" aria-selected="true">Userlist</button>
+          <button class="nav-link" id="v-pills-bans-tab" data-bs-toggle="pill" type="button" role="tab" aria-selected="false">Banlist</button>
+          <button class="nav-link" id="v-pills-chats-tab" data-bs-toggle="pill" type="button" role="tab" aria-selected="false">Chatlist</button>
+        </div>
+      </th>
+      <th>
+        <h1>Users <button type="button" class="button-sm" id="refresh-button">
+          <%= show_svg('refresh.svg') %></button></h1>
+        <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
+          <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Wins</th><th>Loses</th><th>Display name</th></tr>
+        </table>
+      </th>
+    </tr>
+  </table>
+</script>
