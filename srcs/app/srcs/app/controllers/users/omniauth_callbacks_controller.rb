@@ -4,7 +4,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.nil?
       set_flash_message(:danger, :failure, kind: '42',
-                        reason: 'it probably failed to provide valid uid') if is_navigational_format?
+                        reason: 'it failed to provide a valid uid. Try again later') if is_navigational_format?
       return redirect_to root_path
     end
 
