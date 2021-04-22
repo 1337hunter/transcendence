@@ -13,6 +13,8 @@ class User < ApplicationRecord
          :omniauthable, omniauth_providers: [:marvin]
 
   def self.from_omniauth(auth)
+    # auth may return nil uid
+    return if auth.nil? || auth.uid.nil?
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
       user.password = Devise.friendly_token[0, 20]

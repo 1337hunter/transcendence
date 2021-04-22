@@ -2,6 +2,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def marvin
     @user = User.from_omniauth(request.env['omniauth.auth'])
 
+    if @user.nil?
+      set_flash_message(:danger, :failure, kind: '42',
+                        reason: 'it probably failed to provide valid uid') if is_navigational_format?
+      return redirect_to root_path
+    end
+
     if @user.persisted?
       if @user.banned?
         set_flash_message(:danger, :banned) if is_navigational_format?
