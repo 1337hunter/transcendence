@@ -26,7 +26,7 @@ export default class Utils {
         if (options['json'])
             Object.values(options['json']).forEach((val) =>
                 val.toString().split(',').forEach((msg) =>
-                    Utils.app_alert('danger', {msg: msg})));
+                    Utils.app_alert(type, {msg: msg})));
     };
 
     static ajax(url, http, data) {
