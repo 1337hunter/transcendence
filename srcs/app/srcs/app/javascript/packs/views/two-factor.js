@@ -20,7 +20,7 @@ $(function () {
         },
         inputOTP: function (e) {
             if (e.keyCode !== 13) return;
-            this.model.save({otp: this.input.val()},
+            this.model.save({otp: this.input.val().trim()},
                 {patch:true, success: this.onsuccess});
         },
         onsuccess: function (model) {

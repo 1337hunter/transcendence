@@ -46,6 +46,9 @@ class Api::UsersController < ApplicationController
   def define_filters
     @filters = %i[id nickname displayname email admin wins loses elo
                   avatar_url avatar_default_url otp_required_for_login]
+    if current_user.admin?
+      @filters += %i[banned]
+    end
   end
 
   # Only allow a list of trusted parameters through.

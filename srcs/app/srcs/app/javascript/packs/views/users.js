@@ -20,7 +20,7 @@ $(function () {
         updateOnEnter: function (e) {
             if (e.keyCode !== 13) return;
 
-            let newdisplayname = this.input.val();
+            let newdisplayname = this.input.val().trim();
             if (this.model.get('displayname') !== newdisplayname)
             {
                 e.preventDefault();

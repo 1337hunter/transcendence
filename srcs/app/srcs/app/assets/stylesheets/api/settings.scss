@@ -30,6 +30,11 @@ input.form-control:focus {
   box-shadow: inset 0 1px 1px rgba(180, 185, 252, 0.075), 0 0 15px rgba(180, 185, 252, 0.6);
 }
 
+//  fix email to fit in settings
+input#email.form-control {
+  width: 32ch;
+}
+
 .user_avatar {
     border: 0;
     border: none;

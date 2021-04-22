@@ -33,11 +33,15 @@ $(function () {
 		},
 		input_email: function (input)
 		{
-			this.model.save({email: $('#email').val().trim()}, {patch: true});
+			let newemail = $('#email').val().trim();
+			if (this.model.get('email') !== newemail)
+				this.model.save({email: newemail}, {patch: true});
 		},
 		input_displayname: function (input)
 		{
-			this.model.save({displayname: $('#displayname').val().trim()}, {patch: true});
+			let newdisplayname = $('#displayname').val().trim();
+			if (this.model.get('displayname') !== newdisplayname)
+				this.model.save({displayname: newdisplayname}, {patch: true});
 		},
 		update_avatar: function () {
 			this.$('.table-avatar').addClass('edit_url');
