@@ -21,15 +21,15 @@ let AppRouter = Backbone.Router.extend({
         this.main.el = $(".app_main");
     },
     routes: {
-        ""          : "home",
-        "index"     : "home",
-        "oauth"     : "oauth",
-        "play"      : "pong",
-        "rooms"     : "rooms",
-        "settings"  : "settings",
-        "users"     : "users",
-        "admin"     : "admin",
-        ".*"        : "pong" // 404???
+        ""                      : "home",
+        "index"                 : "home",
+        "oauth"                 : "oauth",
+        "play"                  : "pong",
+        "rooms"                 : "rooms",
+        "settings"              : "settings",
+        "users"                 : "users",
+        "admin(/)(/:section)"   : "admin",
+        ".*"                    : "pong" // 404???
     },
     home: function () {
         this.main.view = new HomeView.View();
@@ -52,9 +52,12 @@ let AppRouter = Backbone.Router.extend({
         this.main.view = new UsersView.View();
         this.main.el.html(this.main.view.render().el);
     },
-    admin: function () {
-        this.main.view = new AdminView.View();
-        this.main.el.html(this.main.view.render().el);
+    admin: function (section) {
+        if (!(this.main.view instanceof AdminView.View)) {
+            this.main.view = new AdminView.View();
+            this.main.el.html(this.main.view.render().el);
+        }
+        this.main.view.rendercontent(section);
     }
 });
 

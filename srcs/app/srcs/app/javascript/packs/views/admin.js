@@ -7,7 +7,7 @@ const AdminView = {};
 
 $(function () {
 	AdminView.SingleUserView = Backbone.View.extend({
-        template: _.template($('#singleuser-template').html()),
+        template: _.template($('#admin-singleuser-template').html()),
         events: {
             "keypress .displayname" : "updateOnEnter"
         },
@@ -50,8 +50,8 @@ $(function () {
         }
     });
 
-	AdminView.View = Backbone.View.extend({
-		template: _.template($('#admin-template').html()),
+	AdminView.UserlistView = Backbone.View.extend({
+		template: _.template($('#admin-userlist-template').html()),
 		events: {
 		    "click #refresh-button" :   "refresh"
         },
@@ -82,6 +82,100 @@ $(function () {
 			return this;
 		}
 	});
+
+	AdminView.BanlistView = Backbone.View.extend({
+		template: _.template($('#admin-banlist-template').html()),
+		events: {
+		    "click #refresh-button" :   "refresh"
+        },
+		initialize: function () {
+		    this.collection = new Users.UserCollection;
+		    this.listenTo(this.collection, 'add', this.addOne);
+		    this.listenTo(this.collection, 'reset', this.addAll);
+            this.collection.fetch({reset: true, error: this.onerror});
+        },
+		addOne: function (user) {
+            user.view = new AdminView.SingleUserView({model: user});
+            this.$("table#users-table tbody").append(user.view.render().el);
+        },
+        addAll: function () {
+            this.collection.each(this.addOne, this);
+        },
+        refresh: function () {
+            this.collection.fetch({
+                success: function () {Utils.app_alert('success', {msg: 'Up to date'});},
+                error: this.onerror});
+        },
+        onerror: function () {
+            Utils.app_alert('danger', {msg: 'Users fetch from API failed'});
+        },
+		render: function () {
+			this.$el.html(this.template());
+			this.addAll();
+			return this;
+		}
+	});
+
+	AdminView.ChatlistView = Backbone.View.extend({
+		template: _.template($('#admin-chatlist-template').html()),
+		events: {
+		    "click #refresh-button" :   "refresh"
+        },
+		initialize: function () {
+		    this.collection = new Users.UserCollection;
+		    this.listenTo(this.collection, 'add', this.addOne);
+		    this.listenTo(this.collection, 'reset', this.addAll);
+            this.collection.fetch({reset: true, error: this.onerror});
+        },
+		addOne: function (user) {
+            user.view = new AdminView.SingleUserView({model: user});
+            this.$("table#users-table tbody").append(user.view.render().el);
+        },
+        addAll: function () {
+            this.collection.each(this.addOne, this);
+        },
+        refresh: function () {
+            this.collection.fetch({
+                success: function () {Utils.app_alert('success', {msg: 'Up to date'});},
+                error: this.onerror});
+        },
+        onerror: function () {
+            Utils.app_alert('danger', {msg: 'Users fetch from API failed'});
+        },
+		render: function () {
+			this.$el.html(this.template());
+			this.addAll();
+			return this;
+		}
+	});
+
+    AdminView.View = Backbone.View.extend({
+        template: _.template($('#admin-template').html()),
+        removeactive: function () {
+            this.$('#admin-users-tab').removeClass('active', 200);
+            this.$('#admin-bans-tab').removeClass('active', 200);
+            this.$('#admin-chats-tab').removeClass('active', 200);
+        },
+        rendercontent: function (section) {
+            this.section = section;
+            this.removeactive();
+            if (this.section === 'bans') {
+                this.content = new AdminView.BanlistView();
+                this.$('#admin-bans-tab').addClass('active', 200);
+            } else if (this.section === 'chats') {
+                this.content = new AdminView.ChatlistView();
+                this.$('#admin-chats-tab').addClass('active', 200);
+            } else {
+                this.content = new AdminView.UserlistView();
+                this.$('#admin-users-tab').addClass('active', 200);
+            }
+            this.$('#admin-content').html(this.content.render().el);
+        },
+        render: function () {
+            this.$el.html(this.template());
+            return this;
+        }
+    });
 });
 
 export default AdminView;
