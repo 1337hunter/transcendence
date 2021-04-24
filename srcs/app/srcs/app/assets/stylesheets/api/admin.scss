@@ -18,5 +18,15 @@ button.nav-link {
 }
 
 button.nav-link.active {
-  background-color: indigo !important;
+  background-color: indigo!important;
+}
+
+button#admin-admins-tab.nav-link.active {
+  background-color: darkorange!important;
+  color: black;
+}
+
+button#admin-bans-tab.nav-link.active {
+  background-color: #dc3545!important;
+  color: black;
 }

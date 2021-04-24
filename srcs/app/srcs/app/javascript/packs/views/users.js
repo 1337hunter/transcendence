@@ -31,21 +31,21 @@ $(function () {
         },
         onerror: function (model, response) {
             if (response.responseJSON == null) //  true for undefined too
-                Utils.app_alert('danger', {msg: 'No response from API'});
+                Utils.appAlert('danger', {msg: 'No response from API'});
             else
-                Utils.app_alert('danger', {json: response.responseJSON});
+                Utils.appAlert('danger', {json: response.responseJSON});
             this.model.attributes = this.model.previousAttributes();
             this.render();
         },
         onsuccess: function () {
-            Utils.app_alert('success', {msg: 'Displayname has been changed'});
+            Utils.appAlert('success', {msg: 'Displayname has been changed'});
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
             let model = this.model;
             this.$('.user_icon').on("error",
-                function () { Utils.replaceavatar(this, model); });
+                function () { Utils.replaceAvatar(this, model); });
             return this;
         }
     });
@@ -70,11 +70,11 @@ $(function () {
         },
         refresh: function () {
             this.collection.fetch({
-                success: function () {Utils.app_alert('success', {msg: 'Up to date'});},
+                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
                 error: this.onerror});
         },
         onerror: function () {
-            Utils.app_alert('danger', {msg: 'Users fetch from API failed'});
+            Utils.appAlert('danger', {msg: 'Users fetch from API failed'});
         },
 		render: function () {
 			this.$el.html(this.template());

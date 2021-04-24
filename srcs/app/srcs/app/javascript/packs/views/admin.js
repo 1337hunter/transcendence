@@ -1,6 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
-import Users from "../models/users";
+import Admin from "../models/admin";
 import Utils from "../helpers/utils";
 
 const AdminView = {};
@@ -31,14 +31,14 @@ $(function () {
         },
         onerror: function (model, response) {
             if (response.responseJSON == null) //  true for undefined too
-                Utils.app_alert('danger', {msg: 'No response from API'});
+                Utils.appAlert('danger', {msg: 'No response from API'});
             else
-                Utils.app_alert('danger', {json: response.responseJSON});
+                Utils.appAlert('danger', {json: response.responseJSON});
             this.model.attributes = this.model.previousAttributes();
             this.render();
         },
         onsuccess: function () {
-            Utils.app_alert('success', {msg: 'Displayname has been changed'});
+            Utils.appAlert('success', {msg: 'Displayname has been changed'});
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
@@ -55,11 +55,16 @@ $(function () {
 		events: {
 		    "click #refresh-button" :   "refresh"
         },
-		initialize: function () {
-		    this.collection = new Users.UserCollection;
+		initialize: function (filter, listname) {
+            this.listname = listname;
+		    if (listname == null)
+		        this.listname = 'Userlist';
+		    this.filter = filter;
+		    this.collection = new Admin.UserCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
 		    this.listenTo(this.collection, 'reset', this.addAll);
-            this.collection.fetch({reset: true, error: this.onerror});
+            this.collection.fetch({data: {filter: this.filter},
+                reset: true, error: this.onerror});
         },
 		addOne: function (user) {
             user.view = new AdminView.SingleUserView({model: user});
@@ -69,48 +74,15 @@ $(function () {
             this.collection.each(this.addOne, this);
         },
         refresh: function () {
-            this.collection.fetch({
-                success: function () {Utils.app_alert('success', {msg: 'Up to date'});},
+            this.collection.fetch({data: {filter: this.filter},
+                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
                 error: this.onerror});
         },
-        onerror: function () {
-            Utils.app_alert('danger', {msg: 'Users fetch from API failed'});
+        onerror: function (collection, response) {
+            Utils.alertOnAjaxError(response);
         },
 		render: function () {
-			this.$el.html(this.template());
-			this.addAll();
-			return this;
-		}
-	});
-
-	AdminView.BanlistView = Backbone.View.extend({
-		template: _.template($('#admin-banlist-template').html()),
-		events: {
-		    "click #refresh-button" :   "refresh"
-        },
-		initialize: function () {
-		    this.collection = new Users.UserCollection;
-		    this.listenTo(this.collection, 'add', this.addOne);
-		    this.listenTo(this.collection, 'reset', this.addAll);
-            this.collection.fetch({reset: true, error: this.onerror});
-        },
-		addOne: function (user) {
-            user.view = new AdminView.SingleUserView({model: user});
-            this.$("table#users-table tbody").append(user.view.render().el);
-        },
-        addAll: function () {
-            this.collection.each(this.addOne, this);
-        },
-        refresh: function () {
-            this.collection.fetch({
-                success: function () {Utils.app_alert('success', {msg: 'Up to date'});},
-                error: this.onerror});
-        },
-        onerror: function () {
-            Utils.app_alert('danger', {msg: 'Users fetch from API failed'});
-        },
-		render: function () {
-			this.$el.html(this.template());
+			this.$el.html(this.template(_.clone({listname: this.listname})));
 			this.addAll();
 			return this;
 		}
@@ -122,7 +94,7 @@ $(function () {
 		    "click #refresh-button" :   "refresh"
         },
 		initialize: function () {
-		    this.collection = new Users.UserCollection;
+		    this.collection = new Admin.UserCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
 		    this.listenTo(this.collection, 'reset', this.addAll);
             this.collection.fetch({reset: true, error: this.onerror});
@@ -136,11 +108,11 @@ $(function () {
         },
         refresh: function () {
             this.collection.fetch({
-                success: function () {Utils.app_alert('success', {msg: 'Up to date'});},
+                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
                 error: this.onerror});
         },
-        onerror: function () {
-            Utils.app_alert('danger', {msg: 'Users fetch from API failed'});
+        onerror: function (collection, response) {
+            Utils.alertOnAjaxError(response);
         },
 		render: function () {
 			this.$el.html(this.template());
@@ -154,14 +126,18 @@ $(function () {
         removeactive: function () {
             this.$('#admin-users-tab').removeClass('active', 200);
             this.$('#admin-bans-tab').removeClass('active', 200);
+            this.$('#admin-admins-tab').removeClass('active', 200);
             this.$('#admin-chats-tab').removeClass('active', 200);
         },
         rendercontent: function (section) {
             this.section = section;
             this.removeactive();
             if (this.section === 'bans') {
-                this.content = new AdminView.BanlistView();
+                this.content = new AdminView.UserlistView('banned', 'Banlist');
                 this.$('#admin-bans-tab').addClass('active', 200);
+            } else if (this.section === 'admins') {
+                this.content = new AdminView.UserlistView('admin', 'Admins');
+                this.$('#admin-admins-tab').addClass('active', 200);
             } else if (this.section === 'chats') {
                 this.content = new AdminView.ChatlistView();
                 this.$('#admin-chats-tab').addClass('active', 200);

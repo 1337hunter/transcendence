@@ -25,16 +25,13 @@ $(function () {
         },
         onsuccess: function (model) {
             if (model.get('otp_required_for_login'))
-                Utils.app_alert('success', {msg: '2FA Enabled'});
+                Utils.appAlert('success', {msg: '2FA Enabled'});
             else
-                Utils.app_alert('success', {msg: '2FA Disabled'});
+                Utils.appAlert('success', {msg: '2FA Disabled'});
             model.trigger('success');
         },
         onerror: function (model, response)  {
-            if (response.responseJSON == null) //  true for undefined too
-                Utils.app_alert('danger', {msg: 'No response from API'});
-            else
-                Utils.app_alert('danger', {json: response.responseJSON});
+            Utils.alertOnAjaxError(response);
         },
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));

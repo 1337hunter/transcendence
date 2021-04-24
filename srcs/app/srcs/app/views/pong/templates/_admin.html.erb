@@ -8,25 +8,16 @@
   <td><label><%%= id %></label></td>
   <td><label><%%= nickname %></label></td>
   <td><label><%%= email %></label></td>
-  <td><label><%%= wins %></label></td>
-  <td><label><%%= loses %></label></td>
   <td><input class="form-control displayname" value="<%%= displayname %>"
              style="text-align: center;width: 17ch;border: none; padding: 1px"></td>
+  <td><label><%%= banned %></label></td>
 </script>
 
 <script type="text/template" id="admin-userlist-template">
-  <h1>Userlist <button type="button" class="button-sm" id="refresh-button">
+  <h1><%%= listname %> <button type="button" class="button-sm" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
   <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
-    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Wins</th><th>Loses</th><th>Display name</th></tr>
-  </table>
-</script>
-
-<script type="text/template" id="admin-banlist-template">
-  <h1>Banlist <button type="button" class="button-sm" id="refresh-button">
-    <%= show_svg('refresh.svg') %></button></h1>
-  <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
-    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Wins</th><th>Loses</th><th>Display name</th></tr>
+    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Display name</th><th>Banned</th></tr>
   </table>
 </script>
 
@@ -34,7 +25,7 @@
   <h1>Chatlist <button type="button" class="button-sm" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
   <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
-    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Wins</th><th>Loses</th><th>Display name</th></tr>
+    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Display name</th><th>Banned</th></tr>
   </table>
 </script>
 
@@ -44,8 +35,11 @@
       <th id="admin-nav">
         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <button onclick="location.href='#/admin';" class="nav-link" id="admin-users-tab" type="button" role="tab">Userlist</button>
-          <button onclick="location.href='#/admin/bans';" class="nav-link" id="admin-bans-tab" type="button" role="tab">Banlist</button>
           <button onclick="location.href='#/admin/chats';" class="nav-link" id="admin-chats-tab" type="button" role="tab">Chatlist</button>
+          <hr>
+          <button onclick="location.href='#/admin/admins';" class="nav-link" id="admin-admins-tab" type="button" role="tab">Admins</button>
+          <hr>
+          <button onclick="location.href='#/admin/bans';" class="nav-link" id="admin-bans-tab" type="button" role="tab">Banlist</button>
         </div>
       </th>
       <th id="admin-content"></th>

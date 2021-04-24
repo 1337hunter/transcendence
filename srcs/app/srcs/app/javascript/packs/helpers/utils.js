@@ -4,7 +4,7 @@ export default class Utils {
     // replaces avatar with default from db
     // if default from db is unavailable - replaces to common default
     // if common default is unavailable - element is removed
-    static replaceavatar (elem, model) {
+    static replaceAvatar (elem, model) {
         if ($(elem).attr('src') === "/assets/avatar_default.jpg")
             $(elem).remove();
         else {
@@ -20,14 +20,21 @@ export default class Utils {
         return string[0].toUpperCase() + string.slice(1);
     }
 
-    static app_alert(type, options) {
+    static appAlert(type, options) {
         if (options['msg'])
             MainSPA.SPA.app_alerts.addOne(type, Utils.capitalizeFirstLetter(options['msg']));
         if (options['json'])
             Object.values(options['json']).forEach((val) =>
                 val.toString().split(',').forEach((msg) =>
-                    Utils.app_alert(type, {msg: msg})));
+                    Utils.appAlert(type, {msg: msg})));
     };
+
+    static alertOnAjaxError(response) {
+        if (response.responseJSON == null)  //  true for undefined too
+            Utils.appAlert('danger', {msg: 'No response from API'});
+        else
+            Utils.appAlert('danger', {json: response.responseJSON});
+    }
 
     static ajax(url, http, data) {
         return new Promise(((resolve, reject) => {

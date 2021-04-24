@@ -11,6 +11,10 @@ Rails.application.routes.draw do
     resources :settings
     resources :rooms
     resources :messages
+
+    get 'admin/users', to: 'admin#users'
+    patch 'admin/users', to: 'admin#update'
+    get 'admin/chats', to: 'admin#chatlist'
   end
 
   get '/pong', to: 'pong#index'

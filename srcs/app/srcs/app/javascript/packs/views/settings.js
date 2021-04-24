@@ -28,7 +28,7 @@ $(function () {
 			this.$el.html(this.template(this.model.toJSON()));
 			let model = this.model;
 			this.$('.user_avatar').on("error",
-				function () { Utils.replaceavatar(this, model); });
+				function () { Utils.replaceAvatar(this, model); });
 			return this;
 		},
 		input_email: function (input)

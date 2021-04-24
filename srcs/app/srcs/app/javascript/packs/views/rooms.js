@@ -68,7 +68,7 @@ $(function () {
 							})
 						},
 						error: function () {
-							Utils.app_alert('danger', {msg: 'Can\'t create chat room'});
+							Utils.appAlert('danger', {msg: 'Can\'t create chat room'});
 						}
 			});
 		}

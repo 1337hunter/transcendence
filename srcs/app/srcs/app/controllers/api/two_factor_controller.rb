@@ -33,8 +33,7 @@ class Api::TwoFactorController < ApplicationController
         otp_qrcode: ''
       }, status: :ok
     else
-      @user.errors.add :otp, 'Bad OTP'
-      render json: @user.errors, status: :forbidden
+      render json: {error: 'Bad OTP'}, status: :forbidden
     end
   end
 
@@ -48,8 +47,7 @@ class Api::TwoFactorController < ApplicationController
         otp_required_for_login: @user.otp_required_for_login,
       }, status: :ok
     else
-      @user.errors.add :otp, 'Bad OTP'
-      render json: @user.errors, status: :forbidden
+      render json: {error: 'Bad OTP'}, status: :forbidden
     end
   end
 
