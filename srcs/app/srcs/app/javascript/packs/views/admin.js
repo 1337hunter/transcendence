@@ -45,7 +45,7 @@ $(function () {
             this.input = this.$('.displayname');
             let model = this.model;
             this.$('.user_icon').on("error",
-                function () { Utils.replaceavatar(this, model); });
+                function () { Utils.replaceAvatar(this, model); });
             return this;
         }
     });
