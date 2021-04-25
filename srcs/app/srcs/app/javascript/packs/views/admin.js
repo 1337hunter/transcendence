@@ -30,10 +30,7 @@ $(function () {
             }
         },
         onerror: function (model, response) {
-            if (response.responseJSON == null) //  true for undefined too
-                Utils.appAlert('danger', {msg: 'No response from API'});
-            else
-                Utils.appAlert('danger', {json: response.responseJSON});
+            Utils.alertOnAjaxError(response);
             this.model.attributes = this.model.previousAttributes();
             this.render();
         },
@@ -88,20 +85,38 @@ $(function () {
 		}
 	});
 
+    AdminView.SingleChatView = Backbone.View.extend({
+        template: _.template($('#admin-singlechat-template').html()),
+        events: {},
+        tagName: "tr",
+        initialize: function () {
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'error', this.onerror);
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        }
+    });
+
 	AdminView.ChatlistView = Backbone.View.extend({
 		template: _.template($('#admin-chatlist-template').html()),
 		events: {
 		    "click #refresh-button" :   "refresh"
         },
 		initialize: function () {
-		    this.collection = new Admin.UserCollection;
+		    this.collection = new Admin.ChatCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
 		    this.listenTo(this.collection, 'reset', this.addAll);
             this.collection.fetch({reset: true, error: this.onerror});
         },
-		addOne: function (user) {
-            user.view = new AdminView.SingleUserView({model: user});
-            this.$("table#users-table tbody").append(user.view.render().el);
+		addOne: function (chat) {
+            chat.view = new AdminView.SingleChatView({model: chat});
+            this.$("table#users-table tbody").append(chat.view.render().el);
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
