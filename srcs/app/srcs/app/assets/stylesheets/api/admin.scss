@@ -31,7 +31,15 @@ button#admin-bans-tab.nav-link.active {
   color: black;
 }
 
-.chat-access-icon svg {
+table#chats-table th, table#chats-table tr {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+table #chats-table .chat-access-icon svg {
   fill: white;
   width: 15px;
+  padding: 1px;
+  display: block;
 }

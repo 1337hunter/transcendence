@@ -33,10 +33,10 @@
 </script>
 
 <script type="text/template" id="admin-chatlist-template">
-  <h1>Chatlist <button type="button" class="button-sm" id="refresh-button">
+  <h1>Chatrooms <button type="button" class="button-sm" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
-  <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
-    <tr><th></th><th>Id</th><th>Chatname</th><th>Owner</th></tr>
+  <table id="chats-table" border-spacing="20px" padding="0 2em 1em 0">
+    <tr><th></th><th>Id</th><th>Name</th><th>Owner</th></tr>
   </table>
 </script>
 
@@ -45,8 +45,8 @@
     <tr>
       <th id="admin-nav">
         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-          <button onclick="location.href='#/admin';" class="nav-link" id="admin-users-tab" type="button" role="tab">Userlist</button>
-          <button onclick="location.href='#/admin/chats';" class="nav-link" id="admin-chats-tab" type="button" role="tab">Chatlist</button>
+          <button onclick="location.href='#/admin';" class="nav-link" id="admin-users-tab" type="button" role="tab">All Users</button>
+          <button onclick="location.href='#/admin/chats';" class="nav-link" id="admin-chats-tab" type="button" role="tab">Chatrooms</button>
           <hr>
           <button onclick="location.href='#/admin/admins';" class="nav-link" id="admin-admins-tab" type="button" role="tab">Admins</button>
           <hr>

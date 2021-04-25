@@ -55,7 +55,7 @@ $(function () {
 		initialize: function (filter, listname) {
             this.listname = listname;
 		    if (listname == null)
-		        this.listname = 'Userlist';
+		        this.listname = 'All Users';
 		    this.filter = filter;
 		    this.collection = new Admin.UserCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
@@ -116,7 +116,7 @@ $(function () {
         },
 		addOne: function (chat) {
             chat.view = new AdminView.SingleChatView({model: chat});
-            this.$("table#users-table tbody").append(chat.view.render().el);
+            this.$("table#chats-table tbody").append(chat.view.render().el);
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
