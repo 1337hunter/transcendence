@@ -22,14 +22,9 @@ class Api::AdminController < ApplicationController
     render json: @users, only: @userfilters
   end
 
-  def admins
-    @users = User.where(admin: true)
-    render json: @users, only: @userfilters
-  end
-
   # GET /api/admin/chats.json
   def chatlist
-    @rooms = User.all
+    @rooms = Room.all
     render json: @rooms, only: @roomfilters
   end
 
