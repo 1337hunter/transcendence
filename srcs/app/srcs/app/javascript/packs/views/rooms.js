@@ -11,6 +11,7 @@ $(function () {
 	RoomsView.RoomView = Backbone.View.extend({
         template: _.template($('#room-template').html()),
         events: {
+			'click .room-click' : 'room_click',
         },
     	tagName: "div",
         initialize: function () {
@@ -21,7 +22,10 @@ $(function () {
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
             return this;
-        }
+        },
+		room_click: function () {
+			//console.log(this.model.get("id"));
+		}
 	 });
 
 
@@ -36,6 +40,7 @@ $(function () {
 		events: {
 			'click #create-room-btn' : 'create_room',
 			'click #send-msg-btn' : 'send_msg',
+			'click .room-click' : 'room_click',
 		},
 		render: function () {
 			this.$el.html(this.template());
@@ -45,6 +50,12 @@ $(function () {
 			});
 			this.addAll();
 			return this;
+		},
+		room_click: function (e) {
+			var regex = /\d+/g;
+			var href = $(e.currentTarget).attr("href");
+			var room_id = parseInt(href.match(regex));
+			console.log(room_id);
 		},
 		addOne: function (room) {
             room.view = new RoomsView.RoomView({model: room});
