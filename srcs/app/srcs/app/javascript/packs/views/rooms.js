@@ -31,6 +31,7 @@ $(function () {
 
 	RoomsView.View = Backbone.View.extend({
 		initialize: function () {
+			this.current_room = 0;
 			this.collection = new Rooms.RoomCollection;
 			this.listenTo(this.collection, 'add', this.addOne);
 		    //this.listenTo(this.collection, 'reset', this.addAll);
@@ -54,8 +55,7 @@ $(function () {
 		room_click: function (e) {
 			var regex = /\d+/g;
 			var href = $(e.currentTarget).attr("href");
-			var room_id = parseInt(href.match(regex));
-			console.log(room_id);
+			this.current_room = parseInt(href.match(regex));
 		},
 		addOne: function (room) {
             room.view = new RoomsView.RoomView({model: room});
@@ -71,7 +71,7 @@ $(function () {
 				this.collection.create({id: mod.cid, name: $('#room-name').val().trim(),
 					password: $('#room-password').val().trim(), private: $('#is_private').prop("checked")}, {
 						wait: true,
-						success: function() { 						//model, resp, options){
+						success: function() {
 							$this.collection.fetch({
 								success: function() {
 									$this.render();
@@ -82,16 +82,10 @@ $(function () {
 							Utils.appAlert('danger', {msg: 'Can\'t create chat room'});
 						}
 			});
-		}
-			var $this = this;
-			// this.collection.fetch({wait: true,
-			// 	success: function() {
-			// 		$this.render();
-			// 	},
-			// 	error: function(){}
-			// });
+			}
 		},
 		send_msg: function () {
+			console.log(this.current_room)
 			var mes = new Messages.MessageModel;
 			mes.save({content: $('#chat-input').val().trim()}, {patch: true});
 		}
