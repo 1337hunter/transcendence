@@ -1,0 +1,61 @@
+.open-button {
+    background-color: #21f3e1;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    position: fixed;
+    bottom: 23px;
+    right: 28px;
+    width: 100px;
+    height: 100px;
+    opacity: 0.8;
+    border-radius: 50%;
+}
+
+.form-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 15px;
+    z-index: 9;
+}
+
+.form-container input[type=text], .form-container input[type=password] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    background: #f1f1f1;
+    color: #282828;
+}
+
+.form-container input[type=text]:focus, .form-container input[type=password]:focus, .form-container input[type=text]:hover, .form-container input[type=password]:hover  {
+    background: #ddd;
+    outline: none;
+    color: #282828;
+}
+
+.form-container .btn {
+    cursor: pointer;
+    opacity: 0.8;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 16px 20px;
+    margin-bottom:10px;
+    border-radius: 8px;
+}
+
+.form-container {
+  width: 100%;
+  border: none;
+  color: white;
+  background-color: #b3b1b1;
+  max-width: 300px;
+  padding: 10px;
+}
+
+.form-container .btn:hover, .open-button:hover {
+    opacity: 1;
+}

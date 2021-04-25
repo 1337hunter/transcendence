@@ -2,6 +2,8 @@ include Api::UsersHelper
 require 'open-uri'
 
 class User < ApplicationRecord
+  belongs_to :guild, required: false, :foreign_key => :guild_id
+
   include ActiveModel::Validations
   validates :email, uniqueness: { case_sensitive: false }, presence: true
   validates :displayname, uniqueness: { case_sensitive: false }, presence: true

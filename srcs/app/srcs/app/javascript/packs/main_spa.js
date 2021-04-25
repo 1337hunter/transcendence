@@ -7,6 +7,7 @@ import RoomsView from "./views/rooms";
 import UsersView from "./views/users"
 import AlertsView from "./views/alerts";
 import AdminView from "./views/admin";
+import GuildsView from "./views/guilds";
 import pong_game from "./pong_game";
 
 const MainSPA = {};
@@ -29,6 +30,7 @@ let AppRouter = Backbone.Router.extend({
         "settings"              : "settings",
         "users"                 : "users",
         "admin(/)(/:section)"   : "admin",
+        "guilds"                : "guilds",
         ".*"                    : "pong" // 404???
     },
     home: function () {
@@ -46,6 +48,10 @@ let AppRouter = Backbone.Router.extend({
     },
     rooms: function () {
         this.main.view = new RoomsView.View();
+        this.main.el.html(this.main.view.render().el);
+    },
+    guilds: function () {
+        this.main.view = new GuildsView.View();
         this.main.el.html(this.main.view.render().el);
     },
     users: function () {

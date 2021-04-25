@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_13_210250) do
+ActiveRecord::Schema.define(version: 2021_04_24_221352) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "guilds", force: :cascade do |t|
+    t.string "name"
+    t.string "anagram", limit: 5
+    t.integer "score", default: 0
+    t.integer "place", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "messages", force: :cascade do |t|
     t.string "content"
@@ -59,6 +68,9 @@ ActiveRecord::Schema.define(version: 2021_04_13_210250) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
     t.boolean "otp_validated"
+    t.integer "guild_id"
+    t.boolean "guild_master", default: false
+    t.boolean "guild_officer", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -11,7 +11,12 @@ Users.TwoFactorModel = Backbone.Model.extend({
 });
 
 Users.UserModel = Backbone.Model.extend({
-    urlRoot: '/api/users'
+    urlRoot: '/api/users',
+    defaults: {
+        //guild_id: 0,
+        guild_master: false,
+        guild_officer: false
+    }
 });
 
 Users.UserCollection = Backbone.Collection.extend({

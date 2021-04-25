@@ -15,6 +15,8 @@ Rails.application.routes.draw do
     get 'admin/users', to: 'admin#users'
     patch 'admin/users', to: 'admin#update'
     get 'admin/chats', to: 'admin#chatlist'
+    resources :guilds
+
   end
 
   get '/pong', to: 'pong#index'
