@@ -32,6 +32,7 @@ $(function () {
 	RoomsView.View = Backbone.View.extend({
 		initialize: function () {
 			this.current_room = 0;
+			this.messages = {};
 			this.collection = new Rooms.RoomCollection;
 			this.listenTo(this.collection, 'add', this.addOne);
 		    //this.listenTo(this.collection, 'reset', this.addAll);
@@ -56,6 +57,10 @@ $(function () {
 			var regex = /\d+/g;
 			var href = $(e.currentTarget).attr("href");
 			this.current_room = parseInt(href.match(regex));
+			console.log(this.messages);
+			this.messages = new Messages.MessageCollection({id: this.current_room});
+			this.messages.fetch();
+			console.log(this.messages);
 		},
 		addOne: function (room) {
             room.view = new RoomsView.RoomView({model: room});
