@@ -11,6 +11,9 @@ $(function () {
         events: {
         },
         tagName: "div",
+        initialize: function () {
+            this.listenTo(this.model, 'destroy', this.remove);
+        },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
             return this;
@@ -38,30 +41,26 @@ $(function () {
         },
         refresh: function () {
             this.collection.fetch({
-                success: function () {Utils.app_alert('success', {msg: 'Up to date'});},
+                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
                 error: this.onerrorFetch});
         },
         onerrorFetch: function () {
-            Utils.app_alert('danger', {msg: 'Guilds fetch from API failed'});
+            Utils.appAlert('danger', {msg: 'Guilds fetch from API failed'});
         },
         createGuild: function(e) {
             e.preventDefault();
             e.stopPropagation();
             //this.model.unset("errors")
             this.model = new this.collection.model();
-            this.collection.create({name: $('#newGuildName').val()});
-            this.refresh()
+            this.collection.create({name: $('#newGuildName').val()},
+                {success: this.onCreateSuccess, error: this.onCreateError});
         },
-        onerror: function (model, response) {
-            if (response.responseJSON == null) //  true for undefined too
-                Utils.app_alert('danger', {msg: 'No response from API'});
-            else
-                Utils.app_alert('danger', {json: response.responseJSON});
-            this.model.attributes = this.model.previousAttributes();
-            this.render();
+        onCreateError: function (model, response) {
+            Utils.alertOnAjaxError(response);
+            model.destroy();
         },
-        onsuccess: function () {
-            Utils.app_alert('success', {msg: 'Guild has been created'});
+        onCreateSuccess: function () {
+            Utils.appAlert('success', {msg: 'Guild has been created'});
         },
         render: function () {
             this.$el.html(this.template());

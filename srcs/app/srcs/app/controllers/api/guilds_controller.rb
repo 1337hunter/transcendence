@@ -18,9 +18,14 @@ class Api::GuildsController < ApplicationController
       #check uniqueness?
     end
     guild = Guild.new(name: params[:name], anagram: anagram)
-    current_user.guild_id = params[:id]
-    current_user.guild_master = true
-    guild.save()
+    if guild.save
+      current_user.guild_id = guild.id
+      current_user.guild_master = true
+      current_user.save
+      render json: guild, status: :ok
+    else
+      render json: guild.errors, status: :unprocessable_entity
+    end
   end
 
   def show
@@ -38,10 +43,8 @@ class Api::GuildsController < ApplicationController
 
   def check_in_other_guild
     if current_user.guild_id
-      @guild.errors.add :base, 'You are in the guild already, leave you guild to continue'
-      render json: @guild.errors, status: :bad_request
-      return false
+      current_user.errors.add :base, 'You are in the guild already. Leave your guild to continue'
+      render json: current_user.errors, status: :bad_request
     end
   end
-
 end
