@@ -19,9 +19,9 @@ class Api::GuildsController < ApplicationController
     end
     guild = Guild.new(name: params[:name], anagram: anagram)
     if guild.save
-      current_user.guild_id = guild.id
-      current_user.guild_master = true
-      current_user.save
+      @user.guild_id = guild.id
+      @user.guild_master = true
+      @user.save
       render json: guild, status: :ok
     else
       render json: guild.errors, status: :unprocessable_entity
@@ -42,9 +42,10 @@ class Api::GuildsController < ApplicationController
   end
 
   def check_in_other_guild
-    if current_user.guild_id
-      current_user.errors.add :base, 'You are in the guild already. Leave your guild to continue'
-      render json: current_user.errors, status: :bad_request
+    @user = current_user
+    if @user.guild_id
+      @user.errors.add :base, 'You are in the guild already. Leave your guild to continue'
+      render json: @user.errors, status: :bad_request
     end
   end
 end

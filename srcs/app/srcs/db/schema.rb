@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_24_221352) do
+ActiveRecord::Schema.define(version: 2021_04_25_133126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,14 +68,16 @@ ActiveRecord::Schema.define(version: 2021_04_24_221352) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
     t.boolean "otp_validated"
-    t.integer "guild_id"
     t.boolean "guild_master", default: false
     t.boolean "guild_officer", default: false
+    t.bigint "guild_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid"], name: "index_users_on_uid"
   end
 
   add_foreign_key "messages", "users"
+  add_foreign_key "users", "guilds"
 end
