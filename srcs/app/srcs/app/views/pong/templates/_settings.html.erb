@@ -58,8 +58,12 @@
     </p>
   </th>
   <th>
-    <div class="qrcode" <%%= otp_required_for_login ? 'style="display:none;"' : '' %>
-        <%%= otp_qrcode %>
+    <div class="qrcode" <%%= otp_required_for_login ? 'style="display:none;"' : '' %>>
+      <%%= otp_qrcode %>
+    </div>
+    <div class="2fakey-icon"
+      <%%= otp_required_for_login ? 'style="width:150px;"' : 'style="display:none;"' %>>
+      <%= show_svg('key.svg') %>
     </div>
   </th>
 </script>
