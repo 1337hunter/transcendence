@@ -14,7 +14,7 @@
 </script>
 
 <script type="text/template" id="admin-userlist-template">
-  <h1><%%= listname %> <button type="button" class="button-sm" id="refresh-button">
+  <h1><%%= listname %> <button type="button" class="button-sm button-refresh" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
   <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
     <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Display name</th><th>Banned</th></tr>
@@ -33,7 +33,7 @@
 </script>
 
 <script type="text/template" id="admin-chatlist-template">
-  <h1>Chatrooms <button type="button" class="button-sm" id="refresh-button">
+  <h1>Chatrooms <button type="button" class="button-sm button-refresh" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
   <table id="chats-table" border-spacing="20px" padding="0 2em 1em 0">
     <tr><th></th><th>Id</th><th>Name</th><th>Owner</th></tr>
@@ -56,4 +56,32 @@
       <th id="admin-content"></th>
     </tr>
   </table>
+
+  <!-- Button trigger modal -->
+  <button type="button" class="button-sm button-ban" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <%= show_svg('ban.svg') %>
+  </button>
+
+  <button type="button" class="button-sm button-check" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <%= show_svg('check.svg') %>
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ban</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Do you want to ban this user?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Ban</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </script>

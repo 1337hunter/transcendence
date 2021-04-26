@@ -43,3 +43,15 @@ table #chats-table .chat-access-icon svg {
   padding: 1px;
   display: block;
 }
+
+button.button-sm.button-refresh svg:hover {
+  fill: darkseagreen;
+}
+
+button.button-sm.button-ban svg:hover {
+  fill: #dc3545;
+}
+
+button.button-sm.button-check svg:hover {
+  fill: #28a745;
+}

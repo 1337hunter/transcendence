@@ -105,3 +105,16 @@ table #users-table img {
     border: none;
     width: fit-content;
 }
+
+svg {
+    fill: white;
+}
+
+button#button-signin svg {
+    display: inline-block;
+    width: 25px;
+}
+
+button#button-signin:hover svg {
+    fill: black;
+}
