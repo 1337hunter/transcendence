@@ -10,14 +10,26 @@
   <td><label><%%= email %></label></td>
   <td><input class="form-control displayname" value="<%%= displayname %>"
              style="text-align: center;width: 17ch;border: none; padding: 1px; margin-left: 10px; margin-right: 10px;"></td>
-  <td><label><%%= banned %></label></td>
+  <td>
+    <button type="button" title="Ban user" class="button-sm button-ban"
+            data-bs-toggle="modal" data-bs-target="#banModal"
+            <%%= banned ? 'style="display: none;"' : '' %>>
+      <%= show_svg('ban.svg') %>
+    </button>
+    <button type="button" title="Unban user" class="button-sm button-check"
+            data-bs-toggle="modal" data-bs-target="#unbanModal"
+            <%%= banned ? '' : 'style="display: none;"' %>>
+      <%= show_svg('check.svg') %>
+    </button>
+  </td>
 </script>
 
 <script type="text/template" id="admin-userlist-template">
-  <h1><%%= listname %> <button type="button" class="button-sm button-refresh" id="refresh-button">
+  <h1><%%= listname %>
+    <button type="button" class="button-sm button-refresh" id="refresh-button" title="Refresh">
     <%= show_svg('refresh.svg') %></button></h1>
   <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
-    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Display name</th><th>Banned</th></tr>
+    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Display name</th><th>Actions</th></tr>
   </table>
 </script>
 
@@ -56,15 +68,6 @@
       <th id="admin-content"></th>
     </tr>
   </table>
-
-  <!-- Button trigger modal -->
-  <button type="button" class="button-sm button-ban" data-bs-toggle="modal" data-bs-target="#banModal">
-    <%= show_svg('ban.svg') %>
-  </button>
-
-  <button type="button" class="button-sm button-check" data-bs-toggle="modal" data-bs-target="#unbanModal">
-    <%= show_svg('check.svg') %>
-  </button>
 
   <!-- Modal -->
   <div class="modal fade" id="banModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
