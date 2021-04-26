@@ -1,11 +1,21 @@
 import Backbone from "backbone";
+import Utils from "../helpers/utils";
 
 const Admin = {};
 
 Admin.UserModel = Backbone.Model.extend({
     urlRoot: '/api/admin/users',
-    togglebanned: function() {
-        this.save({banned: !this.get('banned')}, {patch: true});
+    toggleBanned: function() {
+        this.save({banned: !this.get('banned')},
+            {patch: true,
+            success: function (model) {
+                if (model.get('banned'))
+                    Utils.appAlert("success",
+                        {msg: "User " + model.get("nickname") + " has been banned"})
+                else
+                    Utils.appAlert("success",
+                        {msg: "User " + model.get("nickname") + " has been unbanned"})
+            }});
     }
 });
 

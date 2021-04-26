@@ -9,13 +9,13 @@ $(function () {
     AdminView.ModalConfirmView = Backbone.View.extend({
         template: _.template($('#admin-modal-confirm-template').html()),
         events: {
-            "click .btn-confirm"    : "confirmban",
+            "click .btn-confirm"    : "confirm",
             "click .btn-cancel"     : "close",
             "click .btn-close"      : "close",
             "click .modal"          : "clickOutside"
         },
-        confirmban: function () {
-            this.model.togglebanned();
+        confirm: function () {
+            this.model.toggleBanned();
             this.close();
         },
         clickOutside: function (e) {
