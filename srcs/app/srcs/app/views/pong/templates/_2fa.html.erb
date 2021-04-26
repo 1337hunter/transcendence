@@ -1,5 +1,5 @@
 <div class="login-button-container">
-  <div class="login-button-vertical-center" style="top: 100%">
+  <div class="login-button-vertical-center" style="top: 80%">
     <div style="padding: 10px"><%= show_svg('key.svg') %></div>
     <%= form_with url: two_factor_validate_path, method: :post do |form| %>
       <%= form.text_field :otp, class: "form-control input-otp", style: "text-align: center; width: 100px;", placeholder: "2FA OTP" %>
