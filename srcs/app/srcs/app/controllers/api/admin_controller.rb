@@ -31,6 +31,19 @@ class Api::AdminController < ApplicationController
 
   # PATCH /api/admin/users/id.json
   def user_update
+    if params.has_key?('banned')
+      if params['banned'] == true && !(@user.banned?)
+        if @user == current_user
+          render json: {error: "You can't ban yourself"}, status: :forbidden
+          return
+        end
+        if @user.admin
+          render json: {error: "You can't ban another admin"}, status: :forbidden
+          return
+        end
+      end
+    end
+
     if @user.update(user_params)
       render json: @user, only: @userfilters, status: :ok
     else

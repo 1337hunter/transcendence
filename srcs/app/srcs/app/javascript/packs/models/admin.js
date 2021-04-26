@@ -3,7 +3,10 @@ import Backbone from "backbone";
 const Admin = {};
 
 Admin.UserModel = Backbone.Model.extend({
-    urlRoot: '/api/admin/users'
+    urlRoot: '/api/admin/users',
+    togglebanned: function() {
+        this.save({banned: !this.get('banned')}, {patch: true});
+    }
 });
 
 Admin.UserCollection = Backbone.Collection.extend({

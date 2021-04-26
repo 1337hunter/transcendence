@@ -6,16 +6,48 @@ import Utils from "../helpers/utils";
 const AdminView = {};
 
 $(function () {
+    AdminView.ModalConfirmView = Backbone.View.extend({
+        template: _.template($('#admin-modal-confirm-template').html()),
+        events: {
+            "click .btn-confirm"    : "confirmban",
+            "click .btn-cancel"     : "close",
+            "click .btn-close"      : "close",
+            "click .modal"          : "clickOutside"
+        },
+        confirmban: function () {
+            this.model.togglebanned();
+            this.close();
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            let view = this;
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        render: function(model) {
+            this.model = model;
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            return this;
+        }
+    });
+
 	AdminView.SingleUserView = Backbone.View.extend({
         template: _.template($('#admin-singleuser-template').html()),
         events: {
-            "keypress .displayname" : "updateOnEnter"
+            "keypress .displayname" : "updateOnEnter",
+            "click .confirm-action" : "openConfirm"
         },
         tagName: "tr",
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
+        },
+        openConfirm: function () {
+            this.confirmview = new AdminView.ModalConfirmView();
+            document.body.appendChild(this.confirmview.render(this.model).el);
         },
         updateOnEnter: function (e) {
             if (e.keyCode !== 13) return;

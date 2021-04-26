@@ -4,6 +4,7 @@ class Api::UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :check_2fa
   before_action :define_filters
+  before_action :sign_out_if_banned
   before_action :find_user, only: %i[show update destroy]
 
   # GET /api/users.json
