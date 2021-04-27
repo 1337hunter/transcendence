@@ -1,17 +1,16 @@
-
 <script type="text/template" id="room-template">
   <a class="room-click" href="#/room_<%%= id %>"><p><%%= name %></p></a>
 </script>
 
 <script type="text/template" id="message-template">
-  <a class="room-click" href="#/room_<%%= id %>"><p><%%= name %></p></a>
+  <%= image_tag current_user.avatar_url, href: "#/user_profile", size: "40x40", class: "user_icon"%>
+  <div class="message">
+    Hello worldwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwww
+  </div>
 </script>
 
 <script type="text/template" id="rooms-template">
 <div id="messages">
-  <div class="message">
-    Hello worldwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwww
-  </div>
 </div>
 <div id="div-chat-input">
   <input type="text" class="form-control" id="chat-input"\>

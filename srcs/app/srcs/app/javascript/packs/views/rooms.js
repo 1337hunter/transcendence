@@ -3,6 +3,7 @@ import _ from "underscore";
 import Rooms from "../models/rooms";
 import Utils from "../helpers/utils";
 import Messages from "../models/messages";
+import MessagesView from "./message";
 
 const RoomsView = {};
 
@@ -27,7 +28,6 @@ $(function () {
 			//console.log(this.model.get("id"));
 		}
 	 });
-
 
 	RoomsView.View = Backbone.View.extend({
 		initialize: function () {
@@ -60,7 +60,12 @@ $(function () {
 			console.log(this.messages);
 			this.messages = new Messages.MessageCollection({id: this.current_room});
 			this.messages.fetch();
+			this.messages.each(this.addMessage, this);
 			console.log(this.messages);
+		},
+		addMessage: function (msg) {
+			msg.view = new MessagesView.View({model: msg});
+			this.$("#messages").append(msg.view.render().el);
 		},
 		addOne: function (room) {
             room.view = new RoomsView.RoomView({model: room});
