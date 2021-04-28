@@ -12,7 +12,14 @@ $(function () {
             "click .btn-confirm"    : "confirm",
             "click .btn-cancel"     : "close",
             "click .btn-close"      : "close",
-            "click .modal"          : "clickOutside"
+            "click .modal"          : "clickOutside",
+            "keydown"               : "keylisten"
+        },
+        keylisten: function (e) {
+            if (e.keyCode === 13)
+                this.confirm();
+            if (e.keyCode === 27)
+                this.close();
         },
         confirm: function () {
             this.model.toggleBanned(this.reasoninput.val().trim());
@@ -24,10 +31,12 @@ $(function () {
         },
         close: function () {
             let view = this;
+            $('body').removeClass("modal-open");
             this.$el.fadeOut(200, function () { view.remove(); });
         },
         render: function(model) {
             this.model = model;
+            $('body').addClass("modal-open");
             this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
             this.reasoninput = this.$("input#ban-reason");
             return this;
@@ -49,6 +58,7 @@ $(function () {
         openConfirm: function () {
             this.confirmview = new AdminView.ModalConfirmView();
             document.body.appendChild(this.confirmview.render(this.model).el);
+            this.confirmview.reasoninput.focus();
         },
         updateOnEnter: function (e) {
             if (e.keyCode !== 13) return;
