@@ -14,6 +14,15 @@ Users.UserModel = Backbone.Model.extend({
     urlRoot: '/api/users'
 });
 
+Users.UserId = Backbone.Model.extend({
+    initialize: function(options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/users/' + this.id;
+    }
+});
+
 Users.UserCollection = Backbone.Collection.extend({
     model: Users.UserModel,
     url: '/api/users',

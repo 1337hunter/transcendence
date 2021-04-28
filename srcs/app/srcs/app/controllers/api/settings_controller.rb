@@ -26,7 +26,5 @@ class Api::SettingsController < ApplicationController
         end
         render json: @user, :only =>
           [:id, :displayname, :email, :avatar_url, :avatar_default_url]
-        # notice! @user.update_attribute skips model validation
-        # @user.save    # repeats transaction
     end
 end

@@ -4,6 +4,7 @@ import Rooms from "../models/rooms";
 import Utils from "../helpers/utils";
 import Messages from "../models/messages";
 import MessagesView from "./message";
+import Users from "../models/users";
 
 const RoomsView = {};
 
@@ -32,7 +33,6 @@ $(function () {
 	RoomsView.View = Backbone.View.extend({
 		initialize: function () {
 			this.current_room = 0;
-			this.messages = {};
 			this.collection = new Rooms.RoomCollection;
 			this.listenTo(this.collection, 'add', this.addOne);
 		    //this.listenTo(this.collection, 'reset', this.addAll);
@@ -58,13 +58,26 @@ $(function () {
 			var href = $(e.currentTarget).attr("href");
 			this.current_room = parseInt(href.match(regex));
 			this.messages = new Messages.MessageCollection({id: this.current_room});
-			this.messages.fetch();
-			this.messages.each(this.addMessage);
+			var $this = this;
+			this.$("#messages").find('.message').remove();
+			this.$("#messages").find('.user_icon').remove();
+			this.messages.fetch({
+				success: function() {
+					$this.messages.each($this.addMessage, $this);
+				}
+			})
 		},
 		addMessage: function (msg) {
-			console.log(msg)
-			msg.view = new MessagesView.View({model: msg});
-			this.$("#messages").append(msg.view.render().el);
+			var user_model = new Users.UserId({id: msg.get("user_id")});
+			var $this = this;
+			user_model.fetch({
+				success: function() {
+					msg.set({displayname: user_model.get("displayname")});
+					msg.set({avatar: user_model.get("avatar_url")});
+					msg.view = new MessagesView.View({model: msg});
+					$this.$("#messages").append(msg.view.render().el);
+				}
+			})
 		},
 		addOne: function (room) {
             room.view = new RoomsView.RoomView({model: room});
@@ -74,7 +87,7 @@ $(function () {
 			this.collection.each(this.addOne, this);
         },
 		create_room: function () {
-			var mod = new Rooms.RoomModel;
+			var mod = new Rooms.	RoomModel;
 			var $this = this;
 			if ($('#room-name').val().trim()) {
 				this.collection.create({id: mod.cid, name: $('#room-name').val().trim(),
