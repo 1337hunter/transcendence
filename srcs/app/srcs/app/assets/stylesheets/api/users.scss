@@ -37,4 +37,24 @@ table #users-table img {
   fill: darkorange;
   display: block;
   padding: 1.5px;
+  width: 25px;
+}
+
+.card-body {
+  background-color: black;
+}
+
+.card {
+  border-color: #272727;
+}
+
+.list-group-item {
+  background-color: black;
+  color: inherit;
+}
+
+
+.list-group-item svg {
+  width: 25px;
+  height: 25px;
 }
