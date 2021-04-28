@@ -2,6 +2,7 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
+import MainSPA from "../main_spa";
 
 const UsersView = {};
 
@@ -9,7 +10,7 @@ $(function () {
 	UsersView.SingleUserView = Backbone.View.extend({
         template: _.template($('#singleuser-template').html()),
         events: {
-            "keypress .displayname" : "updateOnEnter"
+            "click" : "openprofile"
         },
         tagName: "tr",
         initialize: function () {
@@ -17,17 +18,8 @@ $(function () {
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
         },
-        updateOnEnter: function (e) {
-            if (e.keyCode !== 13) return;
-
-            let newdisplayname = this.input.val().trim();
-            if (this.model.get('displayname') !== newdisplayname)
-            {
-                e.preventDefault();
-                e.stopPropagation();
-                this.model.save({displayname: newdisplayname},
-                    {patch: true, success: this.onsuccess});
-            }
+        openprofile: function () {
+            MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
@@ -79,6 +71,23 @@ $(function () {
 			return this;
 		}
 	});
+
+	UsersView.ProfileView = Backbone.View.extend({
+        template: _.template($('#user-profile-template').html()),
+        initialize: function (id) {
+            this.model = new Users.UserId({id: id});
+            this.listenTo(this.model, 'change', this.render);
+            this.model.fetch();
+        },
+        render: function () {
+            this.$el.html(this.template(this.model.toJSON()));
+            this.input = this.$('.displayname');
+            let model = this.model;
+            this.$('.user_avatar').on("error",
+                function () { Utils.replaceAvatar(this, model); });
+            return this;
+        }
+    });
 });
 
 export default UsersView;
