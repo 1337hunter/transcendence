@@ -50,16 +50,17 @@
       <div class="card mt-3">
         <ul class="list-group list-group-flush">
           <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-            <h6 class="mb-0"><%= show_svg('42_Logo.svg') %> Intra</h6>
+            <div class="mb-0"><%= show_svg('42_Logo.svg') %> Intra</div>
             <span class="text-secondary">
-              <a href="https://profile.intra.42.fr/users/<%%= nickname %>" target="_blank"><%%= nickname %></a>
+              <a href="https://profile.intra.42.fr/users/<%%= nickname %>"
+                 target="_blank" style="text-decoration: inherit; color: inherit;"><%%= nickname %></a>
             </span>
           </li>
         </ul>
       </div>
       <div class="card mt-3">
         <div class="card-body">
-          <h6 class="card-title">Badges</h6>
+          <div class="card-title">Badges</div>
           <div class="row">
             <div class="admin-icon" <%%= admin ? 'style="width:20px"' : 'style="display:none"' %>>
               <%= show_svg('user-astronaut.svg') %>
@@ -71,16 +72,16 @@
     <div class="col-md-8">
       <div class="card mb-3">
         <div class="card-body">
-          <h3 class="card-title">Stats</h3>
+          <h3 class="card-header card-title">Stats</h3>
           <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-              <h6 class="mb-0">Win/Lose ratio</h6>
+              <label class="mb-0">Win/Lose ratio</label>
               <span class="text-secondary">
                 <%%= loses === 0 ? wins/1 : wins/loses %> (<%%= wins %>/<%%= loses %>)
               </span>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-              <h6 class="mb-0">Elo</h6><span class="text-secondary"><%%= elo %></span>
+              <label class="mb-0">Elo</label><span class="text-secondary"><%%= elo %></span>
             </li>
           </ul>
         </div>
