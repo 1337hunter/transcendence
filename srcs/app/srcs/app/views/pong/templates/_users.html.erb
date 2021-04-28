@@ -35,7 +35,8 @@
     <img class="user_avatar" width="150px" height="150px" src="<%%= avatar_url %>" alt="avatar">
   </p>
   <p>
-    <p><label>Intra 42 nickname:</label></p> <%%= nickname %>
+    <p><label>Intra 42:</label></p>
+    <a href="https://profile.intra.42.fr/users/<%%= nickname %>" target="_blank"><%%= nickname %></a>
   </p>
   <p><label>Win/lose ratio:</label>
     <%%= loses === 0 ? wins/1 : wins/loses %> (<%%= wins %>/<%%= loses %>)</p>
