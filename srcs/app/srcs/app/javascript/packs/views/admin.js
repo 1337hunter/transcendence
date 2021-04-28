@@ -12,14 +12,7 @@ $(function () {
             "click .btn-confirm"    : "confirm",
             "click .btn-cancel"     : "close",
             "click .btn-close"      : "close",
-            "click .modal"          : "clickOutside",
-            "keydown"               : "keylisten"
-        },
-        keylisten: function (e) {
-            if (e.keyCode === 13)
-                this.confirm();
-            if (e.keyCode === 27)
-                this.close();
+            "click .modal"          : "clickOutside"
         },
         confirm: function () {
             this.model.toggleBanned(this.reasoninput.val().trim());
@@ -34,11 +27,22 @@ $(function () {
             $('body').removeClass("modal-open");
             this.$el.fadeOut(200, function () { view.remove(); });
         },
+        keylisten: function (e) {
+            if (e.key === "Enter") {
+                e.data.view.confirm();
+                $(this).off('keydown');
+            }
+            if (e.key === "Escape") {
+                e.data.view.close();
+                $(this).off('keydown');
+            }
+        },
         render: function(model) {
             this.model = model;
-            $('body').addClass("modal-open");
             this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
             this.reasoninput = this.$("input#ban-reason");
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
             return this;
         }
     });
