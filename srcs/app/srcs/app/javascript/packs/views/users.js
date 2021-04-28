@@ -62,7 +62,7 @@ $(function () {
                 success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
                 error: this.onerror});
         },
-        onerror: function (object, response) {
+        onerror: function (model, response) {
 		    Utils.alertOnAjaxError(response);
         },
 		render: function () {
@@ -74,10 +74,23 @@ $(function () {
 
 	UsersView.ProfileView = Backbone.View.extend({
         template: _.template($('#user-profile-template').html()),
+        events: {
+            "click #refresh-button" :   "refresh"
+        },
         initialize: function (id) {
             this.model = new Users.UserId({id: id});
             this.listenTo(this.model, 'change', this.render);
-            this.model.fetch();
+            this.model.fetch({error: this.onerror});
+        },
+        refresh: function () {
+            this.model.fetch({
+                success: function () {
+                    Utils.appAlert('success', {msg: 'Up to date'});},
+                    error: this.onerror
+            });
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
         },
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
