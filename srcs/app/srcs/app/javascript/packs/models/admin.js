@@ -5,8 +5,8 @@ const Admin = {};
 
 Admin.UserModel = Backbone.Model.extend({
     urlRoot: '/api/admin/users',
-    toggleBanned: function() {
-        this.save({banned: !this.get('banned')},
+    toggleBanned: function(reason) {
+        this.save({banned: !this.get('banned'), ban_reason: reason},
             {patch: true,
             success: function (model) {
                 if (model.get('banned'))

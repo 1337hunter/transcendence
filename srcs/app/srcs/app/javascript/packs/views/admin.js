@@ -15,7 +15,7 @@ $(function () {
             "click .modal"          : "clickOutside"
         },
         confirm: function () {
-            this.model.toggleBanned();
+            this.model.toggleBanned(this.reasoninput.val().trim());
             this.close();
         },
         clickOutside: function (e) {
@@ -29,6 +29,7 @@ $(function () {
         render: function(model) {
             this.model = model;
             this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            this.reasoninput = this.$("input#ban-reason");
             return this;
         }
     });

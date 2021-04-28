@@ -2,6 +2,7 @@ class Api::AdminController < ApplicationController
   include ApplicationHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
+  before_action :sign_out_if_banned
   before_action :check_2fa
   before_action :check_admin
   before_action :define_filters
@@ -67,7 +68,7 @@ class Api::AdminController < ApplicationController
   end
 
   def define_filters
-    @userfilters = %i[id nickname displayname email admin banned avatar_url avatar_default_url]
+    @userfilters = %i[id nickname displayname email admin banned avatar_url avatar_default_url ban_reason]
     @roomfilters = %i[id name owner_name private]
   end
 
@@ -80,7 +81,7 @@ class Api::AdminController < ApplicationController
   end
 
   def user_params
-    params.require(:admin).permit(%i[displayname avatar_url admin banned])
+    params.require(:admin).permit(%i[displayname avatar_url admin banned ban_reason])
     end
 
   def room_params
