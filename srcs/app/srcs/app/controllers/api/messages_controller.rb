@@ -1,6 +1,7 @@
 class Api::MessagesController < ApplicationController
     skip_before_action :verify_authenticity_token
 
+
     def index
         
         @messages = Message.all
@@ -15,12 +16,13 @@ class Api::MessagesController < ApplicationController
     end
 
     def show
-        
+        @messages = Message.where(room_id: params[:id])
+        render json: @messages
     end
 
     private
-    
+
     def message_params
-        params.require(:message).permit(:content)
+        params.require(:message).permit(:content, :room_id)
     end
 end

@@ -8,5 +8,7 @@ class CreateRooms < ActiveRecord::Migration[6.1]
       t.boolean     :private
       t.timestamps
     end
+
+    execute("SELECT setval('people_id_seq', 999);")
   end
 end

@@ -57,13 +57,12 @@ $(function () {
 			var regex = /\d+/g;
 			var href = $(e.currentTarget).attr("href");
 			this.current_room = parseInt(href.match(regex));
-			console.log(this.messages);
 			this.messages = new Messages.MessageCollection({id: this.current_room});
 			this.messages.fetch();
-			this.messages.each(this.addMessage, this);
-			console.log(this.messages);
+			this.messages.each(this.addMessage);
 		},
 		addMessage: function (msg) {
+			console.log(msg)
 			msg.view = new MessagesView.View({model: msg});
 			this.$("#messages").append(msg.view.render().el);
 		},
@@ -97,7 +96,7 @@ $(function () {
 		send_msg: function () {
 			console.log(this.current_room)
 			var mes = new Messages.MessageModel;
-			mes.save({content: $('#chat-input').val().trim()}, {patch: true});
+			mes.save({content: $('#chat-input').val().trim(), room_id: this.current_room}, {patch: true});
 		}
 	});
 });
