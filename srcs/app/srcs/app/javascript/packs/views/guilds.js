@@ -23,15 +23,16 @@ $(function () {
         },
         join:  function() {
             let view = this;
-            this.cur_user.fetch(
-                { success: function (model) {
+            this.cur_user.fetch({
+                success: function (model) {
                     model.save({guild_id: view.model.id}, {
                             patch: true,
                             success: view.onJoinSuccess(),
                             onerror: view.onerror
-                        });
-                    }
-                });
+                    });
+                },
+                error: view.onerror
+            });
         },
         onJoinSuccess: function () {
             Utils.appAlert('success', {msg: 'You joined the guild ' + this.model.get('name')});
