@@ -10,22 +10,43 @@
   <td><label><%%= email %></label></td>
   <td><input class="form-control displayname" value="<%%= displayname %>"
              style="text-align: center;width: 17ch;border: none; padding: 1px; margin-left: 10px; margin-right: 10px;"></td>
-  <td><label><%%= banned %></label></td>
+  <td>
+    <button type="button" title="Ban user" class="button-sm button-ban confirm-action"
+            <%%= banned ? 'style="display: none;"' : '' %>>
+      <%= show_svg('ban.svg') %>
+    </button>
+    <button type="button" title="Unban user" class="button-sm button-check confirm-action"
+            <%%= banned ? '' : 'style="display: none;"' %>>
+      <%= show_svg('check.svg') %>
+    </button>
+  </td>
 </script>
 
 <script type="text/template" id="admin-userlist-template">
-  <h1><%%= listname %> <button type="button" class="button-sm" id="refresh-button">
+  <h1><%%= listname %>
+    <button type="button" class="button-sm button-refresh" id="refresh-button" title="Refresh">
     <%= show_svg('refresh.svg') %></button></h1>
   <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
-    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Display name</th><th>Banned</th></tr>
+    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Display name</th><th>Actions</th></tr>
   </table>
 </script>
 
+<script type="text/template" id="admin-singlechat-template">
+  <td><div class="chat-access-icon" <%%= private ? '' : 'style="display:none"' %>>
+    <%= show_svg('lock.svg') %></div>
+    <div class="chat-access-icon" <%%= private ? 'style="display:none"' : '' %>>
+    <%= show_svg('lock-open.svg') %></div>
+  </td>
+  <td><label><%%= id %></label></td>
+  <td><label><%%= name %></label></td>
+  <td><label><%%= owner_name %></label></td>
+</script>
+
 <script type="text/template" id="admin-chatlist-template">
-  <h1>Chatlist <button type="button" class="button-sm" id="refresh-button">
+  <h1>Chatrooms <button type="button" class="button-sm button-refresh" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
-  <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
-    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Display name</th><th>Banned</th></tr>
+  <table id="chats-table" border-spacing="20px" padding="0 2em 1em 0">
+    <tr><th></th><th>Id</th><th>Name</th><th>Owner</th></tr>
   </table>
 </script>
 
@@ -34,8 +55,8 @@
     <tr>
       <th id="admin-nav">
         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-          <button onclick="location.href='#/admin';" class="nav-link" id="admin-users-tab" type="button" role="tab">Userlist</button>
-          <button onclick="location.href='#/admin/chats';" class="nav-link" id="admin-chats-tab" type="button" role="tab">Chatlist</button>
+          <button onclick="location.href='#/admin';" class="nav-link" id="admin-users-tab" type="button" role="tab">All Users</button>
+          <button onclick="location.href='#/admin/chats';" class="nav-link" id="admin-chats-tab" type="button" role="tab">Chatrooms</button>
           <hr>
           <button onclick="location.href='#/admin/admins';" class="nav-link" id="admin-admins-tab" type="button" role="tab">Admins</button>
           <hr>
@@ -45,4 +66,32 @@
       <th id="admin-content"></th>
     </tr>
   </table>
+</script>
+
+<script type="text/template" id="admin-modal-confirm-template">
+  <div class="modal fade show" aria-modal="true" role="dialog" style="display: block;">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background: #090909">
+        <div class="modal-header" style="border-bottom-color: #111111;">
+          <h5 class="modal-title">You are about to <%%= banned ? 'unban' : 'ban' %>
+            <b>@<%%= nickname %></b></h5>
+          <button type="button" class="btn-close btn-close-white"></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            <label for="ban-reason" style="font-weight: bold">Reason for ban</label>
+            <input type="text" class="form-control" id="ban-reason"
+                   value="<%%= ban_reason %>"
+                   placeholder="no reason provided" <%%= banned ? 'disabled' : '' %>>
+          </p>
+        </div>
+        <div class="modal-footer" style="border-top-color: #111111;">
+          <button type="button" class="btn btn-dark btn-cancel">Cancel</button>
+          <button type="button" class="btn btn-<%%= banned ? 'success' : 'danger' %> btn-confirm">
+            <%%= banned ? 'Revoke Ban' : 'Ban' %></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
 </script>

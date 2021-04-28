@@ -9,8 +9,13 @@ Messages.MessageModel = Backbone.Model.extend({
 });
 
 Messages.MessageCollection = Backbone.Collection.extend({
+    initialize: function(options) {
+        this.id = options.id;
+    },
     model: Messages.MessageModel,
-    url: '/api/messages',
+    url: function () {
+        return '/api/messages/' + this.id;
+    },
     comparator: 'id'
 });
 

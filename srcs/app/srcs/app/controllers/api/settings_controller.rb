@@ -3,6 +3,7 @@ class Api::SettingsController < ApplicationController
     skip_before_action :verify_authenticity_token
     before_action :authenticate_user!
     before_action :check_2fa
+    before_action :sign_out_if_banned
 
     def index
         @user = current_user
@@ -25,7 +26,5 @@ class Api::SettingsController < ApplicationController
         end
         render json: @user, :only =>
           [:id, :displayname, :email, :avatar_url, :avatar_default_url]
-        # notice! @user.update_attribute skips model validation
-        # @user.save    # repeats transaction
     end
 end

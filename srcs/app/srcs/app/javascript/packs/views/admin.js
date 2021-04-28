@@ -6,16 +6,63 @@ import Utils from "../helpers/utils";
 const AdminView = {};
 
 $(function () {
+    AdminView.ModalConfirmView = Backbone.View.extend({
+        template: _.template($('#admin-modal-confirm-template').html()),
+        events: {
+            "click .btn-confirm"    : "confirm",
+            "click .btn-cancel"     : "close",
+            "click .btn-close"      : "close",
+            "click .modal"          : "clickOutside"
+        },
+        confirm: function () {
+            this.model.toggleBanned(this.reasoninput.val().trim());
+            this.close();
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            let view = this;
+            $('body').removeClass("modal-open");
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        keylisten: function (e) {
+            if (e.key === "Enter") {
+                e.data.view.confirm();
+                $(this).off('keydown');
+            }
+            if (e.key === "Escape") {
+                e.data.view.close();
+                $(this).off('keydown');
+            }
+        },
+        render: function(model) {
+            this.model = model;
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            this.reasoninput = this.$("input#ban-reason");
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
+            return this;
+        }
+    });
+
 	AdminView.SingleUserView = Backbone.View.extend({
         template: _.template($('#admin-singleuser-template').html()),
         events: {
-            "keypress .displayname" : "updateOnEnter"
+            "keypress .displayname" : "updateOnEnter",
+            "click .confirm-action" : "openConfirm"
         },
         tagName: "tr",
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
+        },
+        openConfirm: function () {
+            this.confirmview = new AdminView.ModalConfirmView();
+            document.body.appendChild(this.confirmview.render(this.model).el);
+            this.confirmview.reasoninput.focus();
         },
         updateOnEnter: function (e) {
             if (e.keyCode !== 13) return;
@@ -30,10 +77,7 @@ $(function () {
             }
         },
         onerror: function (model, response) {
-            if (response.responseJSON == null) //  true for undefined too
-                Utils.appAlert('danger', {msg: 'No response from API'});
-            else
-                Utils.appAlert('danger', {json: response.responseJSON});
+            Utils.alertOnAjaxError(response);
             this.model.attributes = this.model.previousAttributes();
             this.render();
         },
@@ -58,7 +102,7 @@ $(function () {
 		initialize: function (filter, listname) {
             this.listname = listname;
 		    if (listname == null)
-		        this.listname = 'Userlist';
+		        this.listname = 'All Users';
 		    this.filter = filter;
 		    this.collection = new Admin.UserCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
@@ -88,20 +132,38 @@ $(function () {
 		}
 	});
 
+    AdminView.SingleChatView = Backbone.View.extend({
+        template: _.template($('#admin-singlechat-template').html()),
+        events: {},
+        tagName: "tr",
+        initialize: function () {
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'error', this.onerror);
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        }
+    });
+
 	AdminView.ChatlistView = Backbone.View.extend({
 		template: _.template($('#admin-chatlist-template').html()),
 		events: {
 		    "click #refresh-button" :   "refresh"
         },
 		initialize: function () {
-		    this.collection = new Admin.UserCollection;
+		    this.collection = new Admin.ChatCollection;
 		    this.listenTo(this.collection, 'add', this.addOne);
 		    this.listenTo(this.collection, 'reset', this.addAll);
             this.collection.fetch({reset: true, error: this.onerror});
         },
-		addOne: function (user) {
-            user.view = new AdminView.SingleUserView({model: user});
-            this.$("table#users-table tbody").append(user.view.render().el);
+		addOne: function (chat) {
+            chat.view = new AdminView.SingleChatView({model: chat});
+            this.$("table#chats-table tbody").append(chat.view.render().el);
         },
         addAll: function () {
             this.collection.each(this.addOne, this);

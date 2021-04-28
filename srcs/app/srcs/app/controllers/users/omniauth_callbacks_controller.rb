@@ -10,7 +10,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.persisted?
       if @user.banned?
-        set_flash_message(:danger, :banned) if is_navigational_format?
+        if @user.ban_reason.nil? || @user.ban_reason.empty?
+          set_flash_message(:danger, :banned) if is_navigational_format?
+        else
+          set_flash_message(:danger, :banned_with_reason, reason: @user.ban_reason) if is_navigational_format?
+        end
         return redirect_to root_path
       end
       @user.update(otp_validated: false)

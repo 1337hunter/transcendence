@@ -4,6 +4,7 @@ class Api::TwoFactorController < ApplicationController
   before_action :authenticate_user!
   before_action :check_2fa, except: %i[validate]
   before_action :define_user
+  before_action :sign_out_if_banned
 
   def status
     if @user.otp_required_for_login?

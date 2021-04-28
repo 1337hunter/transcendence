@@ -30,10 +30,7 @@ $(function () {
             }
         },
         onerror: function (model, response) {
-            if (response.responseJSON == null) //  true for undefined too
-                Utils.appAlert('danger', {msg: 'No response from API'});
-            else
-                Utils.appAlert('danger', {json: response.responseJSON});
+            Utils.alertOnAjaxError(response);
             this.model.attributes = this.model.previousAttributes();
             this.render();
         },
@@ -73,8 +70,8 @@ $(function () {
                 success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
                 error: this.onerror});
         },
-        onerror: function () {
-            Utils.appAlert('danger', {msg: 'Users fetch from API failed'});
+        onerror: function (object, response) {
+		    Utils.alertOnAjaxError(response);
         },
 		render: function () {
 			this.$el.html(this.template());

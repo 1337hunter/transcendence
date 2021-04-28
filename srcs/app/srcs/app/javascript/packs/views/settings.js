@@ -71,22 +71,6 @@ $(function () {
 			this.otpview = null;
 			this.$('#2fa-button').html('Show');
 		}
-		/*upload_avatar: function (event) {
-			var input = $("#upload_user_avatar");
-			console.log(input);
-			var data = new FormData();
-			data.append('file', input[0].files[0]);
-			console.log(data);
-			if (data) {
-				alert("name: " + data.name + "n" +"type: " + data.type + "n" +"size: " + data.size + " bytesn" + "starts with: " + contents);
-				data.onload = function(e) {
-					var contents = e.target.result;
-				}
-
-			}
-			//data.append('file', picture);
-			//this.model.save({displayname: $('#displayname').val().trim(), email: $('#email').val().trim(), avatar: data});
-		}*/
 	});
 });
 

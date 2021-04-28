@@ -1,13 +1,19 @@
-
 <script type="text/template" id="room-template">
-  <a href="#/room_<%%= id %>"><p><%%= name %></p></a>
+  <a class="room-click" href="#/room_<%%= id %>"><p><%%= name %></p></a>
+</script>
+
+<script type="text/template" id="message-template">
+  <div class="message">
+    <table>
+      <th><img class="user_icon" width="35px" height="35px" src="<%%= avatar %>" style="margin-bottom: 10px"></th>
+      <th><%%= displayname %></th>
+    </table>
+    <%%= content %>
+  </div>
 </script>
 
 <script type="text/template" id="rooms-template">
 <div id="messages">
-  <div class="message">
-    Hello worldwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww wwwwwwwwwwwwwwwwwwwwww
-  </div>
 </div>
 <div id="div-chat-input">
   <input type="text" class="form-control" id="chat-input"\>

@@ -16,8 +16,8 @@ module ApplicationHelper
 
   def sign_out_if_banned
     if defined?(current_user) && current_user.banned?
-      sign_out_and_redirect(current_user)
-      set_flash_message(:danger, :banned) if is_navigational_format?
+      render json: {error: "You are banned"}, status: :forbidden
+      sign_out(current_user)
     end
   end
 end

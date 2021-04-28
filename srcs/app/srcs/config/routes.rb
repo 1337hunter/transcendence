@@ -13,8 +13,9 @@ Rails.application.routes.draw do
     resources :messages
 
     get 'admin/users', to: 'admin#users'
-    patch 'admin/users', to: 'admin#update'
+    patch 'admin/users/:id', to: 'admin#user_update'
     get 'admin/chats', to: 'admin#chatlist'
+    patch 'admin/chats/:id', to: 'admin#chat_update'
     resources :guilds
 
   end
