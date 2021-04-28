@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     patch 'admin/chats/:id', to: 'admin#chat_update'
     resources :guilds
 
+    resources :guilds do
+      resources :users
+    end
+    #put 'guilds/:id/leave', to: 'guilds#leave'
   end
 
   get '/pong', to: 'pong#index'

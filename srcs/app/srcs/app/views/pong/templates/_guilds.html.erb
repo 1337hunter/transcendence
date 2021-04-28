@@ -1,10 +1,14 @@
 <script type="text/template" id="guild-template">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-1"><%%= place %></div>
-    <div class="col-3"><%%= name %></div>
-    <div class="col-3">Master</div>
-    <div class="col-2"><%%= score %></div>
-    <div class="col-3">nobody</div>
+    <div class="col-2"><%%= name %></div>
+    <div class="col-1"><%%= anagram ? anagram : '' %></div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-3"><%= current_user.guild_id %></div>
+    <% if current_user.guild_id #change to !%>
+      <div class="col-1"> <button type="button" class="btn btn-light options-button join" id="join-button">join</button></div>
+    <% elsif current_user.guild_id == 1 #doesn't work%>
+      <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="leave-button">leave</button></div>
+    <% end %>
   </div>
 </script>
 
@@ -17,21 +21,22 @@
 </script>
 
 <script type="text/template" id="guilds-template">
+  <% if current_user.guild_id # change to !%>
   <button class="open-button" onclick="openForm()">Create Guild</button>
   <div class="form-popup" id="newGuildForm">
     <form id="create-guild" class="form-container">
-      <input type="text" class="form-control" id="newGuildName" placeholder="The Guild Name" pattern="[A-Za-z]{3,20}" required="required" title="Guild Name can only have 3-20 letters"><br>
+      <input type="text" class="form-control" id="newGuildName" placeholder="The Guild Name" pattern="[A-Za-z ]{3,20}" required="required" title="Guild Name can only have 3-20 letters, no special symbols allowed"><br>
       <button type="submit" class="btn btn-success">Create Guild</button>
       <button type="button" class="btn btn-danger" onclick="closeForm()">Cancel</button>
     </form>
   </div>
+  <% end %>
   <h1>Guilds <button type="button" class="button-sm" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
     <div class="row" style="max-width: 1000px; min-width: 300px">
-      <div class="col-1">Place</div>
-      <div class="col-3">Name</div>
-      <div class="col-3">Master</div>
-      <div class="col-2">Score</div>
-      <div class="col-3">In war with</div>
+      <div class="col-2">Name</div>
+      <div class="col-1">Anagram</div>
+      <div class="col-1">Score</div>
+      <div class="col-3">Wars</div>
     </div>
 </script>

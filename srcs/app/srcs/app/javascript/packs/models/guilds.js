@@ -1,4 +1,5 @@
 import Backbone from "backbone";
+import Utils from "../helpers/utils";
 
 const Guilds = {};
 
@@ -6,7 +7,8 @@ Guilds.GuildModel = Backbone.Model.extend({
     urlRoot: '/api/guilds',
     defaults: {
         place: 0,
-        score: 0
+        score: 0,
+        anagram: ''
     }
 });
 

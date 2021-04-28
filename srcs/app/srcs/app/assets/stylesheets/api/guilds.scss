@@ -15,6 +15,20 @@
     border-radius: 50%;
 }
 
+.options-button {
+    height: 1.5vw;
+    line-height: 10px;
+    font-size: 80%;
+    border-radius: 3px !important;
+    opacity: 0.8
+}
+
+.join {
+  background-color: #43eeaa;
+  border-color : #43eeaa;
+  color : white;
+}
+
 .form-popup {
     display: none;
     position: fixed;
@@ -56,6 +70,6 @@
   padding: 10px;
 }
 
-.form-container .btn:hover, .open-button:hover {
+.form-container .btn:hover, .open-button:hover .options-button:hover {
     opacity: 1;
 }
