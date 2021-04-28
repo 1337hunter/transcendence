@@ -14,6 +14,7 @@ $(function () {
         template: _.template($('#room-template').html()),
         events: {
 			'click .room-click' : 'room_click',
+			
         },
     	tagName: "div",
         initialize: function () {
@@ -43,6 +44,7 @@ $(function () {
 			'click #create-room-btn' : 'create_room',
 			'click #send-msg-btn' : 'send_msg',
 			'click .room-click' : 'room_click',
+			"keypress #chat-input" : "send_msg"
 		},
 		render: function () {
 			this.$el.html(this.template());
@@ -106,10 +108,24 @@ $(function () {
 			});
 			}
 		},
-		send_msg: function () {
-			console.log(this.current_room)
-			var mes = new Messages.MessageModel;
-			mes.save({content: $('#chat-input').val().trim(), room_id: this.current_room}, {patch: true});
+		send_msg: function (e) {
+			if (e.keyCode !== 13) return;
+
+			let $this = this;
+			var current_user = new Users.CurrentUserModel();
+			current_user.fetch({
+				success: function () {
+					var mes = new Messages.MessageModel;
+					mes.save({content: $('#chat-input').val().trim(), room_id: $this.current_room,
+						user_id: current_user.get("id")}, {patch: true});
+					mes.set({displayname: current_user.get("displayname")});
+					mes.set({avatar: current_user.get("avatar_url")});
+					var	mes_view = new MessagesView.View({model: mes});
+					$this.$("#messages").append(mes_view.render().el);
+					$('#chat-input').val('');
+				}
+			}
+			);
 		}
 	});
 });
