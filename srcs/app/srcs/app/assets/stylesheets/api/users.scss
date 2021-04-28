@@ -6,11 +6,21 @@ button.button-sm {
   background: none;
   border: none;
   margin: 5px;
+  display: inline-flex;
 }
 
 button.button-sm svg {
   width: 20px;
   height: 20px;
+}
+
+button.button-back svg {
+  width: 25px;
+  height: 25px;
+}
+
+button.button-back svg:hover {
+  fill: royalblue;
 }
 
 table #users-table th, table #users-table tr {
@@ -23,7 +33,7 @@ table #users-table img {
   margin: 2px;
 }
 
-table #users-table .admin-icon svg {
+.admin-icon svg {
   fill: darkorange;
   display: block;
   padding: 1.5px;

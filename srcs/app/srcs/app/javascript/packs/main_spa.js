@@ -28,6 +28,7 @@ let AppRouter = Backbone.Router.extend({
         "rooms"                 : "rooms",
         "settings"              : "settings",
         "users"                 : "users",
+        "users/:id"             : "profile",
         "admin(/)(/:section)"   : "admin",
         ".*"                    : "pong" // 404???
     },
@@ -51,6 +52,10 @@ let AppRouter = Backbone.Router.extend({
     users: function () {
         this.main.view = new UsersView.View();
         this.main.el.html(this.main.view.render().el);
+    },
+    profile: function (id) {
+        this.main.view = new UsersView.ProfileView(id);
+        this.main.el.html(this.main.view.el);
     },
     admin: function (section) {
         if (!(this.main.view instanceof AdminView.View)) {

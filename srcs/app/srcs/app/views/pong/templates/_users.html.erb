@@ -10,8 +10,7 @@
   <td><label><%%= email %></label></td>
   <td><label><%%= wins %></label></td>
   <td><label><%%= loses %></label></td>
-  <td><input class="form-control displayname" value="<%%= displayname %>"
-             style="text-align: center;width: 17ch;border: none; padding: 1px"></td>
+  <td><label><%%= displayname %></label></td>
 </script>
 
 <script type="text/template" id="users-template">
@@ -20,4 +19,30 @@
   <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
     <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Wins</th><th>Loses</th><th>Display name</th></tr>
   </table>
+</script>
+
+<script type="text/template" id="user-profile-template">
+  <h1><button type="button" class="button-sm button-back" id="refresh-button"
+              onclick="location.href='#/users';">
+      <%= show_svg('arrow-left.svg') %>
+    </button>
+    Profile: <%%= displayname %>
+    <button type="button" class="button-sm button-refresh" id="refresh-button">
+      <%= show_svg('refresh.svg') %>
+    </button>
+  </h1>
+  <p>
+    <img class="user_avatar" width="150px" height="150px" src="<%%= avatar_url %>" alt="avatar">
+  </p>
+  <p>
+    <p><label>Intra 42 nickname:</label></p> <%%= nickname %>
+  </p>
+  <p><label>Win/lose ratio:</label>
+    <%%= loses === 0 ? wins/1 : wins/loses %> (<%%= wins %>/<%%= loses %>)</p>
+  <p>
+    <p><label>Badges</label></p>
+      <div class="admin-icon" <%%= admin ? 'style="width:20px"' : 'style="display:none"' %>>
+        <%= show_svg('user-astronaut.svg') %>
+      </div>
+  </p>
 </script>
