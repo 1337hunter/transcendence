@@ -29,6 +29,11 @@ table #users-table th, table #users-table tr {
   padding: 10px;
 }
 
+th.users-displayname, td.users-displayname {
+  text-align: left;
+  padding-left: 10px;
+}
+
 table #users-table img {
   margin: 2px;
 }
@@ -56,4 +61,8 @@ table #users-table img {
 .list-group-item svg {
   width: 25px;
   height: 25px;
+}
+
+.bg-admin {
+  background-color: darkorange;
 }

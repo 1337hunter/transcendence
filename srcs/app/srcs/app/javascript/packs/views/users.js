@@ -98,6 +98,13 @@ $(function () {
             let model = this.model;
             this.$('.user_avatar').on("error",
                 function () { Utils.replaceAvatar(this, model); });
+
+            //  TODO: tempporary solution.
+            if (MainSPA.SPA.router.currentuser.get('id') === this.model.get('id')) {
+                this.$('button.btn-profile-actions').prop('disabled', true);
+                this.$('div.profile-badges')
+                    .prepend("<span class=\"badge rounded-pill bg-primary\">You</span>")
+            }
             return this;
         }
     });

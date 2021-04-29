@@ -5,19 +5,27 @@
   <td>
     <img class="user_icon" width="30px" height="30px" src="<%%= avatar_url %>">
   </td>
-  <td><label><%%= id %></label></td>
-  <td><label><%%= nickname %></label></td>
-  <td><label><%%= email %></label></td>
+<!--  <td><label><%%= id %></label></td>-->
+  <td class="users-displayname"><label><%%= displayname %></label></td>
+<!--  <td><label><%%= email %></label></td>-->
   <td><label><%%= wins %></label></td>
   <td><label><%%= loses %></label></td>
-  <td><label><%%= displayname %></label></td>
+  <td><label><%%= elo %></label></td>
+  <td><label><%%= nickname %></label></td>
 </script>
 
 <script type="text/template" id="users-template">
   <h1>Users <button type="button" class="button-sm button-refresh" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
   <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
-    <tr><th></th><th></th><th>Id</th><th>Nickname</th><th>Email</th><th>Wins</th><th>Loses</th><th>Display name</th></tr>
+    <tr><th></th><th></th>
+<!--  <th>Id</th>-->
+      <th class="users-displayname">Display name</th>
+<!--  <th>Email</th>-->
+      <th>Wins</th>
+      <th>Loses</th>
+      <th>Elo</th>
+      <th>Intra nickname</th></tr>
   </table>
 </script>
 
@@ -32,18 +40,22 @@
     </button>
   </h1>
   <div class="container">
-    <div class="row gutters-sm">
-      <div class="col-md-4 mb-3">
+    <div class="row g-2">
+      <div class="col-md-4">
         <div class="card">
           <div class="card-body">
             <div class="d-flex flex-column align-items-center text-center">
               <img class="rounded-circle user_avatar" width="150px" src="<%%= avatar_url %>" alt="avatar">
               <div class="mt-3">
-                <h4><%%= displayname %></h4>
+                <h4 class="profile-displayname"><%%= displayname %></h4>
                 <p class="text-secondary mb-1"><%%= nickname %></p>
                 <p class="text-muted font-size-sm"><%%= email %></p>
-                <button class="btn btn-outline-success">Add Friend</button>
-                <button class="btn btn-outline-primary">Message</button>
+                <button class="btn btn-outline-success btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
+                  Add Friend
+                </button>
+                <button class="btn btn-outline-primary btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
+                  Message
+                </button>
               </div>
             </div>
           </div>
@@ -61,30 +73,73 @@
         </div>
         <div class="card mt-3">
           <div class="card-body">
-            <div class="card-title">Badges</div>
-            <div class="row">
-              <div class="admin-icon" <%%= admin ? 'style="width:20px"' : 'style="display:none"' %>>
-                <%= show_svg('user-astronaut.svg') %>
-              </div>
+            <h5 class="card-title">Badges/Roles</h5>
+            <div class="profile-badges">
+              <span class="badge rounded-pill bg-admin text-dark" <%%= admin ? '' : 'style="display:none"' %>>
+                Admin
+              </span>
+              <span class="badge rounded-pill bg-danger text-dark" <%%= banned ? '' : 'style="display:none"' %>>
+                Banned
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-4">
         <div class="card mb-3">
           <div class="card-body">
-            <h3 class="card-header card-title">Stats</h3>
+            <h5 class="card-header card-title">Stats</h5>
             <ul class="list-group list-group-flush">
               <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                 <label class="mb-0">Win/Lose ratio</label>
                 <span class="text-secondary">
-                  <%%= loses === 0 ? wins/1 : wins/loses %> (<%%= wins %>/<%%= loses %>)
-                </span>
+                    <%%= loses === 0 ? wins/1 : wins/loses %> (<%%= wins %>/<%%= loses %>)
+                  </span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                 <label class="mb-0">Elo</label><span class="text-secondary"><%%= elo %></span>
               </li>
             </ul>
+            <hr>
+            <h6 class="card-header card-title">Duels</h6>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                <label class="mb-0">Won</label><span class="text-secondary">0</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                <label class="mb-0">Total</label><span class="text-secondary">0</span>
+              </li>
+            </ul>
+            <hr>
+            <h6 class="card-header card-title">Ladder tournaments</h6>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                <label class="mb-0">Won</label><span class="text-secondary">0</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                <label class="mb-0">Total</label><span class="text-secondary">0</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-header card-title">Friends (0)</h5>
+            <ul class="list-group">
+              <li class="list-group-item">Placeholder</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row g-2">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-header card-title">Match History</h5>
+              <table>Placeholder</table>
+            </div>
           </div>
         </div>
       </div>

@@ -50,16 +50,6 @@ div.app_main {
     padding-right: 5%;
 }
 
-table #users-table th, table #users-table tr {
-    text-align: center;
-    vertical-align: middle;
-    padding: 10px;
-}
-
-table #users-table img {
-    margin: 2px;
-}
-
 .navbar  {
     height: 65px;
     padding-left: 5%;
