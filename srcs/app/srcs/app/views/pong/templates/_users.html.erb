@@ -48,7 +48,7 @@
               <img class="rounded-circle user_avatar" width="150px" src="<%%= avatar_url %>" alt="avatar">
               <div class="mt-3">
                 <h4 class="profile-displayname"><%%= displayname %></h4>
-                <p class="text-secondary mb-1"><%%= nickname %></p>
+                <p class="text-secondary mb-1"><%%= online ? 'Online' : 'last seen ' + last_seen_at %></p>
                 <p class="text-muted font-size-sm"><%%= email %></p>
                 <button class="btn btn-outline-success btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
                   Add Friend

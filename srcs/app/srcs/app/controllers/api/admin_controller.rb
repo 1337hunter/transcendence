@@ -81,7 +81,8 @@ class Api::AdminController < ApplicationController
   end
 
   def user_params
-    params.require(:admin).permit(%i[displayname avatar_url admin banned ban_reason])
+    params.require(:admin).permit(%i[displayname avatar_url admin
+                                  banned ban_reason online last_seen_at])
     end
 
   def room_params

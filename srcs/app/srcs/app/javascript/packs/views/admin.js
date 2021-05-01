@@ -23,19 +23,16 @@ $(function () {
                 this.close();
         },
         close: function () {
-            let view = this;
+            $('body.modal-open').off('keydown', this.keylisten);
             $('body').removeClass("modal-open");
+            let view = this;
             this.$el.fadeOut(200, function () { view.remove(); });
         },
         keylisten: function (e) {
-            if (e.key === "Enter") {
+            if (e.key === "Enter")
                 e.data.view.confirm();
-                $(this).off('keydown');
-            }
-            if (e.key === "Escape") {
+            if (e.key === "Escape")
                 e.data.view.close();
-                $(this).off('keydown');
-            }
         },
         render: function(model) {
             this.model = model;
