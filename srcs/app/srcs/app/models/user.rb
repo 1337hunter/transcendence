@@ -35,4 +35,8 @@ class User < ApplicationRecord
     end
     qrcode.as_svg(module_size: 4)
   end
+
+  def update_online!(is_online)
+    self.update({online: is_online, last_seen_at: Time.now})
+  end
 end

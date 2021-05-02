@@ -11,12 +11,17 @@ module ApplicationHelper
   end
 
   def check_2fa
-    redirect_to root_path unless user_validated_2fa?
+    unless user_validated_2fa?
+      redirect_to root_path
+      return
+    end
+    current_user.update_online!(true)
   end
 
   def sign_out_if_banned
     if defined?(current_user) && current_user.banned?
       render json: {error: "You are banned"}, status: :forbidden
+      current_user.update_online!(false)
       sign_out(current_user)
     end
   end
