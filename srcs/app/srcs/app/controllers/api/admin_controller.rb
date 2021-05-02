@@ -68,7 +68,8 @@ class Api::AdminController < ApplicationController
   end
 
   def define_filters
-    @userfilters = %i[id nickname displayname email admin banned avatar_url avatar_default_url ban_reason]
+    @userfilters = %i[id nickname displayname email admin avatar_url avatar_default_url
+                      banned ban_reason online last_seen_at]
     @roomfilters = %i[id name owner_name private]
   end
 
@@ -81,11 +82,10 @@ class Api::AdminController < ApplicationController
   end
 
   def user_params
-    params.require(:admin).permit(%i[displayname avatar_url admin
-                                  banned ban_reason online last_seen_at])
+    params.require(:admin).permit(%i[displayname avatar_url banned ban_reason])
     end
 
   def room_params
-    params.require(:admin).permit(%i[name privates])
+    params.require(:admin).permit(%i[name private])
   end
 end

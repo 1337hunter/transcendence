@@ -3,7 +3,7 @@
     <%= show_svg('user-astronaut.svg') %></div>
   </td>
   <td>
-    <img class="user_icon" width="30px" height="30px" src="<%%= avatar_url %>">
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>" width="30px" height="30px" src="<%%= avatar_url %>">
   </td>
   <td><label><%%= id %></label></td>
   <td><label><%%= nickname %></label></td>

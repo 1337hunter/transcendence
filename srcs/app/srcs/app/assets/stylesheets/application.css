@@ -80,6 +80,14 @@ div.app_main {
     -moz-border-radius: 100px;
 }
 
+.user_icon_online {
+    border: 2px solid seagreen;
+}
+
+.user_icon_ingame {
+    border: 2px solid blueviolet;
+}
+
 .alerts-block {
     position: absolute;
     bottom: 1em;
