@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
+import moment from "moment";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
@@ -93,6 +94,7 @@ $(function () {
             Utils.alertOnAjaxError(response);
         },
         render: function () {
+            this.model.attributes.last_seen_at = moment(this.model.get('last_seen_at')).fromNow();
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
             let model = this.model;
