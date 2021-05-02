@@ -2,7 +2,7 @@ class Api::TwoFactorController < ApplicationController
   include ApplicationHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
-  before_action :check_2fa, except: %i[validate]
+  before_action :check_2fa!, except: %i[validate]
   before_action :define_user
   before_action :sign_out_if_banned
 

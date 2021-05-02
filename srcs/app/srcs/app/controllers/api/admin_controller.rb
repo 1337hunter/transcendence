@@ -3,7 +3,7 @@ class Api::AdminController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
   before_action :sign_out_if_banned
-  before_action :check_2fa
+  before_action :check_2fa!
   before_action :check_admin
   before_action :define_filters
   before_action :find_user, only: %i[user_update]
