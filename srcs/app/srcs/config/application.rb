@@ -11,12 +11,6 @@ module Transcendence
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
 
-    if defined?(Rails::Server)
-      config.after_initialize do
-        User.update_all(online: false) if User.has_attribute?('online')
-      end
-    end
-
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
