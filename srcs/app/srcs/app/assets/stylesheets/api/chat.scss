@@ -49,7 +49,7 @@
 }
 
 #rooms {
-    width: 45%;
+    width: 35%;
     height: 65%;
     overflow-y: auto;
     position: absolute;
@@ -95,6 +95,24 @@
 #create-room-btn:hover {
     box-shadow: 0 0 0 30px rgb(0, 0, 0) inset !important;
     -webkit-text-fill-color: rgb(255, 255, 255) !important;
+}
+
+.room-click {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.room-click:hover{
+    color: rgba(180, 185, 252, 0.6)
+}
+
+.room_name {
+    margin-left: 1%;
+    margin-top: 2%;
+}
+
+.room_name:hover {
+    color: rgba(180, 185, 252, 0.6)
 }
 
 // .message-nick
