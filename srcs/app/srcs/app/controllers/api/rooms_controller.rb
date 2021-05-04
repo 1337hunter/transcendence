@@ -10,6 +10,11 @@ class Api::RoomsController < ApplicationController
     def create
     end
 
+    def show
+        @room = Room.where(id: params[:id])
+        render json: @room
+    end
+
     def update
         @room = Room.new
         if (params.has_key?(:name))

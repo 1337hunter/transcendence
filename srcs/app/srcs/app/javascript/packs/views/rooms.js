@@ -26,10 +26,8 @@ $(function () {
 
 	RoomsView.View = Backbone.View.extend({
 		initialize: function () {
-			this.current_room = 0;
 			this.collection = new Rooms.RoomCollection;
 			this.listenTo(this.collection, 'add', this.addOne);
-		    //this.listenTo(this.collection, 'reset', this.addAll);
 			this.collection.fetch();
 		},
 		template: _.template($('#rooms-template').html()),
