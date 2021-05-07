@@ -50,16 +50,6 @@ div.app_main {
     padding-right: 5%;
 }
 
-table #users-table th, table #users-table tr {
-    text-align: center;
-    vertical-align: middle;
-    padding: 10px;
-}
-
-table #users-table img {
-    margin: 2px;
-}
-
 .navbar  {
     height: 65px;
     padding-left: 5%;
@@ -88,6 +78,14 @@ table #users-table img {
     border-radius: 100px;
     -webkit-border-radius: 100px;
     -moz-border-radius: 100px;
+}
+
+.user_icon_online {
+    border: 2px solid seagreen;
+}
+
+.user_icon_ingame {
+    border: 2px solid blueviolet;
 }
 
 .alerts-block {

@@ -41,3 +41,6 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+puts 'Setting all users offline'
+User.update_all(online: false) if User.has_attribute?('online')

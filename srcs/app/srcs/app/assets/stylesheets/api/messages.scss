@@ -1,0 +1,37 @@
+#messages {
+    width: 90%;
+    overflow-y: auto;
+    height: 80%;
+    width: 90%;
+    position: absolute;
+    left: 5%;
+}
+
+
+#messages::-webkit-scrollbar {
+    display: none;
+}
+
+#div-chat-input {
+    position: absolute;
+    width: 90%;
+    left: 5%;
+    top: 90%;
+}
+
+.message {
+    width: 97%;
+    word-wrap: break-word;
+}
+
+#message-content {
+    width: 98%;
+    position: relative;
+    left: 1%;
+}
+
+#user-name {
+    position: relative;
+    left: 0.5%;
+    top: 0.5%;
+}

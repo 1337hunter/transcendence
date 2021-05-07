@@ -29,6 +29,11 @@ table #users-table th, table #users-table tr {
   padding: 10px;
 }
 
+th.users-displayname, td.users-displayname {
+  text-align: left;
+  padding-left: 10px;
+}
+
 table #users-table img {
   margin: 2px;
 }
@@ -37,4 +42,24 @@ table #users-table img {
   fill: darkorange;
   display: block;
   padding: 1.5px;
+  width: 25px;
+}
+
+.card {
+  border-color: #202020;
+  background: transparent;
+}
+
+.list-group-item, .card-header {
+  background-color: black;
+  color: inherit;
+}
+
+.list-group-item svg {
+  width: 25px;
+  height: 25px;
+}
+
+.bg-admin {
+  background-color: darkorange;
 }

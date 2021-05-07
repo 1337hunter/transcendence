@@ -1,5 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
+import moment from "moment";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
@@ -62,7 +63,7 @@ $(function () {
                 success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
                 error: this.onerror});
         },
-        onerror: function (object, response) {
+        onerror: function (model, response) {
 		    Utils.alertOnAjaxError(response);
         },
 		render: function () {
@@ -74,17 +75,38 @@ $(function () {
 
 	UsersView.ProfileView = Backbone.View.extend({
         template: _.template($('#user-profile-template').html()),
+        events: {
+            "click #refresh-button" :   "refresh"
+        },
         initialize: function (id) {
             this.model = new Users.UserId({id: id});
             this.listenTo(this.model, 'change', this.render);
-            this.model.fetch();
+            this.model.fetch({error: this.onerror});
+        },
+        refresh: function () {
+            this.model.fetch({
+                success: function () {
+                    Utils.appAlert('success', {msg: 'Up to date'});},
+                    error: this.onerror
+            });
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
         },
         render: function () {
+            this.model.attributes.last_seen_at = moment(this.model.get('last_seen_at')).fromNow();
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
             let model = this.model;
             this.$('.user_avatar').on("error",
                 function () { Utils.replaceAvatar(this, model); });
+
+            //  TODO: temp solution.
+            if (MainSPA.SPA.router.currentuser.get('id') === this.model.get('id')) {
+                this.$('button.btn-profile-actions').prop('disabled', true);
+                this.$('div.profile-badges')
+                    .prepend("<span class=\"badge rounded-pill bg-primary\">You</span>")
+            }
             return this;
         }
     });

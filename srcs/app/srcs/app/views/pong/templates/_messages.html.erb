@@ -1,0 +1,18 @@
+<script type="text/template" id="message-template">
+  <div class="message">
+    <table>
+      <tr><th><img class="user_icon" width="35px" height="35px" src="<%%= avatar %>" style="margin-bottom: 10px"></th>
+      <th id="user-name"><%%= displayname %>:</th>
+      <th id="message-content"> <%%= content %> </th></tr>
+    </table>
+  </div>
+</script>
+
+<script type="text/template" id="messages-template">
+    <h1 id="room-name"></h1>
+    <div id="messages">
+    </div>
+    <div id="div-chat-input">
+        <input type="text" class="form-control" id="chat-input" autocomplete="off"\>
+    </div>
+</script>

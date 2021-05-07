@@ -2,7 +2,7 @@ class Api::UsersController < ApplicationController
   include ApplicationHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
-  before_action :check_2fa
+  before_action :check_2fa!
   before_action :define_filters
   before_action :sign_out_if_banned
   before_action :find_user, only: %i[show update destroy]
@@ -45,7 +45,7 @@ class Api::UsersController < ApplicationController
 
   # DRY filters for json responses
   def define_filters
-    @filters = %i[id nickname displayname email admin
+    @filters = %i[id nickname displayname email admin banned online last_seen_at
                   wins loses elo avatar_url avatar_default_url guild_id]
   end
 
