@@ -4,13 +4,21 @@ import Utils from "../helpers/utils";
 import Messages from "../models/messages";
 import Users from "../models/users";
 import Rooms from "../models/rooms";
+import MainSPA from "../main_spa";
 
 const MessagesView = {};
 
 $(function () {
 	MessagesView.MessageView = Backbone.View.extend({
 		template: _.template($('#message-template').html()),
-		
+		events: {
+			"click .message" : "open_user_profile"
+		},
+		open_user_profile: function () {
+			var $this = this;
+			var u_id = $this.$('.message').attr("data-user-id");
+			MainSPA.SPA.router.navigate("#/users/" + u_id);
+		},
 		render: function() {
             this.$el.html(this.template(this.model.toJSON()));
             return this;
@@ -27,7 +35,7 @@ $(function () {
 			this.room_model = new Rooms.RoomId({id: this.room_id});
         },
 		events: {
-			"keypress #chat-input" : "send_msg"
+			"keypress #chat-input" : "send_msg",
 		},
         render: function () {
 			var $this = this;
