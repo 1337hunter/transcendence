@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_01_223333) do
+ActiveRecord::Schema.define(version: 2021_05_10_165517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,7 +36,6 @@ ActiveRecord::Schema.define(version: 2021_05_01_223333) do
     t.bigint "message_id"
     t.index ["message_id"], name: "index_rooms_on_message_id"
   end
-  execute "SELECT setval('rooms_id_seq', 4)"
 
   create_table "users", force: :cascade do |t|
     t.string "displayname"
