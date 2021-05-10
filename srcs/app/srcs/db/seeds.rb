@@ -15,3 +15,6 @@ User.create(id: 6, displayname: "dummyban1", wins: 0, loses: 0, elo: 0, created_
 Room.create(id: 1, name: "admin", private: true)
 Room.create(id: 2, name: "general", private: false)
 Room.create(id: 3, name: "random", private: false)
+
+connection = ActiveRecord::Base.connection()
+connection.execute "SELECT setval('rooms_id_seq', 4)"
