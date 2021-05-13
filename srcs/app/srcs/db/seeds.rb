@@ -15,3 +15,9 @@ User.create(displayname: "dummyban1", wins: 0, loses: 0, elo: 0, created_at: "20
 Room.create(name: "admin", private: true)
 Room.create(name: "general", private: false)
 Room.create(name: "random", private: false)
+
+Message.create(room_id: 2, content: "message1", user: User.find(1))
+Message.create(room_id: 2, content: "message2", user: User.find(2))
+Message.create(room_id: 2, content: "message3", user: User.find(3))
+Message.create(room_id: 2, content: "message4", user: User.find(4))
+Message.create(room_id: 2, content: "message5", user: User.find(5))
