@@ -1,8 +1,8 @@
 class Api::GuildsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :check_in_other_guild, only: [:create, :update]
-  before_action :find_guild, only: %i[show update destroy leave]
-  before_action :check_member, only: [:leave]
+  before_action :find_guild, only: %i[show update destroy leave show_master show_officers show_soldiers]
+  #before_action :check_member, only: [:leave]
   before_action :check_master_rights, only: [:destroy]
   before_action :check_officer_rights, only: [:update]
 
@@ -35,6 +35,7 @@ class Api::GuildsController < ApplicationController
     end
   end
 
+  #delete?
   def leave
     if @user.guild_master = true
       @user.errors.add :base, 'Pass master role before leaving the guild.'
@@ -60,6 +61,33 @@ class Api::GuildsController < ApplicationController
     end
   end
 
+  def users_available
+    @users = User.all.where(:guild_id => nil)
+    @users = @users.all.where.not(:banned => true)
+    @users = @users.all.where.not(:id => current_user.id)
+    render json: @users, status: :ok
+  end
+
+  def  show_master
+    @master = guild.master
+    render json: @master, status: :ok
+  end
+
+  def  show_officers
+    @officers = guild.officers
+    render json: @officers, status: :ok
+  end
+
+  def show_soldiers
+    @soldiers = guild.soldiers
+    render json: @soldiers, status: :ok
+  end
+
+  def show_members
+    @members = guild.members
+    render json: @members, status: :ok
+  end
+
   private
 
   def find_guild
@@ -70,7 +98,7 @@ class Api::GuildsController < ApplicationController
     @user = current_user
     if @user.guild_id
       @user.errors.add :base, 'You are in the guild already. Leave your guild to continue.'
-      # render json: @user.errors, status: :bad_request #uncomment! commented for test
+      render json: @user.errors, status: :bad_request #uncomment! commented for test
     end
   end
 
@@ -94,7 +122,7 @@ class Api::GuildsController < ApplicationController
     @user = current_user
     if @user.guild_id != @guild.id
       @user.errors.add :base, 'You are not in this guild'
-      render json: @user.errors, status: :bad_request
+      render json: @user.errors, status: :forbidden
     end
   end
 
@@ -160,7 +188,7 @@ class Api::GuildsController < ApplicationController
         end
     end
     while !check_anagram(anagram)
-      charset = name.split('') + Array('0'..'9') + %w[_@#$*^%><~+/.)]
+      charset = name.split('') + Array('0'..'9') + %w[_@#$*^%><~+/.!)]
       add = anagram.size
       if add > 4
         add -= 1

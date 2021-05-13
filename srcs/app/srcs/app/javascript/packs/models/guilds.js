@@ -1,5 +1,7 @@
 import Backbone from "backbone";
-import Utils from "../helpers/utils";
+import Admin from "./admin";
+//import Utils from "../helpers/utils";
+import Users from "./users";
 
 const Guilds = {};
 
@@ -9,6 +11,19 @@ Guilds.GuildModel = Backbone.Model.extend({
         place: 0,
         score: 0,
         anagram: ''
+    }
+});
+
+Guilds.GuildId = Backbone.Model.extend({
+    initialize: function(options) {
+        this.id = options.id;
+        this.set('members', new Users.UserCollection());
+    },
+    url: function () {
+        return '/api/guilds/' + this.id;
+    },
+    members: function () {
+        return '/api/guilds/' + this.id + '/members';
     }
 });
 

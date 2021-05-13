@@ -12,6 +12,9 @@ class GuildValidator < ActiveModel::Validator
 
     # validate anagram
     record.anagram = record.anagram.strip
+    record.errors.add :anagram, 'Anagram is shorter than 2 symbols' if record.anagram.size < 2
+    record.errors.add :anagram, 'Anagram is longer than 5 symbols' if record.anagram.size > 5
+    record.errors.add :anagram, 'Bad symbol' unless record.anagram.match? '^[a-zA-Z0-9_@#$*^%><~+/.!]+$'
     record.errors.add :anagram, 'Bad name' if @badnames.include? record.anagram.downcase
 
   end

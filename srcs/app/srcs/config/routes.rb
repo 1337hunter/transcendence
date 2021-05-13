@@ -16,12 +16,13 @@ Rails.application.routes.draw do
     patch 'admin/users/:id', to: 'admin#user_update'
     get 'admin/chats', to: 'admin#chatlist'
     patch 'admin/chats/:id', to: 'admin#chat_update'
-    resources :guilds
 
     resources :guilds do
       resources :users
     end
+    get 'users_not_in_guild', to: 'guilds#users_available'
     #put 'guilds/:id/leave', to: 'guilds#leave'
+
   end
 
   get '/pong', to: 'pong#index'

@@ -42,10 +42,7 @@ ActiveRecord::Schema.define(version: 2021_05_01_223333) do
     t.boolean "private"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "message_id"
-    t.index ["message_id"], name: "index_rooms_on_message_id"
   end
-  execute "SELECT setval('rooms_id_seq', 4)"
 
   create_table "users", force: :cascade do |t|
     t.string "displayname"
@@ -88,6 +85,5 @@ ActiveRecord::Schema.define(version: 2021_05_01_223333) do
 
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
-  add_foreign_key "rooms", "messages"
   add_foreign_key "users", "guilds"
 end

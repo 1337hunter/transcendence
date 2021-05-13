@@ -34,4 +34,10 @@ Users.UserCollection = Backbone.Collection.extend({
     comparator: 'id'
 });
 
+Users.NoGuildUsersCollection = Backbone.Collection.extend({
+    model: Users.UserModel,
+    url: '/api/users_not_in_guild',
+    comparator: 'id'
+});
+
 export default Users;
