@@ -9,7 +9,7 @@ Messages.MessageModel = Backbone.Model.extend({
 });
 
 Messages.MessageCollection = Backbone.Collection.extend({
-    initialize: function(options) {
+    initialize: function(model, options) {
         this.id = options.id;
     },
     model: Messages.MessageModel,

@@ -8,14 +8,23 @@ class Api::MessagesController < ApplicationController
     end
 
     def create
-        @message = Message.new(message_params)
-        @message.user = current_user
-        @message.save
+        @message = Message.create(room_id: params["room_id"],
+                                  content: params["content"],
+                                  user: current_user)
         ActionCable.server.broadcast("chat_room", { body: params['content'] })
+        render json: @message
     end
 
     def show
-        @messages = Message.where(room_id: params[:id])
+        @messages = Message.where(room_id: params[:id]).
+          includes(:user).
+          joins(:user).
+          select([
+                   Message.arel_table[Arel.star],
+                   User.arel_table[:displayname],
+                   User.arel_table[:avatar_url].as("avatar"),
+                   User.arel_table[:avatar_default_url]
+                 ])
         render json: @messages
     end
 
