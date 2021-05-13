@@ -31,7 +31,7 @@ $(function () {
         initialize: function (id) {
 			this.room_id = id;
 			this.listenTo(this.collection, 'add', this.addOne);
-			this.collection = new Messages.MessageCollection({id: this.room_id});
+			this.collection = new Messages.MessageCollection(null, {id: this.room_id});
 			this.room_model = new Rooms.RoomId({id: this.room_id});
         },
 		events: {
@@ -56,17 +56,19 @@ $(function () {
 			return this;
 		},
 		addOne: function (msg) {
-			var user_model = new Users.UserId({id: msg.get("user_id")});
-			var $this = this;
-			user_model.fetch({
-				success: function() {
-					msg.set({displayname: user_model.get("displayname")});
-					msg.set({avatar: user_model.get("avatar_url")});
-					msg.view = new MessagesView.MessageView({model: msg});
-					$this.$("#messages").append(msg.view.render().el);
-					$("#messages").scrollTop($("#messages")[0].scrollHeight);	
-				}
-			})
+			msg.view = new MessagesView.MessageView({model: msg});
+			this.$("#messages").append(msg.view.render().el);
+			// var user_model = new Users.UserId({id: msg.get("user_id")});
+			// var $this = this;
+			// user_model.fetch({
+			// 	success: function() {
+			// 		msg.set({displayname: user_model.get("displayname")});
+			// 		msg.set({avatar: user_model.get("avatar_url")});
+			// 		msg.view = new MessagesView.MessageView({model: msg});
+			// 		$this.$("#messages").append(msg.view.render().el);
+			// 		$("#messages").scrollTop($("#messages")[0].scrollHeight);
+			// 	}
+			// })
 		},
 		addAll: function () {
 			this.collection.each(this.addOne, this);
