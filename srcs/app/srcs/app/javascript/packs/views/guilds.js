@@ -17,7 +17,9 @@ $(function () {
         template: _.template($('#guild-template').html()),
         events: {
             "click #join-button": "join",
-            "click #leave-button": "leave"
+            "click #leave-button": "leave",
+            "click #master" : "masterProfile",
+            "click #guild-profile" : "guildProfile"
         },
         tagName: "div",
         initialize: function () {
@@ -27,8 +29,11 @@ $(function () {
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         },
-        openprofile: function () {
+        guildProfile: function () {
             MainSPA.SPA.router.navigate("#/guilds/" + this.model.get('id'));
+        },
+        masterProfile:  function () {
+            MainSPA.SPA.router.navigate("#/users/" + this.model.get('master_id'));
         },
         join:  function() {
             let view = this;
@@ -37,7 +42,9 @@ $(function () {
                 success: function (model) {
                     model.save({guild_id: view.model.id}, {
                             patch: true,
-                            success: view.onJoinSuccess(),
+                            success: function () {
+                                Utils.appAlert('success', {msg: 'You joined the guild ' + view.model.get('name')});
+                            },
                             onerror: view.onerror
                     });
                 },
@@ -51,18 +58,14 @@ $(function () {
                 success: function (model) {
                     model.save({guild_id: null, guild_officer: false}, {
                         patch: true,
-                        success: view.onLeaveSuccess(),
+                        success: function () {
+                            Utils.appAlert('success', {msg: 'You left the guild ' + view.model.get('name')});
+                        },
                         onerror: view.onerror
                     });
                 },
                 error: view.onerror
             });
-        },
-        onJoinSuccess: function () {
-            Utils.appAlert('success', {msg: 'You joined the guild ' + this.model.get('name')});
-        },
-        onLeaveSuccess: function () {
-            Utils.appAlert('success', {msg: 'You left the guild ' + this.model.get('name')});
         },
         onerror: function (model, response) {
             if (response.responseJSON == null) //  true for undefined too
@@ -145,8 +148,8 @@ $(function () {
         },
         updateOnEnter: function (e) {
             if (e.keyCode !== 13) return;
-
             let newanagram = $('#anagram').val().trim();
+            let view = this;
             if (this.model.get('anagram') !== newanagram)
             {
                 e.preventDefault();
@@ -155,14 +158,16 @@ $(function () {
                     {patch: true,
                         success: function () {
                             Utils.appAlert('success', {msg: 'Anagram has been changed'});},
-                        error: this.onerror
+                        error: function (model, response) {
+                            Utils.alertOnAjaxError(response);
+                            model.attributes = model.previousAttributes();
+                            view.render();
+                        }
                     });
             }
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
-           // this.model.attributes = this.model.previousAttributes();
-           // this.render();
         },
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));

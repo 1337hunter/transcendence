@@ -1,13 +1,17 @@
 class Api::GuildsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :check_in_other_guild, only: [:create, :update]
+  before_action :check_in_other_guild, only: [:create]
   before_action :find_guild, only: %i[show update destroy leave show_master show_officers show_soldiers]
-  #before_action :check_member, only: [:leave]
-  before_action :check_master_rights, only: [:destroy]
-  before_action :check_officer_rights, only: [:update]
+  before_action :check_master_rights, only: [:destroy, :update]
+  #before_action :check_officer_rights, only: [:update]
 
   def index
-    @guilds = Guild.all
+    @guilds = Guild.all.includes(:master).joins(:master).
+      select([
+               Guild.arel_table[Arel.star],
+               User.arel_table[:displayname].as("master_name"),
+               User.arel_table[:id].as("master_id")
+             ])
     render json: @guilds
   end
 
@@ -17,7 +21,8 @@ class Api::GuildsController < ApplicationController
 
   def create
     puts "Creating new guild"
-    guild = @user.create_guild(name: params[:name], anagram: generate_anagram(params[:name]))
+    guild = @user.create_guild(name: params[:name],
+                               anagram: generate_anagram(params[:name]))
     if guild.save
       @user.guild_master = true
       @user.save
@@ -102,7 +107,7 @@ class Api::GuildsController < ApplicationController
     end
   end
 
-  def chek_master_rights
+  def check_master_rights
     check_member
     if @user.guild_master = false
         @user.errors.add :base, 'Only Guild master can do it'
@@ -128,7 +133,7 @@ class Api::GuildsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def guild_params
-    params.require(:guild).permit(%i[name anagram])
+    params.require(:guild).permit(%i[anagram]) #+name?
   end
 
   def generate_anagram(name)
