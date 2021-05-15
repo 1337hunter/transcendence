@@ -1,3 +1,4 @@
+import {gameRoom} from "./views/pong"
 export default function pong_game() {
     var canvas = document.getElementById("pongCanvas");
     var ctx = canvas.getContext("2d");
@@ -100,6 +101,7 @@ export default function pong_game() {
 
     function drawRightPad() {
         ctx.beginPath()
+        gameRoom.send({data: 'Hi!!'});
         ctx.rect(rightPadX, rightPadY, padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
