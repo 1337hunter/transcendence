@@ -1,6 +1,6 @@
 import consumer from "./consumer"
 
-consumer.subscriptions.create("ChatChannel", {
+consumer.subscriptions.create({channel: "ChatChannel", room_id: 2}, {
   initialized() {
   },
 

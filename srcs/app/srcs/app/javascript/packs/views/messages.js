@@ -58,6 +58,7 @@ $(function () {
 		addOne: function (msg) {
 			msg.view = new MessagesView.MessageView({model: msg});
 			this.$("#messages").append(msg.view.render().el);
+			$("#messages").scrollTop($("#messages")[0].scrollHeight);
 			// var user_model = new Users.UserId({id: msg.get("user_id")});
 			// var $this = this;
 			// user_model.fetch({

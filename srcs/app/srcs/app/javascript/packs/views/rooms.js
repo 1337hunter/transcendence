@@ -62,6 +62,7 @@ $(function () {
 							$this.collection.fetch({
 								success: function() {
 									$this.render();
+									$("#rooms").scrollTop($("#rooms")[0].scrollHeight);
 								}
 							})
 						},

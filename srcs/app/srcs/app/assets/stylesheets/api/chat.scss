@@ -10,15 +10,19 @@
 
 #rooms {
     width: 35%;
-    height: 65%;
+    height: 90%;
     overflow-y: auto;
     position: absolute;
 }
 
+#rooms::-webkit-scrollbar {
+    display: none;
+}
 
 .new-chat-input {
     position: absolute;
-    bottom: 5.5%;
+    right: 10%;
+    top: 5.5%;
     width: 30%;
 }
 
