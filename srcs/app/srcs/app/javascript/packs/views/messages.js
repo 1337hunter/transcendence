@@ -41,8 +41,10 @@ $(function () {
 		},
         render: function () {
 			var $this = this;
+
 			this.room_model.fetch({
 				success: function () {
+					$this.$("#room-name").html($this.room_model.attributes[0].name)
 				}
 			});
 			this.$el.html(this.template(this.room_model.toJSON()));
@@ -54,7 +56,6 @@ $(function () {
 					$this.addAll();
 				}
 			})
-			$this.$("#room-name").val("TITLE")
 			return this;
 		},
 		addOne: function (msg) {
