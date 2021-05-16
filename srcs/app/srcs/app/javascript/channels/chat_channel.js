@@ -9,9 +9,9 @@ function disconnect_from_rooms () {
 }
 
 let SubToChannel = {
-    join(id)
+    async join(id)
     {
-      disconnect_from_rooms();
+      await disconnect_from_rooms();
       consumer.subscriptions.create({channel: "ChatChannel", room_id: id}, {
       initialized() {
         this.id = id;
