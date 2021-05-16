@@ -1,7 +1,12 @@
 import consumer from "./consumer"
 
-var rightPadX;
-var rightPadY;
+var obtainedValues = 
+{
+	rigthPadX: 1,
+	rightPadY: 1,
+	leftPadX: 1,
+	leftPadY: 1
+}
 
 var GameRoomInit = 
 {
@@ -14,16 +19,19 @@ var GameRoomInit =
             },
 
             disconnected() {
+				console.log("Disconnected from game channel.");
               // Called when the subscription has been terminated by the server
             },
 
             received(data) {
-                rightPadX = data.x;
-                rightPadY = data.y;
+                obtainedValues.rightPadX = data.x1;
+                obtainedValues.rightPadY = data.y1;
+				obtainedValues.leftPadX = data.x2;
+                obtainedValues.leftPadY = data.y2;
             }
       });
       return GameRoom;
     }
 }
-export {rightPadX, rightPadY};
+export {obtainedValues};
 export default GameRoomInit;
