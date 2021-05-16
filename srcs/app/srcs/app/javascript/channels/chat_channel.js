@@ -1,8 +1,17 @@
 import consumer from "./consumer"
 
+function disconnect_from_rooms () {
+  consumer.subscriptions.subscriptions.forEach((subscription) => {
+    let found = subscription.identifier.search("\"channel\":\"ChatChannel\"")
+    if (found != -1)
+      consumer.subscriptions.remove(subscription)
+  } )
+}
+
 let SubToChannel = {
-    join(id)
+    async join(id)
     {
+      await disconnect_from_rooms();
       consumer.subscriptions.create({channel: "ChatChannel", room_id: id}, {
       initialized() {
         this.id = id;
@@ -15,12 +24,11 @@ let SubToChannel = {
       },
 
       disconnected() {
+        console.log("Disconnected from room_" + id)
         // Called when the subscription has been terminated by the server
       },
 
       received(data) {
-        console.log(data.room_id);
-        console.log(this.id)
         if (data.room_id == this.id)
         {
           $('#messages').append(`
@@ -31,6 +39,7 @@ let SubToChannel = {
                 <th id="message-content"> ${data.content} </th></tr>
               </table>
             </div>`)
+            $("#messages").scrollTop($("#messages")[0].scrollHeight);
         }
       }
     })
