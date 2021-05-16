@@ -101,7 +101,7 @@ export default function pong_game() {
 
     function drawRightPad() {
         ctx.beginPath()
-    //    PongView.cable.send({data: 'Hi!!'});
+    //    PongView.View.cable.send({data: 'Hi!!'});
         ctx.rect(rightPadX, rightPadY, padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
