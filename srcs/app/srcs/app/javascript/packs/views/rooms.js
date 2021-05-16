@@ -5,6 +5,7 @@ import Utils from "../helpers/utils";
 import Messages from "../models/messages";
 import MessagesView from "./messages";
 import Users from "../models/users";
+import RoomMembers from "../models/room_members"
 
 const RoomsView = {};
 
@@ -25,10 +26,11 @@ $(function () {
 	 });
 
 	RoomsView.View = Backbone.View.extend({
-		initialize: function () {
+		initialize: function (main) {
 			this.collection = new Rooms.RoomCollection;
 			this.listenTo(this.collection, 'add', this.addOne);
 			this.collection.fetch();
+			this.main = main
 		},
 		template: _.template($('#rooms-template').html()),
 		events: {
@@ -51,8 +53,17 @@ $(function () {
         addAll: function () {
 			this.collection.each(this.addOne, this);
         },
+		room_click: function (e) {
+			let regex =  /\d+/;
+			let index = String(e.currentTarget)
+			index = index.substr(index.length - 1)
+			var room = this.collection.where({id: Number(index)})[0]
+			
+			let view = new MessagesView.View(Number(index));
+			$(".app_main").html(view.render().el);
+		},
 		create_room: function () {
-			var mod = new Rooms.	RoomModel;
+			var mod = new Rooms.RoomModel;
 			var $this = this;
 			if ($('#room-name').val().trim()) {
 				this.collection.create({id: mod.cid, name: $('#room-name').val().trim(),

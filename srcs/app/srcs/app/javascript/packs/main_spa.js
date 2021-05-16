@@ -27,7 +27,6 @@ let AppRouter = Backbone.Router.extend({
         "oauth"                 : "oauth",
         "play"                  : "pong",
         "rooms"                 : "rooms",
-        "room_:id"              : "messages",
         "settings"              : "settings",
         "users"                 : "users",
         "users/:id"             : "profile",
@@ -49,10 +48,6 @@ let AppRouter = Backbone.Router.extend({
     },
     rooms: function () {
         this.main.view = new RoomsView.View();
-        this.main.el.html(this.main.view.render().el);
-    },
-    messages: function (id) {
-        this.main.view = new MessagesView.View(id);
         this.main.el.html(this.main.view.render().el);
     },
     users: function () {

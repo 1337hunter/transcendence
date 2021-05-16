@@ -2,8 +2,8 @@ import consumer from "./consumer"
 
 var GameRoomInit = 
 {
-    GameRoom: function () {
-        var Room = consumer.subscriptions.create("GameRoomChannel", {
+    GameRoom: async function () {
+        const Room = consumer.subscriptions.create("GameRoomChannel", {
         connected() {
           // Called when the subscription is ready for use on the server
           console.log("Connected to game room channel");

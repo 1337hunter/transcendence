@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :settings
     resources :rooms
     resources :messages
+    resources :room_members
 
     get 'admin/users', to: 'admin#users'
     patch 'admin/users/:id', to: 'admin#user_update'

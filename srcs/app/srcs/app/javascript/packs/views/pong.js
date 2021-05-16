@@ -9,8 +9,8 @@ $(function () {
 		template: _.template($('#pong-template').html()),
 		events: {},
 		initialize: function () {
-			this.cable = GameRoomInit.GameRoom();
-			this.cable.send({str: "test"});
+			// this.cable = GameRoomInit.GameRoom();
+			// this.cable.send({str: "test"});
 		},
 		render: function () {
 			this.$el.html(this.template());

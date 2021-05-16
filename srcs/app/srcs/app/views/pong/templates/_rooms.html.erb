@@ -1,5 +1,10 @@
 <script type="text/template" id="room-template">
-  <a class="room-click" href="#/room_<%%= id %>"><div class="card mb-2"><p class="room_name"><%%= name %></p></div></a>
+  <a class="room-click" href="#/room_<%%= id %>">
+    <div class="card mb-2">
+      <%= show_svg('lock.svg') %>
+      <p class="room_name"><%%= name %></p>
+    </div>
+</a>
 </script>
 
 <script type="text/template" id="rooms-template">
