@@ -15,7 +15,10 @@ class Api::UsersController < ApplicationController
 
   # GET /api/users/id.json
   def show
-    render json: @user, only: @filters
+    render json: @user.as_json(
+      only: @filters,
+      include: { guild: { only: @guildfilters } }
+    )
   end
 
   # PATCH/PUT /api/users/id.json
@@ -47,6 +50,7 @@ class Api::UsersController < ApplicationController
   def define_filters
     @filters = %i[id nickname displayname email admin banned online last_seen_at
                   wins loses elo avatar_url avatar_default_url guild_id]
+    @guildfilters = %i[name anagram]
   end
 
   # Only allow a list of trusted parameters through.

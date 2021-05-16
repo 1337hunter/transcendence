@@ -22,7 +22,7 @@ class User < ApplicationRecord
       user.password = Devise.friendly_token[0, 20]
       user.nickname = auth.info.nickname
       user.displayname = user.nickname
-      user.avatar = URI.open(user_gravatar(auth.info.email, user.nickname)).read
+      # user.avatar = URI.open(user_gravatar(auth.info.email, user.nickname)).read
       user.avatar_url = user_gravatar(auth.info.email, user.nickname)
       user.avatar_default_url = user_gravatar(auth.info.email, user.nickname)
     end
