@@ -1,8 +1,10 @@
 <script type="text/template" id="room-template">
   <a class="room-click" href="#/room_<%%= id %>">
     <div class="card mb-2">
-      <%= show_svg('lock.svg') %>
-      <p class="room_name"><%%= name %></p>
+      <table width="100%">
+        <th><p class="room_name"><%%= name %></p></th>
+        <th class="lock_icon"><div class="lock" <%%= password? '' : 'style="display:none"' %>><%= show_svg('lock.svg') %></div></th>
+      </table>
     </div>
 </a>
 </script>

@@ -66,8 +66,11 @@ $(function () {
 			var mod = new Rooms.RoomModel;
 			var $this = this;
 			if ($('#room-name').val().trim()) {
-				this.collection.create({id: mod.cid, name: $('#room-name').val().trim(),
-					password: $('#room-password').val().trim(), private: $('#is_private').prop("checked")}, {
+				this.collection.create({
+					id: mod.cid, 
+					name: $('#room-name').val().trim(),
+					password: $('#room-password').val().trim(),
+					private: $('#is_private').prop("checked")}, {
 						wait: true,
 						success: function() {
 							$this.collection.fetch({

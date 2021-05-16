@@ -79,6 +79,18 @@
     color: rgba(180, 185, 252, 0.6)
 }
 
+.lock svg {
+    fill: white;
+    width: 20px;
+    padding: 1px;
+    display: block;
+    position: relative;
+    left: 50%;
+}
+
+.lock_icon {
+    align-items: right;
+}
 // .message-nick
 // {
 //     left: 15%;
