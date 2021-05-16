@@ -17,13 +17,9 @@ Guilds.GuildModel = Backbone.Model.extend({
 Guilds.GuildId = Backbone.Model.extend({
     initialize: function(options) {
         this.id = options.id;
-        this.set('members', new Users.UserCollection());
     },
     url: function () {
         return '/api/guilds/' + this.id;
-    },
-    members: function () {
-        return '/api/guilds/' + this.id + '/members';
     }
 });
 

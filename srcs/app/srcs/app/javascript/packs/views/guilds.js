@@ -55,6 +55,7 @@ $(function () {
             let view = this;
             this.cur_user.fetch({
                 //check in guild?
+                //check master
                 success: function (model) {
                     model.save({guild_id: null, guild_officer: false}, {
                         patch: true,

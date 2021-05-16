@@ -1,7 +1,8 @@
 class Api::GuildsController < ApplicationController
   skip_before_action :verify_authenticity_token
+  before_action :define_user_filters, only: %i[show_members]
   before_action :check_in_other_guild, only: [:create]
-  before_action :find_guild, only: %i[show update destroy leave show_master show_officers show_soldiers]
+  before_action :find_guild, only: %i[show update destroy show_master show_officers show_members]
   before_action :check_master_rights, only: [:destroy, :update]
   #before_action :check_officer_rights, only: [:update]
 
@@ -70,27 +71,28 @@ class Api::GuildsController < ApplicationController
     @users = User.all.where(:guild_id => nil)
     @users = @users.all.where.not(:banned => true)
     @users = @users.all.where.not(:id => current_user.id)
-    render json: @users, status: :ok
+    render json: @users, only: @filters, status: :ok
   end
 
+  #delete?
   def  show_master
-    @master = guild.master
-    render json: @master, status: :ok
+    @master = @guild.master
+    render json: @master, only: @filters, status: :ok
   end
-
+  #delete?
   def  show_officers
-    @officers = guild.officers
-    render json: @officers, status: :ok
+    @officers = @guild.officers
+    render json: @officers, only: @filters, status: :ok
   end
-
+  #delete?
   def show_soldiers
-    @soldiers = guild.soldiers
-    render json: @soldiers, status: :ok
+    @soldiers = @guild.soldiers
+    render json: @soldiers, only: @filters, status: :ok
   end
 
   def show_members
-    @members = guild.members
-    render json: @members, status: :ok
+    @users = @guild.members
+    render json: @users, only: @filters, status: :ok
   end
 
   private
@@ -103,7 +105,7 @@ class Api::GuildsController < ApplicationController
     @user = current_user
     if @user.guild_id
       @user.errors.add :base, 'You are in the guild already. Leave your guild to continue.'
-      render json: @user.errors, status: :bad_request #uncomment! commented for test
+      render json: @user.errors, status: :bad_request
     end
   end
 
@@ -134,6 +136,12 @@ class Api::GuildsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def guild_params
     params.require(:guild).permit(%i[anagram]) #+name?
+  end
+
+  def define_user_filters
+    @filters = %i[id nickname displayname email admin banned online last_seen_at
+                  wins loses elo avatar_url avatar_default_url
+                  guild_id guild_master guild_officer] #guild_request
   end
 
   def generate_anagram(name)

@@ -34,6 +34,7 @@ let AppRouter = Backbone.Router.extend({
         "users/:id"             : "profile",
         "admin(/)(/:section)"   : "admin",
         "users_not_in_guild"    : "guild_users_available",
+        "guilds/:id/members"    : "guild_members",
         "guilds"                : "guilds",
         "guilds/:id"            : "guild_profile",
         ".*"                    : "pong" // 404???
@@ -65,6 +66,10 @@ let AppRouter = Backbone.Router.extend({
     },
     guild_users_available: function () {
         this.main.view = new UsersView.AvailableForGuildView();
+        this.main.el.html(this.main.view.render().el);
+    },
+    guild_members: function (id) {
+        this.main.view = new UsersView.GuildMembersView(id);
         this.main.el.html(this.main.view.render().el);
     },
     messages: function (id) {

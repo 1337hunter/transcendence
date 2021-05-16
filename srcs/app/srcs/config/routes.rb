@@ -21,7 +21,7 @@ Rails.application.routes.draw do
       resources :users
     end
     get 'users_not_in_guild', to: 'guilds#users_available'
-    #put 'guilds/:id/leave', to: 'guilds#leave'
+    get 'guilds/:id/members', to: 'guilds#show_members'
 
   end
 

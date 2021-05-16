@@ -11,12 +11,7 @@ Users.TwoFactorModel = Backbone.Model.extend({
 });
 
 Users.UserModel = Backbone.Model.extend({
-    urlRoot: '/api/users',
-    defaults: {
-        //guild_id: 0,
-        guild_master: false,
-        guild_officer: false
-    }
+    urlRoot: '/api/users'
 });
 
 Users.UserId = Backbone.Model.extend({
@@ -38,6 +33,19 @@ Users.NoGuildUsersCollection = Backbone.Collection.extend({
     model: Users.UserModel,
     url: '/api/users_not_in_guild',
     comparator: 'id'
+});
+
+Users.GuildMembersCollection = Backbone.Collection.extend({
+    model: Users.UserModel,
+    initialize: function(model, options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/guilds/' + this.id + '/members';
+    },
+    comparator:  function(model) {
+        return [!model.get('guild_master'), !model.get('guild_officer')];
+    }
 });
 
 export default Users;
