@@ -93,7 +93,7 @@ export default function pong_game(view) {
 
     function drawLeftPad() {
         ctx.beginPath();
-        ctx.rect(leftPadX, leftPadY, padHeight, padWidth);
+        ctx.rect(view.getLeftPadX(), view.getLeftPadY(), padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -101,10 +101,6 @@ export default function pong_game(view) {
 
     function drawRightPad() {
         ctx.beginPath()
-        view.broadcastData(rightPadX, rightPadY);
-     //   console.log('----------------------------');
-     //   console.log(rightPadX + ' ' + rightPadY);
-        console.log(view.getRightPadX() + ' ' + view.getRightPadY());
         ctx.rect(view.getRightPadX(), view.getRightPadY(), padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
@@ -441,7 +437,7 @@ export default function pong_game(view) {
             if (rightPadY + padWidth > canvas.height)
                 rightPadY = canvas.height - padWidth;
         }
-
+        view.broadcastData(rightPadX, rightPadY, leftPadX, leftPadY);
         drawLeftPad()
         drawRightPad()
         x += dx;

@@ -1,7 +1,7 @@
 import Backbone from "backbone";
 import _ from "underscore";
 import GameRoomInit from "../../channels/game_room_channel";
-import {rightPadX, rightPadY} from "../../channels/game_room_channel";
+import {obtainedValues} from "../../channels/game_room_channel";
 
 const PongView = {};
 
@@ -18,19 +18,26 @@ $(function () {
 			this.$el.html(this.template());
 			return this;
 		},
-		broadcastData: function (x, y)
+		broadcastData: function (x1, y1, x2, y2)
 		{
-			this.cable.send({x, y});
+			this.cable.send({x1, y1, x2, y2});
 		},
 		getRightPadX: function ()
 		{
-			console.log(rightPadX + '---' + rightPadY);
-			return (rightPadX);
+			return (obtainedValues.rightPadX);
 		},
 		getRightPadY: function ()
 		{
-			return (rightPadY);
-		}
+			return (obtainedValues.rightPadY);
+		},
+		getLeftPadX: function ()
+		{
+			return (obtainedValues.leftPadX);
+		},
+		getLeftPadY: function ()
+		{
+			return (obtainedValues.leftPadY);
+		},
 	});
 });
 
