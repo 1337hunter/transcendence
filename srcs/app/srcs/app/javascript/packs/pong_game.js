@@ -1,5 +1,5 @@
 import PongView from "./views/pong"
-export default function pong_game() {
+export default function pong_game(view) {
     var canvas = document.getElementById("pongCanvas");
     var ctx = canvas.getContext("2d");
     const CENTER_X = canvas.width / 2;
@@ -101,8 +101,11 @@ export default function pong_game() {
 
     function drawRightPad() {
         ctx.beginPath()
-    //    PongView.View.cable.send({data: 'Hi!!'});
-        ctx.rect(rightPadX, rightPadY, padHeight, padWidth);
+        view.broadcastData(rightPadX, rightPadY);
+     //   console.log('----------------------------');
+     //   console.log(rightPadX + ' ' + rightPadY);
+        console.log(view.getRightPadX() + ' ' + view.getRightPadY());
+        ctx.rect(view.getRightPadX(), view.getRightPadY(), padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
