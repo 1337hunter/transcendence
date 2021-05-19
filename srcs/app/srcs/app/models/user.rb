@@ -7,6 +7,7 @@ class User < ApplicationRecord
   validates :displayname, uniqueness: { case_sensitive: false }, presence: true
   validates_with UserValidator
 
+  has_friendship
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :two_factor_authenticatable, :rememberable, :validatable,

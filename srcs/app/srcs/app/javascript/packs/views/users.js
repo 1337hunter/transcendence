@@ -76,12 +76,16 @@ $(function () {
 	UsersView.ProfileView = Backbone.View.extend({
         template: _.template($('#user-profile-template').html()),
         events: {
-            "click #refresh-button" :   "refresh"
+            "click #refresh-button" :   "refresh",
+            "click .add-friend-button" : "addFriend"
         },
         initialize: function (id) {
             this.model = new Users.UserId({id: id});
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch({error: this.onerror});
+        },
+        addFriend: function () {
+            console.log("Add friend action");
         },
         refresh: function () {
             this.model.fetch({
