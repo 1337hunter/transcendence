@@ -88,7 +88,10 @@ $(function () {
 					var mes = new Messages.MessageModel;
 					mes.save({content: $('#chat-input').val().trim(), room_id: $this.room_id,
 						user_id: current_user.get("id")}, {patch: true});
-					mes.set({displayname: current_user.get("displayname")});
+					if ($this.room_model.attributes[0].private === true)
+						mes.set({displayname: "anonimous"});
+					else
+						mes.set({displayname: current_user.get("displayname")});
 					mes.set({avatar: current_user.get("avatar_url")});
 					var	mes_view = new MessagesView.MessageView({model: mes});
 					$("#messages").scrollTop($("#messages")[0].scrollHeight);

@@ -11,7 +11,14 @@ class Api::MessagesController < ApplicationController
         @message = Message.create(room_id: params["room_id"],
                                   content: params["content"],
                                   user: current_user)
-
+        @room = Room.where(id: params["room_id"])
+        puts ">>>>>>>>>>>>>>>>>>>>>>>>>"
+        puts @room.private
+        puts ">>>>>>>>>>>>>>>>>>>>>>>>>"
+        # if @room.private == true 
+        #     user_name = current_user.displayname
+        # else
+        #     user_name = "anonimous"
         ActionCable.server.broadcast("room_#{@message.room_id}", 
         {
             user_id: @message.user_id,

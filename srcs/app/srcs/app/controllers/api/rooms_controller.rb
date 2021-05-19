@@ -20,7 +20,9 @@ class Api::RoomsController < ApplicationController
         if (params.has_key?(:name))
             @room.name = params[:name]
             @room.password = params[:password]
-            @room.private = params[:is_private]
+            @room.owner_id = current_user.id
+            @room.owner_name = current_user.displayname
+            @room.private = params[:private]
             @room.save
             render json: @room, status: :ok
         end

@@ -1,8 +1,10 @@
 <script type="text/template" id="message-template">
   <div class="message" data-user-id="<%%= user_id %>">
     <table>
-      <tr><th><img class="user_icon" width="35px" height="35px" src="<%%= avatar %>" style="margin-bottom: 10px"></th>
-      <th id="user-name"><%%= displayname %>:</th>
+      <div>
+        <tr><th><img class="user_icon" width="35px" height="35px" src="<%%= avatar %>" style="margin-bottom: 10px"></th>
+        <th id="user-name"><%%= displayname %>:</th>
+      </div>
       <th id="message-content"> <%%= content %> </th></tr>
     </table>
   </div>
