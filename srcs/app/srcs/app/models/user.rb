@@ -40,4 +40,20 @@ class User < ApplicationRecord
   def update_online!(is_online)
     self.update({online: is_online, last_seen_at: Time.now})
   end
+
+  def on_friendship_created(friendship)
+    puts "friendship started"
+  end
+
+  def on_friendship_accepted(friendship)
+    puts "friendship accepted"
+  end
+
+  def on_friendship_blocked(friendship)
+    puts "friendship blocked"
+  end
+
+  def on_friendship_destroyed(friendship)
+    puts "friendship ended"
+  end
 end
