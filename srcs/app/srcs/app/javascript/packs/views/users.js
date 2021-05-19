@@ -86,6 +86,12 @@ $(function () {
         },
         addFriend: function () {
             console.log("Add friend action");
+            return Backbone.ajax(_.extend({
+                url: 'api/friends/' + this.model.id,
+                method: "POST",
+                data: this.attributes,
+                dataType: "json",
+            }));
         },
         refresh: function () {
             this.model.fetch({
