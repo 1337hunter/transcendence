@@ -3,7 +3,7 @@ class Api::FriendsController < ApplicationController
     before_action :define_filters
     # protect_from_forgery with: :null_session
     def index
-        @users = User.where(banned: false)
+        @users = current_user.friends
         render json: @users, only: @filters
     end
     def add_friend
