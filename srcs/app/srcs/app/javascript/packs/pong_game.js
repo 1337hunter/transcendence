@@ -448,6 +448,7 @@ export default function pong_game(view) {
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         startTime -= 10
+        view.broadcastData(rightPadX, rightPadY, leftPadX, leftPadY);
         drawLeftPad()
         drawRightPad()
         if (startTime > 2000)
