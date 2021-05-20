@@ -83,6 +83,28 @@ $(function () {
             this.model = new Users.UserId({id: id});
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch({error: this.onerror});
+            this.collection = new Users.FriendsCollection;
+            this.listenTo(this.collection, 'add', this.addOne);
+		    this.listenTo(this.collection, 'reset', this.addAll);
+            this.collection.fetch({reset: true, error: this.onerror});
+        },
+        addFriend: function () {
+            console.log("Add friend action");
+            return Backbone.ajax(_.extend({
+                url: 'api/friends/' + this.model.id,
+                method: "POST",
+                data: this.attributes,
+                dataType: "json",
+            }));
+        },
+        addOne: function (user) {
+            user.view = new UsersView.SingleUserView({model: user});
+            console.log(user);
+            this.$("#friends-table").append(user.view.render().el);
+            this.$("#friends-table").append("<tr><th></th><th></th></tr>");
+        },
+        addAll: function () {
+            this.collection.each(this.addOne, this);
         },
         addFriend: function () {
             console.log("Add friend action");

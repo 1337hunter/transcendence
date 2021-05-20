@@ -29,4 +29,10 @@ Users.UserCollection = Backbone.Collection.extend({
     comparator: 'id'
 });
 
+Users.FriendsCollection = Backbone.Collection.extend({
+    model: Users.UserModel,
+    url: '/api/friends',
+    comparator: 'id'
+});
+
 export default Users;
