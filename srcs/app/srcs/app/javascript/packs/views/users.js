@@ -53,7 +53,7 @@ $(function () {
         },
 		addOne: function (user) {
             user.view = new UsersView.SingleUserView({model: user});
-            this.$("tbody").append(user.view.render().el);
+            this.$("#users-table").append(user.view.render().el);
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
@@ -99,21 +99,12 @@ $(function () {
         },
         addOne: function (user) {
             user.view = new UsersView.SingleUserView({model: user});
-            console.log(user);
+            console.log(user.view.render().el);
             this.$("#friends-table").append(user.view.render().el);
             this.$("#friends-table").append("<tr><th></th><th></th></tr>");
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
-        },
-        addFriend: function () {
-            console.log("Add friend action");
-            return Backbone.ajax(_.extend({
-                url: 'api/friends/' + this.model.id,
-                method: "POST",
-                data: this.attributes,
-                dataType: "json",
-            }));
         },
         refresh: function () {
             this.model.fetch({
@@ -139,6 +130,7 @@ $(function () {
                 this.$('div.profile-badges')
                     .prepend("<span class=\"badge rounded-pill bg-primary\">You</span>")
             }
+            this.addAll();
             return this;
         }
     });
