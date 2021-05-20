@@ -10,10 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_19_105943) do
+ActiveRecord::Schema.define(version: 2021_05_20_105354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "direct_messages", force: :cascade do |t|
+    t.text "content"
+    t.bigint "direct_room_id", null: false
+    t.bigint "user_id", null: false
+    t.boolean "read"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["direct_room_id"], name: "index_direct_messages_on_direct_room_id"
+    t.index ["user_id"], name: "index_direct_messages_on_user_id"
+  end
+
+  create_table "direct_rooms", force: :cascade do |t|
+    t.integer "sender_id"
+    t.integer "receiver_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "friendships", id: :serial, force: :cascade do |t|
     t.string "friendable_type"
@@ -92,6 +110,8 @@ ActiveRecord::Schema.define(version: 2021_05_19_105943) do
     t.index ["uid"], name: "index_users_on_uid"
   end
 
+  add_foreign_key "direct_messages", "direct_rooms"
+  add_foreign_key "direct_messages", "users"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
   add_foreign_key "rooms", "messages"

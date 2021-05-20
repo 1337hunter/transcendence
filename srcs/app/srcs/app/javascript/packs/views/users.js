@@ -101,7 +101,6 @@ $(function () {
             user.view = new UsersView.SingleUserView({model: user});
             console.log(user);
             this.$("#friends-table").append(user.view.render().el);
-            this.$("#friends-table").append("<tr><th></th><th></th></tr>");
         },
         addAll: function () {
             this.collection.each(this.addOne, this);

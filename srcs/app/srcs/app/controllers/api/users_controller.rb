@@ -38,8 +38,10 @@ class Api::UsersController < ApplicationController
   def find_user
     @user = if params[:id] == 'current' # /api/users/current.json
               current_user
-            else
+            elsif is_numeric(params[:id])
               User.find(params[:id])
+            else
+              User.where(displayname: params[:id])
             end
   end
 
@@ -54,4 +56,8 @@ class Api::UsersController < ApplicationController
     params.require(:user).permit(%i[displayname avatar_url])
   end
 
+  def is_numeric(str)
+    r = Integer(str) rescue nil
+    r == nil ? false : true
+  end
 end

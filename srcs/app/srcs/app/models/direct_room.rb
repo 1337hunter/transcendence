@@ -5,7 +5,6 @@ class DirectRoom < ApplicationRecord
 
     validates_uniqueness_of :sender_id, scope: :receiver_id
     scope :between, -> (sender_id,receiver_id) do
-        where("(conversations.sender_id = ? AND conversations.receiver_id = ?) OR (conversations.receiver_id = ? AND conversations.sender_id = ?)", sender_id, receiver_id, sender_id, receiver_id)
+        where("(direct_rooms.sender_id = ? AND direct_rooms.receiver_id = ?) OR (direct_rooms.receiver_id = ? AND direct_rooms.sender_id = ?)", sender_id, receiver_id, sender_id, receiver_id)
     end
 end
-
