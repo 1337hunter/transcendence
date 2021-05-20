@@ -52,10 +52,15 @@
                 <p class="text-secondary mb-1"><%%= online ? 'Online' : 'last seen ' + last_seen_at %></p>
                 <p class="text-muted font-size-sm"><%%= email %></p>
                 <button class="btn btn-outline-success btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
-                  Add Friend
+                  <div class="add-friend-button">
+                    Add Friend
+                  </div>
                 </button>
                 <button class="btn btn-outline-primary btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
                   Message
+                </button>
+                <button class="btn btn-outline-primary btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
+                  Invite to Battle
                 </button>
               </div>
             </div>

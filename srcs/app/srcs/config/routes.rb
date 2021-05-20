@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     resources :messages
     resources :room_members
 
+    post 'friends/:id', to: "friends#add_friend"
     get 'admin/users', to: 'admin#users'
     patch 'admin/users/:id', to: 'admin#user_update'
     get 'admin/chats', to: 'admin#chatlist'
