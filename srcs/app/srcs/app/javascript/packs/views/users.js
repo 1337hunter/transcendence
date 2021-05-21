@@ -54,7 +54,6 @@ $(function () {
 		addOne: function (user) {
             user.view = new UsersView.SingleUserView({model: user});
             this.$("#users-table").append(user.view.render().el);
-            console.log(user);
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
@@ -84,10 +83,9 @@ $(function () {
             this.model = new Users.UserId({id: id});
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch({error: this.onerror});
-            this.friends_collection = new Users.FriendsCollection;
-            this.listenTo(this.friends_collection, 'add', this.addOne);
-		    this.listenTo(this.friends_collection, 'reset', this.addAll);
-            this.friends_collection.fetch({reset: true, error: this.onerror, }, {id: this.model.attributes.id});
+            this.model.attributes.number_of_friends = 2;
+        //  this.model.attributes.number_of_friends = this.model.attributes.friends.length;
+        //    this.model.set({number_of_friends: this.model.attributes.friends.length});
         },
         addFriend: function () {
             console.log("Add friend action");
@@ -99,12 +97,15 @@ $(function () {
             }));
         },
         addOne: function (user) {
-            user.view = new UsersView.SingleUserView({model: user});
-            this.$("#friends-table").append(user.view.render().el);
+            var user_element = new Users.UserModel(user);
+            user_element.view = new UsersView.SingleUserView({model: user_element});
+            this.$("#friends-table").append(user_element.view.render().el);
         },
         addAll: function () {
-            this.friends_collection.each(this.addOne, this);
-            this.model.attributes.number_of_friends = this.friends_collection.length;
+            var $this = this;
+            this.model.attributes.friends.forEach(function(user) {
+                $this.addOne(user);
+            });
         },
         refresh: function () {
             this.model.fetch({
@@ -118,7 +119,7 @@ $(function () {
         },
         render: function () {
             this.model.attributes.last_seen_at = moment(this.model.get('last_seen_at')).fromNow();
-            this.addAll();
+            this.model.attributes.number_of_friends = this.model.attributes.friends.length;
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
             let model = this.model;
