@@ -10,15 +10,23 @@ class Api::UsersController < ApplicationController
   # GET /api/users.json
   def index
     @users = User.where(banned: false)
-    render json: @users, only: @filters
+    if @user.present?
+      render json: @users, only: @filters
+    else
+      render :json => {:error => "not-found"}.to_json, :status => 404
+    end
   end
 
   # GET /api/users/id.json
   def show
-    render json: @user.as_json(
-      only: @filters,
-      include: { friends: { only: @filters } }
-    )
+    if @user.present?
+      render json: @user.as_json(
+        only: @filters,
+        include: { friends: { only: @filters } }
+      )
+    else
+      render :json => {:error => "not-found"}.to_json, :status => 404
+    end
   end
 
   # PATCH/PUT /api/users/id.json
