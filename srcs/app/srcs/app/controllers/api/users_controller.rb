@@ -43,6 +43,12 @@ class Api::UsersController < ApplicationController
     end
   end
 
+  def add_friend
+    @friended_user = User.find(params[:id])
+    current_user.friend_request(@friended_user)
+    render json: {}, status: :ok
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
