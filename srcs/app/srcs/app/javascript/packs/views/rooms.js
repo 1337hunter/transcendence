@@ -27,9 +27,11 @@ $(function () {
 
 	RoomsView.View = Backbone.View.extend({
 		initialize: function (main) {
-			this.collection = new Rooms.RoomCollection;
-			this.listenTo(this.collection, 'add', this.addOne);
-			this.collection.fetch();
+			this.rooms = new Rooms.RoomCollection;
+			this.direct_rooms = new Rooms.DirectRoomCollection;
+			this.listenTo(this.rooms, 'add', this.addOne);
+			this.direct_rooms.fetch();
+			this.rooms.fetch();
 			this.main = main
 		},
 		template: _.template($('#rooms-template').html()),
@@ -37,7 +39,8 @@ $(function () {
 			'click #create-room-btn' 	: 'create_room',
 			'click .room-click' 		: 'room_click',
 			"keypress" 					: "check_keypress_event",
-			'click #new_chat'			: "click_new_chat_btn"
+			'click #new_chat'			: "click_new_chat_btn",
+			'click #new_message'		: "click_new_message_btn"
 		},
 		render: function () {
 			this.$el.html(this.template());
@@ -55,13 +58,13 @@ $(function () {
             this.$("#rooms").append(room.view.render().el);
         },
         addAll: function () {
-			this.collection.each(this.addOne, this);
+			this.rooms.each(this.addOne, this);
         },
 		room_click: function (e) {
 			let regex =  /\d+/;
 			let room_id = String(e.currentTarget)
 			room_id = room_id.substr(room_id.length - 1)
-			var room = this.collection.where({id: Number(room_id)})[0]
+			var room = this.rooms.where({id: Number(room_id)})[0]
 			
 			if (room.get("password") != "" && room.get("password") != null)
 			{
@@ -70,7 +73,7 @@ $(function () {
 					$("#input-room-password_" + room_id).css("display", "none");
 					return this;
 				}
-				for (let i = 1; i <= this.collection.length; ++i)
+				for (let i = 1; i <= this.rooms.length; ++i)
 					$("#input-room-password_" + String(i)).css("display", "none");
 				$("#input-room-password_" + room_id).css("display", "block");
 				$('#input-room-password_' + room_id).focus();
@@ -87,13 +90,15 @@ $(function () {
 				this.verify_password(Number(target.substr(target.length - 1)))
 			else if (target == 'room-name' || target == 'room-password')
 				this.create_room();
+			else if (target == 'nickname_input')
+				this.create_direct_room();
 		},
 		verify_password: function (room_id) {
 			var $this = this;
-			this.collection.fetch({
+			this.rooms.fetch({
 				success: function () {
 					let password = $('#input-room-password_' + room_id).val();
-					let room = $this.collection.where({id: Number(room_id)})[0]
+					let room = $this.rooms.where({id: Number(room_id)})[0]
 					if (room.get("password") == password) {
 						$this.render_messages(room_id)
 					}
@@ -104,6 +109,7 @@ $(function () {
 			})
 		},
 		click_new_chat_btn: function() {
+			$("#new_message_input").css("display", "none");
 			if ($(".new-chat-input").css("display") == 'none')
 			{
 				$(".new-chat-input").css("display", "block");
@@ -111,6 +117,16 @@ $(function () {
 			}
 			else
 				$(".new-chat-input").css("display", "none");
+		},
+		click_new_message_btn: function () {
+			$(".new-chat-input").css("display", "none");
+			if ($("#new_message_input").css("display") == 'none')
+			{
+				$("#new_message_input").css("display", "block");
+				this.$('#nickname_input').focus();
+			}
+			else
+				$("#new_message_input").css("display", "none");
 		},
 		render_messages: function (room_id) {
 			let view = new MessagesView.View(room_id);
@@ -120,7 +136,7 @@ $(function () {
 			var mod = new Rooms.RoomModel;
 			var $this = this;
 			if ($('#room-name').val().trim()) {
-				this.collection.create({
+				this.rooms.create({
 					id: mod.cid, 
 					name: $('#room-name').val().trim(),
 					password: $('#room-password').val().trim(),
@@ -128,7 +144,7 @@ $(function () {
 				}, {
 						wait: true,
 						success: function() {
-							$this.collection.fetch({
+							$this.rooms.fetch({
 								success: function() {
 									$this.render();
 									$("#rooms").scrollTop($("#rooms")[0].scrollHeight);
@@ -140,6 +156,20 @@ $(function () {
 						}
 			});
 			}
+		},
+		create_direct_room: function () {
+			var dr_model = new Rooms.DirectRoomModel;
+			var nickname_input = $('#nickname_input').val().trim();
+			if (nickname_input) {
+				console.log(nickname_input)
+				var user = new Users.UserId({id: nickname_input})
+				user.fetch();
+			}
+			// $('#nickname_input').val('');
+			// this.click_new_message_btn();
+		},
+		render_direct_messages: function () {
+
 		}
 	});
 });

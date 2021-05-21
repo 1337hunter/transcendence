@@ -21,8 +21,8 @@
 
 .new-chat-input {
     position: absolute;
-    left: 52%;
-    top: 6%;
+    left: 43%;
+    top: 13%;
     width: 30%;
 }
 
@@ -109,6 +109,26 @@
     height: 10%;
     left: 43%;
     top: 6%;
+}
+
+#new_chat
+{
+    position: relative;
+    width: 100%;
+}
+
+#new_message
+{
+    position: relative;
+    width: 100%;
+}
+
+#new_message_input
+{
+    position: absolute;
+    left: 43%;
+    top: 13%;
+    width: 30%;
 }
 
 // .message-nick

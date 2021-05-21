@@ -57,4 +57,8 @@ class User < ApplicationRecord
   def on_friendship_destroyed(friendship)
     puts "friendship ended"
   end
+
+  def displayname
+    self[:displayname]
+  end
 end
