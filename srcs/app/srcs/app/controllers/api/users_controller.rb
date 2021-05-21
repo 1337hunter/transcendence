@@ -24,7 +24,7 @@ class Api::UsersController < ApplicationController
 
   # PATCH/PUT /api/users/id.json
   def update
-    if (current_user.admin? && @user != current_user && !@user.admin?) || current_user == @user
+    if current_user == @user
       if @user.update(user_params)
         render json: @user, only: @filters, status: :ok
       else
