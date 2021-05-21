@@ -7,6 +7,7 @@ class Api::UsersController < ApplicationController
   before_action :sign_out_if_banned
   before_action :find_user, only: %i[show update destroy]
 
+
   # GET /api/users.json
   def index
     @users = User.where(banned: false)
@@ -16,6 +17,7 @@ class Api::UsersController < ApplicationController
   # GET /api/users/id.json
   def show
     render json: @user, only: @filters
+  # render json: @user.as_json(include: [:friends]), only: @filters
   end
 
   # PATCH/PUT /api/users/id.json

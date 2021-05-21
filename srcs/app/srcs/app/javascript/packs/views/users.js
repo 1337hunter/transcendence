@@ -54,6 +54,7 @@ $(function () {
 		addOne: function (user) {
             user.view = new UsersView.SingleUserView({model: user});
             this.$("#users-table").append(user.view.render().el);
+            console.log(user);
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
