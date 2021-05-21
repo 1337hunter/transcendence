@@ -54,10 +54,15 @@
                   <%%= guild_id == null ? '' : `<a href="#/guilds/${guild_id}" style="text-decoration: inherit; color: inherit;">[${guild.anagram}] ${guild.name}</a>` %>
                 </p>
                 <button class="btn btn-outline-success btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
-                  Add Friend
+                  <div class="add-friend-button">
+                    Add Friend
+                  </div>
                 </button>
                 <button class="btn btn-outline-primary btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
                   Message
+                </button>
+                <button class="btn btn-outline-primary btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
+                  Invite to Battle
                 </button>
               </div>
             </div>
@@ -129,10 +134,17 @@
       <div class="col-md-4">
         <div class="card" style="max-height: 550px;">
           <div class="card-body overflow-auto">
-            <h5 class="card-header card-title">Friends (0)</h5>
-            <ul class="list-group">
-              <li class="list-group-item">Placeholder</li>
-            </ul>
+            <h5 class="card-header card-title">Friends (<%%= number_of_friends %>)</h5>
+              <table id="friends-table" border-spacing="20px" padding="0 2em 1em 0">
+              <tr><th></th><th></th>
+          <!--  <th>Id</th>-->
+                <th class="users-displayname">Display name</th>
+          <!--  <th>Email</th>-->
+                <th>Wins</th>
+                <th>Loses</th>
+                <th>Elo</th>
+                <th>Intra nickname</th></tr>
+            </table>
           </div>
         </div>
       </div>

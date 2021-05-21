@@ -11,7 +11,13 @@ Rails.application.routes.draw do
     resources :settings
     resources :rooms
     resources :messages
+    resources :room_members
+    resources :friends
+    resources :direct_rooms, only: [:index, :create, :show] do
+      resources :direct_messages, only: [:index, :create, :show]
+    end
 
+    post 'friends/:id', to: "friends#add_friend"
     get 'admin/users', to: 'admin#users'
     patch 'admin/users/:id', to: 'admin#user_update'
     get 'admin/chats', to: 'admin#chatlist'
@@ -37,4 +43,6 @@ Rails.application.routes.draw do
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   get '*unmatched_route', to: 'application#raise_not_found'
+
+  mount ActionCable.server => '/cable'
 end

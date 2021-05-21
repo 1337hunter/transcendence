@@ -28,7 +28,6 @@ let AppRouter = Backbone.Router.extend({
         "oauth"                 : "oauth",
         "play"                  : "pong",
         "rooms"                 : "rooms",
-        "room_:id"              : "messages",
         "settings"              : "settings",
         "users"                 : "users",
         "users/:id"             : "profile",
@@ -46,7 +45,7 @@ let AppRouter = Backbone.Router.extend({
     pong: function () {
         this.main.view = new PongView.View();
         this.main.el.html(this.main.view.render().el);
-        pong_game();
+        pong_game(this.main.view);
     },
     settings: function () {
         this.main.view = new SettingsView.View();

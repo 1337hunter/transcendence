@@ -11,7 +11,14 @@ class Api::MessagesController < ApplicationController
         @message = Message.create(room_id: params["room_id"],
                                   content: params["content"],
                                   user: current_user)
-        ActionCable.server.broadcast("chat_room", { body: params['content'] })
+        ActionCable.server.broadcast("room_#{@message.room_id}", 
+        {
+            user_id: @message.user_id,
+            room_id: @message.room_id,
+            avatar: current_user.avatar_url,
+            displayname: current_user.displayname,
+            content: params['content'] 
+        })
         render json: @message
     end
 

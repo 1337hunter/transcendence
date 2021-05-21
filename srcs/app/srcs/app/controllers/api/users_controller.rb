@@ -10,15 +10,24 @@ class Api::UsersController < ApplicationController
   # GET /api/users.json
   def index
     @users = User.where(banned: false)
-    render json: @users, only: @filters
+    if @user.present?
+      render json: @users, only: @filters
+    else
+      render :json => {:error => "not-found"}.to_json, :status => 404
+    end
   end
 
   # GET /api/users/id.json
   def show
-    render json: @user.as_json(
-      only: @filters,
-      include: { guild: { only: @guildfilters } }
-    )
+    if @user.present?
+      render json: @user.as_json(
+        only: @filters,
+        include: { friends: { only: @filters },
+                   guild: { only: @guildfilters } }
+      )
+    else
+      render :json => {:error => "not-found"}.to_json, :status => 404
+    end
   end
 
   # PATCH/PUT /api/users/id.json
@@ -35,14 +44,22 @@ class Api::UsersController < ApplicationController
     end
   end
 
+  def add_friend
+    @friended_user = User.find(params[:id])
+    current_user.friend_request(@friended_user)
+    render json: {}, status: :ok
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
   def find_user
     @user = if params[:id] == 'current' # /api/users/current.json
               current_user
-            else
+            elsif is_numeric(params[:id])
               User.find(params[:id])
+            else
+              User.where(displayname: params[:id])
             end
   end
 
@@ -58,4 +75,8 @@ class Api::UsersController < ApplicationController
     params.require(:user).permit(%i[displayname avatar_url guild_id])
   end
 
+  def is_numeric(str)
+    r = Integer(str) rescue nil
+    r == nil ? false : true
+  end
 end

@@ -1,18 +1,18 @@
 import consumer from "./consumer"
 
-function disconnect_from_rooms () {
+function disconnect_from_direct () {
   consumer.subscriptions.subscriptions.forEach((subscription) => {
-    let found = subscription.identifier.search("\"channel\":\"ChatChannel\"")
+    let found = subscription.identifier.search("\"channel\":\"DirectChannel\"")
     if (found != -1)
       consumer.subscriptions.remove(subscription)
   } )
 }
 
-let SubToChannel = {
+let SubToDirect = {
     async join(id)
     {
-      await disconnect_from_rooms();
-      consumer.subscriptions.create({channel: "ChatChannel", room_id: id}, {
+      await disconnect_from_direct();
+      consumer.subscriptions.create({channel: "DirectChannel", room_id: id}, {
       initialized() {
         this.id = id;
       },
@@ -43,4 +43,4 @@ let SubToChannel = {
   }
 }
 
-export default SubToChannel;
+export default SubToDirect;

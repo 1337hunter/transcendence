@@ -54,7 +54,7 @@ $(function () {
         },
 		addOne: function (user) {
             user.view = new UsersView.SingleUserView({model: user});
-            this.$("tbody").append(user.view.render().el);
+            this.$("#users-table").append(user.view.render().el);
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
@@ -77,12 +77,36 @@ $(function () {
 	UsersView.ProfileView = Backbone.View.extend({
         template: _.template($('#user-profile-template').html()),
         events: {
-            "click #refresh-button" :   "refresh"
+            "click #refresh-button" :   "refresh",
+            "click .add-friend-button" : "addFriend"
         },
         initialize: function (id) {
             this.model = new Users.UserId({id: id});
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch({error: this.onerror});
+            this.model.attributes.number_of_friends = 2;
+        //  this.model.attributes.number_of_friends = this.model.attributes.friends.length;
+        //    this.model.set({number_of_friends: this.model.attributes.friends.length});
+        },
+        addFriend: function () {
+            console.log("Add friend action");
+            return Backbone.ajax(_.extend({
+                url: 'api/friends/' + this.model.id,
+                method: "POST",
+                data: this.attributes,
+                dataType: "json",
+            }));
+        },
+        addOne: function (user) {
+            var user_element = new Users.UserModel(user);
+            user_element.view = new UsersView.SingleUserView({model: user_element});
+            this.$("#friends-table").append(user_element.view.render().el);
+        },
+        addAll: function () {
+            var $this = this;
+            this.model.attributes.friends.forEach(function(user) {
+                $this.addOne(user);
+            });
         },
         refresh: function () {
             this.model.fetch({
@@ -96,6 +120,7 @@ $(function () {
         },
         render: function () {
             this.model.attributes.last_seen_at = moment(this.model.get('last_seen_at')).fromNow();
+            this.model.attributes.number_of_friends = this.model.attributes.friends.length;
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
             let model = this.model;
@@ -108,6 +133,7 @@ $(function () {
                 this.$('div.profile-badges')
                     .prepend("<span class=\"badge rounded-pill bg-primary\">You</span>")
             }
+            this.addAll();
             return this;
         }
     });

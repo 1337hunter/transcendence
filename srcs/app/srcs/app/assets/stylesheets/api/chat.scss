@@ -10,15 +10,19 @@
 
 #rooms {
     width: 35%;
-    height: 65%;
+    height: 80%;
     overflow-y: auto;
     position: absolute;
 }
 
+#rooms::-webkit-scrollbar {
+    display: none;
+}
 
 .new-chat-input {
     position: absolute;
-    bottom: 5.5%;
+    left: 43%;
+    top: 13%;
     width: 30%;
 }
 
@@ -72,6 +76,73 @@
 }
 
 .room_name:hover {
+    color: rgba(180, 185, 252, 0.6)
+}
+
+.lock svg {
+    fill: white;
+    width: 17px;
+    padding: 1px;
+    display: block;
+    position: relative;
+    left: 30%;
+}
+
+.private svg {
+    fill: white;
+    width: 25px;
+    height: 25px;
+    padding: 1px;
+    display: block;
+    position: relative;
+    left: 35%;
+}
+
+.lock_icon {
+    align-items: right;
+
+}
+
+#join_new_btns {
+    position: absolute;
+    width: 35%;
+    height: 10%;
+    left: 43%;
+    top: 6%;
+}
+
+#new_chat
+{
+    position: relative;
+    width: 100%;
+}
+
+#new_message
+{
+    position: relative;
+    width: 100%;
+}
+
+#new_message_input
+{
+    position: absolute;
+    left: 43%;
+    top: 13%;
+    width: 30%;
+
+}
+
+.direct_room_click {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.user_name {
+    margin-left: 1%;
+    margin-top: 2%;
+}
+
+.user_name:hover {
     color: rgba(180, 185, 252, 0.6)
 }
 
