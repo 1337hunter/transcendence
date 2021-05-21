@@ -6,33 +6,26 @@ class Api::UsersController < ApplicationController
   before_action :define_filters
   before_action :sign_out_if_banned
   before_action :find_user, only: %i[show update destroy]
+  rescue_from ActiveRecord::RecordNotFound, :with => :user_not_found
 
   # GET /api/users.json
   def index
     @users = User.where(banned: false)
-    if @user.present?
-      render json: @users, only: @filters
-    else
-      render :json => {:error => "not-found"}.to_json, :status => 404
-    end
+    render json: @users, only: @filters
   end
 
   # GET /api/users/id.json
   def show
-    if @user.present?
-      render json: @user.as_json(
-        only: @filters,
-        include: { friends: { only: @filters },
-                   guild: { only: @guildfilters } }
-      )
-    else
-      render :json => {:error => "not-found"}.to_json, :status => 404
-    end
+    render json: @user.as_json(
+      only: @filters,
+      include: { friends: { only: @filters },
+                 guild: { only: @guildfilters } }
+    )
   end
 
   # PATCH/PUT /api/users/id.json
   def update
-    if current_user.admin? || current_user == @user
+    if (current_user.admin? && @user != current_user && !@user.admin?) || current_user == @user
       if @user.update(user_params)
         render json: @user, only: @filters, status: :ok
       else
@@ -79,4 +72,9 @@ class Api::UsersController < ApplicationController
     r = Integer(str) rescue nil
     r == nil ? false : true
   end
+
+  def user_not_found
+    render json: {error: 'User not found'}, status: :not_found
+  end
+
 end
