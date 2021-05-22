@@ -15,6 +15,23 @@
   <td><label><%%= nickname %></label></td>
 </script>
 
+<script type="text/template" id="friends-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <td width="60%" class="users-displayname"><label><%%= displayname %></label></td>
+  <td><button class="btn btn-outline-success btn-profile-actions" <%%= status == "no" ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+  <div class="accept-friend-button">
+    Accept Friend
+  </div>
+</button></td>
+</script>
+
+
 <script type="text/template" id="users-template">
   <h1>Users <button type="button" class="button-sm button-refresh" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
@@ -135,13 +152,6 @@
             <h5 class="card-header card-title">Friends (<%%= number_of_friends %>)</h5>
               <table id="friends-table" border-spacing="20px" padding="0 2em 1em 0">
               <tr><th></th><th></th>
-          <!--  <th>Id</th>-->
-                <th class="users-displayname">Display name</th>
-          <!--  <th>Email</th>-->
-                <th>Wins</th>
-                <th>Loses</th>
-                <th>Elo</th>
-                <th>Intra nickname</th></tr>
             </table>
           </div>
         </div>

@@ -17,7 +17,7 @@ class Api::UsersController < ApplicationController
   def show
     render json: @user.as_json(
       only: @filters,
-      include: { friends: { only: @filters } }
+      include: { friends: { only: @filters }, requested_friends: {only: @filters} }
     )
   end
 
