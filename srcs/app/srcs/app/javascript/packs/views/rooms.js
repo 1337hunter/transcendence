@@ -25,6 +25,21 @@ $(function () {
         }
 	 });
 
+	 RoomsView.DirectRoomView = Backbone.View.extend({
+		template: _.template($('#direct_room_template').html()),
+		events: {
+
+		},
+		tagName: "div",
+		initialize: function () {
+            this.listenTo(this.model, 'change', this.render);
+        },
+		render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        }
+	 })
+
 	RoomsView.View = Backbone.View.extend({
 		initialize: function (main) {
 			this.rooms = new Rooms.RoomCollection;
@@ -38,6 +53,7 @@ $(function () {
 		events: {
 			'click #create-room-btn' 	: 'create_room',
 			'click .room-click' 		: 'room_click',
+			'click .direct_room_click'	: 'direct_room_click',
 			"keypress" 					: "check_keypress_event",
 			'click #new_chat'			: "click_new_chat_btn",
 			'click #new_message'		: "click_new_message_btn"
@@ -52,13 +68,24 @@ $(function () {
 			return this;
 		},
 		addOne: function (room) {
-			// if (room.get("private") == true)
-			// 	return ;
             room.view = new RoomsView.RoomView({model: room});
             this.$("#rooms").append(room.view.render().el);
         },
+		addDirectOne: function (direct_room) {
+			//console.log(direct_room)
+			direct_room.view = new RoomsView.DirectRoomView({model: direct_room});
+			this.$("#rooms").append(direct_room.view.render().el);
+		},
         addAll: function () {
-			this.rooms.each(this.addOne, this);
+			var $this = this;
+			this.direct_rooms.fetch({
+				success: function () {
+					if ($this.direct_rooms.length > 0)
+						$this.direct_rooms.each($this.addDirectOne, $this);
+				}
+			})
+			if (this.rooms.length > 0)
+				this.rooms.each(this.addOne, this);
         },
 		room_click: function (e) {
 			let regex =  /\d+/;
@@ -74,13 +101,19 @@ $(function () {
 					return this;
 				}
 				for (let i = 1; i <= this.rooms.length; ++i)
+				{
 					$("#input-room-password_" + String(i)).css("display", "none");
+					$("#input-room-password_" + String(i)).val('');
+				}
 				$("#input-room-password_" + room_id).css("display", "block");
 				$('#input-room-password_' + room_id).focus();
 			}
 			else
 				this.render_messages(Number(room_id));
 			return this;
+		},
+		direct_room_click: function (e) {
+
 		},
 		check_keypress_event: function (e) {
 			if (e.keyCode !== 13) return;
@@ -158,18 +191,49 @@ $(function () {
 			}
 		},
 		create_direct_room: function () {
-			var dr_model = new Rooms.DirectRoomModel;
+			var $this = this
 			var nickname_input = $('#nickname_input').val().trim();
 			if (nickname_input) {
-				console.log(nickname_input)
-				var user = new Users.UserId({id: nickname_input})
-				user.fetch();
+				var receiver = new Users.UserId({id: nickname_input})
+				receiver.fetch({
+					success: function () {
+						var current = new Users.CurrentUserModel();
+						current.fetch({
+							success: function () {
+								$this.direct_rooms.create({
+									sender_id: current.get("id"),
+									receiver_id: receiver.attributes[0].id
+								},{
+									wait: true,
+									success: function () {
+										$this.direct_rooms.fetch({
+											success: function () {
+												let room = $this.direct_rooms.where({sender_id: current.get("id"), receiver_id: receiver.attributes[0].id})[0]
+												if (room.attributes.blocked == true)
+												{
+													Utils.appAlert('danger', {msg: 'Can\'t start private messages [blocked]'});
+													$("#nickname_input").val('')
+													$("#new_message_input").css("display", "none");
+													return this;
+												}
+												$this.render_direct_messages(room)
+											}
+										})
+									}
+								}
+								)
+							}
+						});
+					},
+					error: function () {
+						Utils.appAlert('danger', {msg: 'User not found'});
+					}
+				});
 			}
-			// $('#nickname_input').val('');
-			// this.click_new_message_btn();
 		},
-		render_direct_messages: function () {
-
+		render_direct_messages: function (room) {
+			let view = new MessagesView.DirectMessagesView(room.attributes.id);
+			$(".app_main").html(view.render().el);
 		}
 	});
 });

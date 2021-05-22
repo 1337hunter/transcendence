@@ -6,6 +6,7 @@ class Api::UsersController < ApplicationController
   before_action :define_filters
   before_action :sign_out_if_banned
   before_action :find_user, only: %i[show update destroy]
+  rescue_from ActiveRecord::RecordNotFound, :with => :user_not_found
 
   # GET /api/users.json
   def index
@@ -23,7 +24,7 @@ class Api::UsersController < ApplicationController
 
   # PATCH/PUT /api/users/id.json
   def update
-    if current_user.admin? || current_user == @user
+    if current_user == @user
       if @user.update(user_params)
         render json: @user, only: @filters, status: :ok
       else
@@ -53,7 +54,6 @@ class Api::UsersController < ApplicationController
               User.where(displayname: params[:id])
             end
   end
-
   # DRY filters for json responses
   def define_filters
     @filters = %i[id nickname displayname email admin banned online last_seen_at
@@ -69,4 +69,9 @@ class Api::UsersController < ApplicationController
     r = Integer(str) rescue nil
     r == nil ? false : true
   end
+
+  def user_not_found
+    render json: {error: 'User not found'}, status: :not_found
+  end
+
 end

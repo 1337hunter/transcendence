@@ -90,6 +90,73 @@ $(function () {
 			);
 		}
 	});
+
+	MessagesView.DirectMessagesView = Backbone.View.extend({
+		template: _.template($('#messages-template').html()),
+        tagName: "p",
+        initialize: function (id) {
+			this.room_id = id;
+			this.cable = SubToChannel.join(id);
+			this.listenTo(this.collection, 'add', this.addOne);
+			this.collection = new Messages.MessageCollection(null, {id: this.room_id});
+			this.room_model = new Rooms.RoomId({id: this.room_id});
+        },
+		events: {
+			"keypress #chat-input" : "send_msg",
+		},
+        render: function () {
+			var $this = this;
+
+			this.room_model.fetch({
+				success: function () {
+					$this.$("#room-name").html($this.room_model.attributes[0].name)
+				}
+			});
+			this.$el.html(this.template(this.room_model.toJSON()));
+			_.defer(function() {
+  				$this.$('#chat-input').focus();
+			});
+			this.collection.fetch({
+				success: function() {
+					$this.addAll();
+				}
+			})
+			return this;
+		},
+		addOne: function (msg) {
+			msg.view = new MessagesView.MessageView({model: msg});
+			this.$("#messages").append(msg.view.render().el);
+			$("#messages").scrollTop($("#messages")[0].scrollHeight);
+		},
+		addAll: function () {
+			this.collection.each(this.addOne, this);
+		},
+		send_msg: function (e) {
+			if (e.keyCode !== 13) return;
+			if ($('#chat-input').val().trim() === "") return;
+
+			let $this = this;
+			var current_user = new Users.CurrentUserModel();
+			current_user.fetch({
+				success: function () {
+					var mes = new Messages.MessageModel;
+					mes.save({content: $('#chat-input').val().trim(), room_id: $this.room_id,
+						user_id: current_user.get("id")}, {patch: true});
+					if ($this.room_model.attributes[0].private === true)
+						mes.set({displayname: "anonimous"});
+					else
+						mes.set({displayname: current_user.get("displayname")});
+					mes.set({avatar: current_user.get("avatar_url")});
+					var	mes_view = new MessagesView.MessageView({model: mes});
+					$("#messages").scrollTop($("#messages")[0].scrollHeight);
+					$('#chat-input').val('');
+				}
+			}
+			);
+		}
+	});
+	
+
 });
 
 export default MessagesView
