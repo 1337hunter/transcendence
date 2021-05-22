@@ -90,7 +90,8 @@ $(function () {
 		room_click: function (e) {
 			let regex =  /\d+/;
 			let room_id = String(e.currentTarget)
-			room_id = room_id.substr(room_id.length - 1)
+			room_id = room_id.substr(room_id.length - 5)
+			room_id = room_id.match(regex)
 			var room = this.rooms.where({id: Number(room_id)})[0]
 			
 			if (room.get("password") != "" && room.get("password") != null)
@@ -113,6 +114,11 @@ $(function () {
 			return this;
 		},
 		direct_room_click: function (e) {
+			let regex =  /\d+/;
+			let room_id = String(e.currentTarget)
+			room_id = room_id.substr(room_id.length - 10)
+			room_id = room_id.match(regex)
+			this.render_direct_messages(Number(room_id))
 
 		},
 		check_keypress_event: function (e) {
@@ -216,7 +222,7 @@ $(function () {
 													$("#new_message_input").css("display", "none");
 													return this;
 												}
-												$this.render_direct_messages(room)
+												$this.render_direct_messages(room.attributes.id)
 											}
 										})
 									}
@@ -231,8 +237,8 @@ $(function () {
 				});
 			}
 		},
-		render_direct_messages: function (room) {
-			let view = new MessagesView.DirectMessagesView(room.attributes.id);
+		render_direct_messages: function (room_id) {
+			let view = new MessagesView.DirectView(room_id);
 			$(".app_main").html(view.render().el);
 		}
 	});

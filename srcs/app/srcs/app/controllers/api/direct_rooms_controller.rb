@@ -25,6 +25,20 @@ class Api::DirectRoomsController < ApplicationController
         render json: [],  status: :ok
     end
 
+    def show
+        @room = DirectRoom.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id).first
+        if current_user.id == @room.receiver_id
+            @user_id = @room.sender_id
+        else
+            @user_id = @room.receiver_id
+        end
+        @user = User.find(@user_id)
+        puts ">>>>>>>>>>>>>>>>>>>>>"
+        puts show_room
+        puts ">>>>>>>>>>>>>>>>>>>>>"
+        render json: show_room
+    end
+
     private
 
     def get_concat(dr)
@@ -44,6 +58,15 @@ class Api::DirectRoomsController < ApplicationController
             sender_id: params[:sender_id],
             receiver_id: params[:receiver_id],
             blocked: false
+        }
+    end
+
+    def show_room
+        {
+            id: @room.id,
+            receiver_id: @room.receiver_id,
+            sender_id: @room.sender_id,
+            receiver_name: @user.displayname
         }
     end
 
