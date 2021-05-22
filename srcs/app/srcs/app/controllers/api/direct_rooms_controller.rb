@@ -20,22 +20,19 @@ class Api::DirectRoomsController < ApplicationController
         if DirectRoom.between(params[:sender_id], params[:receiver_id]).present?
             @direct_room = DirectRoom.between(params[:sender_id], params[:receiver_id]).first
         else
-            @direct_room = DirectRoom.create!(direct_room_params)
+            @direct_room = DirectRoom.create!(create_direct_room_params)
         end
         render json: [],  status: :ok
     end
 
     def show
-        @room = DirectRoom.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id).first
+        @room = DirectRoom.find(params[:id])
         if current_user.id == @room.receiver_id
             @user_id = @room.sender_id
         else
             @user_id = @room.receiver_id
         end
         @user = User.find(@user_id)
-        puts ">>>>>>>>>>>>>>>>>>>>>"
-        puts show_room
-        puts ">>>>>>>>>>>>>>>>>>>>>"
         render json: show_room
     end
 
@@ -53,7 +50,7 @@ class Api::DirectRoomsController < ApplicationController
         }
     end
     
-    def direct_room_params
+    def create_direct_room_params
         {
             sender_id: params[:sender_id],
             receiver_id: params[:receiver_id],

@@ -45,7 +45,7 @@ $(function () {
 
 			this.room_model.fetch({
 				success: function () {
-					$this.$("#room-name").html($this.room_model.attributes[0].name)
+					$this.$("#room-name").html("#" + $this.room_model.attributes[0].name)
 				}
 			});
 			this.$el.html(this.template(this.room_model.toJSON()));
@@ -110,7 +110,7 @@ $(function () {
 
 			this.room_model.fetch({
 				success: function () {
-					$this.$("#receiver_name").html($this.room_model.attributes.receiver_name)
+					$this.$("#receiver_name").html("@" + $this.room_model.attributes.receiver_name)
 				}
 			});
 			this.$el.html(this.template(this.room_model.toJSON()));
@@ -138,6 +138,7 @@ $(function () {
 
 			let $this = this;
 			var current_user = new Users.CurrentUserModel();
+			console.log("here")
 			current_user.fetch({
 				success: function () {
 					var mes = new Messages.DirectMessageModel;
