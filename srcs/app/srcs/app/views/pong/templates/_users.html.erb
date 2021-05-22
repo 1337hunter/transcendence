@@ -25,13 +25,13 @@
   </td>
   <td width="60%" class="users-displayname"><label><%%= displayname %></label></td>
   <td>
-    <button class="btn btn-outline-danger btn-profile-actions" <%%= status == "friend" ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+    <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == "friend" && current_user_id == main_id) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
       <div class="remove-friend-button">
         Remove
       </div>
     </button>
   </td>
-  <td><button class="btn btn-outline-success btn-profile-actions" <%%= status == "no" ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+  <td><button class="btn btn-outline-success btn-profile-actions" <%%= (status == "no" && current_user_id == main_id) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
   <div class="accept-friend-button">
     Accept Friend
   </div>

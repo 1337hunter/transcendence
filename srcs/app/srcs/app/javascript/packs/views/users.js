@@ -53,14 +53,15 @@ $(function () {
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
             this.model.attributes.status = e.friend_status;
-            this.main_id = e.main_id;
+            this.model.attributes.current_user_id = MainSPA.SPA.router.currentuser.get('id');
+            this.model.attributes.main_id = e.main_id;
         },
         openprofile: function () {
             MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
         },
         acceptFriend: function () {
             return Backbone.ajax(_.extend({
-                url: 'api/users/' + this.main_id + '/accept_friend',
+                url: 'api/users/' + this.model.attributes.main_id + '/accept_friend',
                 method: "POST",
                 data: {friend_id: this.model.attributes.id},
                 dataType: "json",
@@ -68,7 +69,7 @@ $(function () {
         },
         removeFriend: function () {
             return Backbone.ajax(_.extend({
-                url: 'api/users/' + this.main_id + '/remove_friend',
+                url: 'api/users/' + this.model.attributes.main_id + '/remove_friend',
                 method: "POST",
                 data: {friend_id: this.model.attributes.id},
                 dataType: "json",
@@ -83,6 +84,8 @@ $(function () {
             Utils.appAlert('success', {msg: 'Displayname has been changed'});
         },
         render: function() {
+            if (this.model.attributes.status == "no" && this.model.attributes.main_id != this.model.attributes.current_user_id)
+                return this;
             console.log(this.model);
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
