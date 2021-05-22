@@ -1,6 +1,6 @@
 import Backbone from "backbone";
 import _ from "underscore";
-import moment from "moment";
+import moment, { relativeTimeThreshold } from "moment";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
@@ -11,7 +11,7 @@ $(function () {
 	UsersView.SingleUserView = Backbone.View.extend({
         template: _.template($('#singleuser-template').html()),
         events: {
-            "click" : "openprofile"
+            "click" : "openprofile",
         },
         tagName: "tr",
         initialize: function () {
@@ -31,6 +31,63 @@ $(function () {
             Utils.appAlert('success', {msg: 'Displayname has been changed'});
         },
         render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            this.input = this.$('.displayname');
+            let model = this.model;
+            this.$('.user_icon').on("error",
+                function () { Utils.replaceAvatar(this, model); });
+            return this;
+        }
+    });
+
+    UsersView.FriendsView = Backbone.View.extend({
+        template: _.template($('#friends-template').html()),
+        events: {
+            "click .users-displayname" : "openprofile",
+            "click .accept-friend-button" : "acceptFriend",
+            "click .remove-friend-button" : "removeFriend",
+        },
+        tagName: "tr",
+        initialize: function (e) {
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'error', this.onerror);
+            this.model.attributes.status = e.friend_status;
+            this.model.attributes.current_user_id = MainSPA.SPA.router.currentuser.get('id');
+            this.model.attributes.main_id = e.main_id;
+        },
+        openprofile: function () {
+            MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
+        },
+        acceptFriend: function () {
+            return Backbone.ajax(_.extend({
+                url: 'api/users/' + this.model.attributes.main_id + '/accept_friend',
+                method: "POST",
+                data: {friend_id: this.model.attributes.id},
+                dataType: "json",
+            }));
+        },
+        removeFriend: function () {
+            this.remove();
+            return Backbone.ajax(_.extend({
+                url: 'api/users/' + this.model.attributes.main_id + '/remove_friend',
+                method: "POST",
+                data: {friend_id: this.model.attributes.id},
+                dataType: "json",
+            }));
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+            this.model.attributes = this.model.previousAttributes();
+            this.render();
+        },
+        onsuccess: function () {
+            Utils.appAlert('success', {msg: 'Displayname has been changed'});
+        },
+        render: function() {
+            if (this.model.attributes.status == "no" && this.model.attributes.main_id != this.model.attributes.current_user_id)
+                return this;
+            console.log(this.model);
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
             let model = this.model;
@@ -83,14 +140,10 @@ $(function () {
             this.model = new Users.UserId({id: id});
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch({error: this.onerror});
-            this.model.attributes.number_of_friends = 2;
-        //  this.model.attributes.number_of_friends = this.model.attributes.friends.length;
-        //    this.model.set({number_of_friends: this.model.attributes.friends.length});
         },
         addFriend: function () {
-            console.log("Add friend action");
             return Backbone.ajax(_.extend({
-                url: 'api/friends/' + this.model.id,
+                url: 'api/users/' + this.model.id + '/add_friend',
                 method: "POST",
                 data: this.attributes,
                 dataType: "json",
@@ -98,11 +151,19 @@ $(function () {
         },
         addOne: function (user) {
             var user_element = new Users.UserModel(user);
-            user_element.view = new UsersView.SingleUserView({model: user_element});
+            user_element.view = new UsersView.FriendsView({model: user_element, friend_status: "friend", main_id: this.model.attributes.id});
+            this.$("#friends-table").append(user_element.view.render().el);
+        },
+        addRequested: function (user) {
+            var user_element = new Users.UserModel(user);
+            user_element.view = new UsersView.FriendsView({model: user_element, friend_status: "no", main_id: this.model.attributes.id});
             this.$("#friends-table").append(user_element.view.render().el);
         },
         addAll: function () {
             var $this = this;
+            this.model.attributes.requested_friends.forEach(function(user) {
+                $this.addRequested(user);
+            })
             this.model.attributes.friends.forEach(function(user) {
                 $this.addOne(user);
             });

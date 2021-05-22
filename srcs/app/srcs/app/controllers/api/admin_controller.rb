@@ -45,6 +45,11 @@ class Api::AdminController < ApplicationController
       end
     end
 
+    if @user != current_user && @user.admin
+      render json: {error: "You can't udpate another admin"}, status: :forbidden
+      return
+    end
+
     if @user.update(user_params)
       render json: @user, only: @userfilters, status: :ok
     else

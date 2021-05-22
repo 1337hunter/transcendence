@@ -5,33 +5,26 @@ class Api::UsersController < ApplicationController
   before_action :check_2fa!
   before_action :define_filters
   before_action :sign_out_if_banned
-  before_action :find_user, only: %i[show update destroy]
+  before_action :find_user, only: %i[show update destroy accept_friend remove_friend]
+  rescue_from ActiveRecord::RecordNotFound, :with => :user_not_found
 
   # GET /api/users.json
   def index
     @users = User.where(banned: false)
-    if @user.present?
-      render json: @users, only: @filters
-    else
-      render :json => {:error => "not-found"}.to_json, :status => 404
-    end
+    render json: @users, only: @filters
   end
 
   # GET /api/users/id.json
   def show
-    if @user.present?
-      render json: @user.as_json(
-        only: @filters,
-        include: { friends: { only: @filters } }
-      )
-    else
-      render :json => {:error => "not-found"}.to_json, :status => 404
-    end
+    render json: @user.as_json(
+      only: @filters,
+      include: { friends: { only: @filters }, requested_friends: {only: @filters} }
+    )
   end
 
   # PATCH/PUT /api/users/id.json
   def update
-    if current_user.admin? || current_user == @user
+    if current_user == @user
       if @user.update(user_params)
         render json: @user, only: @filters, status: :ok
       else
@@ -49,6 +42,16 @@ class Api::UsersController < ApplicationController
     render json: {}, status: :ok
   end
 
+  def accept_friend
+    @user.accept_request(User.find(params[:friend_id]))
+    render json: {}, status: :ok
+  end
+
+  def remove_friend
+    @user.remove_friend(User.find(params[:friend_id]))
+    render json: {}, status: :ok
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -61,7 +64,6 @@ class Api::UsersController < ApplicationController
               User.where(displayname: params[:id])
             end
   end
-
   # DRY filters for json responses
   def define_filters
     @filters = %i[id nickname displayname email admin banned online last_seen_at
@@ -77,4 +79,9 @@ class Api::UsersController < ApplicationController
     r = Integer(str) rescue nil
     r == nil ? false : true
   end
+
+  def user_not_found
+    render json: {error: 'User not found'}, status: :not_found
+  end
+
 end

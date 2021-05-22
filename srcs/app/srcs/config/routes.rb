@@ -12,7 +12,9 @@ Rails.application.routes.draw do
     resources :rooms
     resources :messages
     resources :room_members
-    resources :friends
+    post 'users/:id/add_friend', to: 'users#add_friend'
+    post 'users/:id/accept_friend', to: 'users#accept_friend'
+    post 'users/:id/remove_friend', to: 'users#remove_friend'
     resources :direct_rooms, only: [:index, :create, :show]
     resources :direct_messages, only: [:index, :create, :show]
 
