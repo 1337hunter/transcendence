@@ -5,7 +5,7 @@ class Api::UsersController < ApplicationController
   before_action :check_2fa!
   before_action :define_filters
   before_action :sign_out_if_banned
-  before_action :find_user, only: %i[show update destroy]
+  before_action :find_user, only: %i[show update destroy accept_friend remove_friend]
   rescue_from ActiveRecord::RecordNotFound, :with => :user_not_found
 
   # GET /api/users.json
@@ -40,6 +40,15 @@ class Api::UsersController < ApplicationController
     @friended_user = User.find(params[:id])
     current_user.friend_request(@friended_user)
     render json: {}, status: :ok
+  end
+
+  def accept_friend
+    @user.accept_request(User.find(params[:friend_id]))
+  end
+
+  def remove_friend
+    @user.remove_friend(User.find(params[:friend_id]))
+  #  current_user.
   end
 
   private

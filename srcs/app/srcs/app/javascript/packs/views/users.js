@@ -11,7 +11,7 @@ $(function () {
 	UsersView.SingleUserView = Backbone.View.extend({
         template: _.template($('#singleuser-template').html()),
         events: {
-            "click" : "openprofile"
+            "click" : "openprofile",
         },
         tagName: "tr",
         initialize: function () {
@@ -43,7 +43,9 @@ $(function () {
     UsersView.FriendsView = Backbone.View.extend({
         template: _.template($('#friends-template').html()),
         events: {
-            "click" : "openprofile"
+            "click .users-displayname" : "openprofile",
+            "click .accept-friend-button" : "acceptFriend",
+            "click .remove-friend-button" : "removeFriend",
         },
         tagName: "tr",
         initialize: function (e) {
@@ -51,9 +53,26 @@ $(function () {
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
             this.model.attributes.status = e.friend_status;
+            this.main_id = e.main_id;
         },
         openprofile: function () {
             MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
+        },
+        acceptFriend: function () {
+            return Backbone.ajax(_.extend({
+                url: 'api/users/' + this.main_id + '/accept_friend',
+                method: "POST",
+                data: {friend_id: this.model.attributes.id},
+                dataType: "json",
+            }));
+        },
+        removeFriend: function () {
+            return Backbone.ajax(_.extend({
+                url: 'api/users/' + this.main_id + '/remove_friend',
+                method: "POST",
+                data: {friend_id: this.model.attributes.id},
+                dataType: "json",
+            }));
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
@@ -64,6 +83,7 @@ $(function () {
             Utils.appAlert('success', {msg: 'Displayname has been changed'});
         },
         render: function() {
+            console.log(this.model);
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
             let model = this.model;
@@ -118,7 +138,6 @@ $(function () {
             this.model.fetch({error: this.onerror});
         },
         addFriend: function () {
-            console.log("Add friend action");
             return Backbone.ajax(_.extend({
                 url: 'api/users/' + this.model.id + '/add_friend',
                 method: "POST",
@@ -128,12 +147,12 @@ $(function () {
         },
         addOne: function (user) {
             var user_element = new Users.UserModel(user);
-            user_element.view = new UsersView.FriendsView({model: user_element, friend_status: "friend"});
+            user_element.view = new UsersView.FriendsView({model: user_element, friend_status: "friend", main_id: this.model.attributes.id});
             this.$("#friends-table").append(user_element.view.render().el);
         },
         addRequested: function (user) {
             var user_element = new Users.UserModel(user);
-            user_element.view = new UsersView.FriendsView({model: user_element, friend_status: "no"});
+            user_element.view = new UsersView.FriendsView({model: user_element, friend_status: "no", main_id: this.model.attributes.id});
             this.$("#friends-table").append(user_element.view.render().el);
         },
         addAll: function () {

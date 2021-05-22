@@ -24,6 +24,13 @@
          width="30px" height="30px" src="<%%= avatar_url %>">
   </td>
   <td width="60%" class="users-displayname"><label><%%= displayname %></label></td>
+  <td>
+    <button class="btn btn-outline-danger btn-profile-actions" <%%= status == "friend" ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+      <div class="remove-friend-button">
+        Remove
+      </div>
+    </button>
+  </td>
   <td><button class="btn btn-outline-success btn-profile-actions" <%%= status == "no" ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
   <div class="accept-friend-button">
     Accept Friend
