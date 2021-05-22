@@ -135,15 +135,9 @@ $(function () {
 	UsersView.ProfileView = Backbone.View.extend({
         template: _.template($('#user-profile-template').html()),
         events: {
-<<<<<<< HEAD
-            "click #refresh-button" :   "refresh",
-            "click .add-friend-button" : "addFriend",
-            "click .remove-friend-button" : "removeFriend",
-=======
             "click #refresh-button"     :   "refresh",
             "click .add-friend-button"  :   "addFriend",
             "click #message_btn"        :   "message_to_user"
->>>>>>> 6a4d2b9f1b59e02ad9e8754a258f7c0ec7f1a210
         },
         initialize: function (id) {
             this.id = id;
