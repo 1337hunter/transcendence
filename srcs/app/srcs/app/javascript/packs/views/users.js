@@ -68,6 +68,7 @@ $(function () {
             }));
         },
         removeFriend: function () {
+            this.remove();
             return Backbone.ajax(_.extend({
                 url: 'api/users/' + this.model.attributes.main_id + '/remove_friend',
                 method: "POST",
