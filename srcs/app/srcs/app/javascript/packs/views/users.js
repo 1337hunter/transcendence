@@ -134,7 +134,8 @@ $(function () {
         template: _.template($('#user-profile-template').html()),
         events: {
             "click #refresh-button" :   "refresh",
-            "click .add-friend-button" : "addFriend"
+            "click .add-friend-button" : "addFriend",
+            "click .remove-friend-button" : "removeFriend",
         },
         initialize: function (id) {
             this.model = new Users.UserId({id: id});
@@ -168,6 +169,15 @@ $(function () {
                 $this.addOne(user);
             });
         },
+        removeFriend: function () {
+            this.remove();
+            return Backbone.ajax(_.extend({
+                url: 'api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/remove_friend',
+                method: "POST",
+                data: {friend_id: this.model.attributes.id},
+                dataType: "json",
+            }));
+        },
         refresh: function () {
             this.model.fetch({
                 success: function () {
@@ -188,7 +198,16 @@ $(function () {
                 function () { Utils.replaceAvatar(this, model); });
 
             //  TODO: temp solution.
-            if (MainSPA.SPA.router.currentuser.get('id') === this.model.get('id')) {
+            var current_user = MainSPA.SPA.router.currentuser;
+            for (let i = 0; i < this.model.attributes.friends.length; i++)
+            {
+                if (this.model.attributes.friends[i].id == current_user.get('id'))
+                {
+                    this.$('.add-friend-button').attr('value', 'Remove Friend');
+                    this.$('button.add-friend-button').attr('class', 'remove-friend-button');
+                }
+            }
+            if (current_user.get('id') === this.model.get('id')) {
                 this.$('button.btn-profile-actions').prop('disabled', true);
                 this.$('div.profile-badges')
                     .prepend("<span class=\"badge rounded-pill bg-primary\">You</span>")
