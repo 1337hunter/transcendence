@@ -60,6 +60,7 @@ $(function () {
             MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
         },
         acceptFriend: function () {
+            this.remove();
             return Backbone.ajax(_.extend({
                 url: 'api/users/' + this.model.attributes.main_id + '/accept_friend',
                 method: "POST",
@@ -87,7 +88,6 @@ $(function () {
         render: function() {
             if (this.model.attributes.status == "no" && this.model.attributes.main_id != this.model.attributes.current_user_id)
                 return this;
-            console.log(this.model);
             this.$el.html(this.template(this.model.toJSON()));
             this.input = this.$('.displayname');
             let model = this.model;
