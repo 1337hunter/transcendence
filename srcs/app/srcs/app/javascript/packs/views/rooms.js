@@ -72,7 +72,6 @@ $(function () {
             this.$("#rooms").append(room.view.render().el);
         },
 		addDirectOne: function (direct_room) {
-			//console.log(direct_room)
 			direct_room.view = new RoomsView.DirectRoomView({model: direct_room});
 			this.$("#rooms").append(direct_room.view.render().el);
 		},
@@ -215,7 +214,7 @@ $(function () {
 										$this.direct_rooms.fetch({
 											success: function () {
 												let room = $this.direct_rooms.where({sender_id: current.get("id"), receiver_id: receiver.attributes[0].id})[0]
-												if (room.attributes.blocked == true)
+												if (!room || room.attributes.blocked1 != "" || room.attributes.blocked2 != "")
 												{
 													Utils.appAlert('danger', {msg: 'Can\'t start private messages [blocked]'});
 													$("#nickname_input").val('')

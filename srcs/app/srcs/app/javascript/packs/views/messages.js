@@ -101,9 +101,12 @@ $(function () {
 			this.listenTo(this.collection, 'add', this.addOne);
 			this.collection = new Messages.DirectMessageCollection(null, {id: this.room_id});
 			this.room_model = new Rooms.DirectRoomId({id: this.room_id});
+			this.current_user = new Users.CurrentUserModel();
+			this.current_user.fetch();
         },
 		events: {
-			"keypress #chat-input" : "send_msg",
+			"keypress #chat-input"	: "send_msg",
+			"click .block_user"		: "block_user"
 		},
         render: function () {
 			var $this = this;
@@ -131,6 +134,16 @@ $(function () {
 		},
 		addAll: function () {
 			this.collection.each(this.addOne, this);
+		},
+		block_user: function () {
+			if (confirm('Are you sure you want to save this thing into the database?')) {
+				if (this.room_model.attributes.blocked1 != "")
+					this.room_model.set("blocked1", String(this.current_user.attributes.id));
+				else
+					this.room_model.set("blocked2", String(this.current_user.attributes.id));
+				this.room_model.save();
+				window.history.back();
+			}
 		},
 		send_msg: function (e) {
 			if (e.keyCode !== 13) return;

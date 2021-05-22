@@ -36,7 +36,4 @@ class Api::DirectMessagesController < ApplicationController
     end
 
     private
-
-    def show_message
-    end
 end

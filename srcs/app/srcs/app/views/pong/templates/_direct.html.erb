@@ -11,7 +11,11 @@
 </script>
 
 <script type="text/template" id="direct_messages_template">
-    <h1 id="receiver_name"></h1><br>
+    <table>
+        <th><h1 id="receiver_name"></h1></th>
+        <th><div style="width: 7%; float:left;" class="block_user"><%= show_svg('block.svg') %></div></div></th>
+    </table>
+    <br>
     <div id="messages">
     </div>
     <div id="div-chat-input">
