@@ -44,11 +44,12 @@ class Api::UsersController < ApplicationController
 
   def accept_friend
     @user.accept_request(User.find(params[:friend_id]))
+    render json: {}, status: :ok
   end
 
   def remove_friend
     @user.remove_friend(User.find(params[:friend_id]))
-  #  current_user.
+    render json: {}, status: :ok
   end
 
   private
