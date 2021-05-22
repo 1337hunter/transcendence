@@ -2,7 +2,7 @@ class DirectMessage < ApplicationRecord
   belongs_to :direct_room
   belongs_to :user
 
-  validates_presence_of :body, :conversation_id, :user_id
+  validates_presence_of :content, :direct_room_id, :user_id
 
   private
     def message_time

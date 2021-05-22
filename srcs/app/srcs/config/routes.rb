@@ -15,9 +15,8 @@ Rails.application.routes.draw do
     post 'users/:id/add_friend', to: 'users#add_friend'
     post 'users/:id/accept_friend', to: 'users#accept_friend'
     post 'users/:id/remove_friend', to: 'users#remove_friend'
-    resources :direct_rooms, only: [:index, :create, :show] do
-      resources :direct_messages, only: [:index, :create, :show]
-    end
+    resources :direct_rooms, only: [:index, :create, :show, :update]
+    resources :direct_messages, only: [:index, :create, :show]
 
     post 'friends/:id', to: "friends#add_friend"
     get 'admin/users', to: 'admin#users'

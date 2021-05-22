@@ -31,7 +31,8 @@ ActiveRecord::Schema.define(version: 2021_05_21_143811) do
     t.integer "receiver_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "blocked"
+    t.string "blocked1"
+    t.string "blocked2"
   end
 
   create_table "friendships", id: :serial, force: :cascade do |t|

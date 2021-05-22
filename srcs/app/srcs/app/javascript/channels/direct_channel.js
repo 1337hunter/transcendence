@@ -26,7 +26,7 @@ let SubToDirect = {
       },
 
       received(data) {
-        if (data.room_id == this.id)
+        if (data.direct_room_id == this.id)
         {
           $('#messages').append(`
             <div class="message" data-user-id="${data.user_id}">

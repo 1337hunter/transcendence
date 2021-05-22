@@ -4,6 +4,8 @@ import moment, { relativeTimeThreshold } from "moment";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
+import Messages from "../models/messages";
+import MessagesView from "./messages";
 
 const UsersView = {};
 
@@ -133,14 +135,24 @@ $(function () {
 	UsersView.ProfileView = Backbone.View.extend({
         template: _.template($('#user-profile-template').html()),
         events: {
+<<<<<<< HEAD
             "click #refresh-button" :   "refresh",
             "click .add-friend-button" : "addFriend",
             "click .remove-friend-button" : "removeFriend",
+=======
+            "click #refresh-button"     :   "refresh",
+            "click .add-friend-button"  :   "addFriend",
+            "click #message_btn"        :   "message_to_user"
+>>>>>>> 6a4d2b9f1b59e02ad9e8754a258f7c0ec7f1a210
         },
         initialize: function (id) {
+            this.id = id;
             this.model = new Users.UserId({id: id});
+            this.current_user = new Users.CurrentUserModel();
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch({error: this.onerror});
+            this.current_user.fetch();
+
         },
         addFriend: function () {
             return Backbone.ajax(_.extend({
@@ -184,6 +196,8 @@ $(function () {
                     Utils.appAlert('success', {msg: 'Up to date'});},
                     error: this.onerror
             });
+        },
+        message_to_user: function () {
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);

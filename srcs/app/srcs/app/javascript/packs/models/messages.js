@@ -19,4 +19,20 @@ Messages.MessageCollection = Backbone.Collection.extend({
     comparator: 'id'
 });
 
+Messages.DirectMessageModel = Backbone.Model.extend({
+    idAttribute: 'id',
+    urlRoot: '/api/direct_messages'
+});
+
+Messages.DirectMessageCollection = Backbone.Collection.extend({
+    initialize: function(model, options) {
+        this.id = options.id;
+    },
+    model: Messages.DirectMessageModel,
+    url: function () {
+        return '/api/direct_messages/' + this.id;
+    },
+    comparator: 'id'
+});
+
 export default Messages;
