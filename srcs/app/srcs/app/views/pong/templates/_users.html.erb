@@ -75,10 +75,8 @@
                 <h4 class="profile-displayname"><%%= displayname %></h4>
                 <p class="text-secondary mb-1"><%%= online ? 'Online' : 'last seen ' + last_seen_at %></p>
                 <p class="text-muted font-size-sm"><%%= email %></p>
-                <button class="btn btn-outline-success btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
-                  <div class="add-friend-button">
-                    Add Friend
-                  </div>
+                <button class="btn btn-outline-success btn-profile-actions add-friend-button" <%%= banned ? 'disabled' : '' %>>
+                  Add Friend
                 </button>
                 <button id="message_btn" class="btn btn-outline-primary btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
                   Message

@@ -135,9 +135,10 @@ $(function () {
 	UsersView.ProfileView = Backbone.View.extend({
         template: _.template($('#user-profile-template').html()),
         events: {
-            "click #refresh-button"     :   "refresh",
-            "click .add-friend-button"  :   "addFriend",
-            "click #message_btn"        :   "message_to_user"
+            "click #refresh-button"         :   "refresh",
+            "click .add-friend-button"      :   "addFriend",
+            "click #message_btn"            :   "message_to_user",
+            "click .remove-friend-button"   :   "removeFriend"
         },
         initialize: function (id) {
             this.id = id;
@@ -176,7 +177,6 @@ $(function () {
             });
         },
         removeFriend: function () {
-            this.remove();
             return Backbone.ajax(_.extend({
                 url: 'api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/remove_friend',
                 method: "POST",
@@ -211,8 +211,8 @@ $(function () {
             {
                 if (this.model.attributes.friends[i].id == current_user.get('id'))
                 {
-                    this.$('.add-friend-button').attr('value', 'Remove Friend');
-                    this.$('button.add-friend-button').attr('class', 'remove-friend-button');
+                    this.$('.add-friend-button').html('Remove Friend');
+                    this.$('.add-friend-button').attr('class', 'btn btn-outline-danger btn-profile-actions remove-friend-button');
                 }
             }
             if (current_user.get('id') === this.model.get('id')) {
