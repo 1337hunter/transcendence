@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_21_143811) do
+ActiveRecord::Schema.define(version: 2021_05_26_131457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,16 @@ ActiveRecord::Schema.define(version: 2021_05_21_143811) do
     t.integer "blocker_id"
     t.integer "status"
     t.index ["friendable_id", "friend_id"], name: "index_friendships_on_friendable_id_and_friend_id", unique: true
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.integer "first_player_id"
+    t.integer "second_player_id"
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["first_player_id"], name: "index_matches_on_first_player_id"
+    t.index ["second_player_id"], name: "index_matches_on_second_player_id"
   end
 
   create_table "messages", force: :cascade do |t|

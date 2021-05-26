@@ -9,6 +9,21 @@ class User < ApplicationRecord
 
   has_friendship
 
+  has_many :matches, foreign_key: "first_player_id"
+  has_one :current_match,
+            -> { where matches: {status: 2} },
+            class_name: "Match",
+            foreign_key: "first_player_id"
+
+  has_many :requested_matches,
+            -> { where matches: {status: 1} },
+            through: :matches,
+            source: :player
+  has_many :pending_matches,
+            -> { where matches: {status: 0} },
+            through: :matches,
+            source: :player
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :two_factor_authenticatable, :rememberable, :validatable,
