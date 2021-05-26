@@ -138,7 +138,8 @@ $(function () {
             "click #refresh-button"         :   "refresh",
             "click .add-friend-button"      :   "addFriend",
             "click #message_btn"            :   "message_to_user",
-            "click .remove-friend-button"   :   "removeFriend"
+            "click .remove-friend-button"   :   "removeFriend",
+            "click .invite-to-battle"       :   "inviteToBattle",
         },
         initialize: function (id) {
             this.id = id;
@@ -148,6 +149,9 @@ $(function () {
             this.model.fetch({error: this.onerror});
             this.current_user.fetch();
 
+        },
+        inviteToBattle: function () {
+            console.log("Invite to battle");
         },
         addFriend: function () {
             return Backbone.ajax(_.extend({
