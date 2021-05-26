@@ -5,7 +5,7 @@ class Api::UsersController < ApplicationController
   before_action :check_2fa!
   before_action :define_filters
   before_action :sign_out_if_banned
-  before_action :find_user, only: %i[show update destroy]
+  before_action :find_user, only: %i[show update destroy add_to_guild remove_from_guild]
   rescue_from ActiveRecord::RecordNotFound, :with => :user_not_found
 
   # GET /api/users.json
@@ -37,6 +37,55 @@ class Api::UsersController < ApplicationController
     end
   end
 
+  def add_to_guild
+    if (guild_master_action && @user != current_user)
+      if !@user.guild_id
+        @user.errors.add :base, 'No request found'
+        render json: @user.errors, status: :forbidden
+      end
+      @user.update(guild_user_params)
+      if @user.guild_master = true
+          @user.guild_officer = false
+            current_user.guild_master = false
+      end
+    else
+      if (@user == current_user) # && @user is invited
+        # @user.id = .guild_id
+           @user.guild_accepted = true
+           @user.save
+      else
+        @user.errors.add :base, 'You have no permission'
+        render json: @user.errors, status: :forbidden
+      end
+    end
+  end
+
+  def remove_from_guild
+    if (!@user.guild_id)
+      @user.errors.add :base, 'User is not any guild member'
+      render json: @user.errors, status: :forbidden
+    end
+    if (current_user == @user || guild_master_action)
+      #if @user.guild_master == true
+        #  @guild = Guild.find(@user.guild_id)
+        #   if @guild.members.size = 1 # ask to destroy guild end
+        #@user.errors.add :base, 'Pass master role before leaving the guild.'
+            #redirect to members list ?
+        # render json: @user.errors, status: :forbidden
+        # else
+        @user.guild_accepted = false
+        @user.guild_id = nil
+        @user.guild_officer = false
+        @user.guild_master = false #tmp for test
+        @user.save
+        render json: @user, only: @filters, status: :ok
+        #  end
+    else
+      @user.errors.add :base, 'You have no permission'
+      render json: @user.errors, status: :forbidden
+    end
+  end
+
   def add_friend
     @friended_user = User.find(params[:id])
     current_user.friend_request(@friended_user)
@@ -59,13 +108,22 @@ class Api::UsersController < ApplicationController
   # DRY filters for json responses
   def define_filters
     @filters = %i[id nickname displayname email admin banned online last_seen_at
-                  wins loses elo avatar_url avatar_default_url guild_id]
+                  wins loses elo avatar_url avatar_default_url
+                  guild_id guild_accepted guild_master guild_officer]
     @guildfilters = %i[name anagram]
   end
 
   # Only allow a list of trusted parameters through.
   def user_params
     params.require(:user).permit(%i[displayname avatar_url guild_id])
+  end
+
+  def guild_user_params
+    params.permit(%i[guild_accepted guild_officer guild_master])
+  end
+
+  def guild_master_action
+    current_user.guild_master = true && current_user.guild_id == @user.guild_id
   end
 
   def is_numeric(str)

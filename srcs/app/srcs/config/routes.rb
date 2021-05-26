@@ -28,6 +28,9 @@ Rails.application.routes.draw do
     end
     get 'users_not_in_guild', to: 'guilds#users_available'
     get 'guilds/:id/members', to: 'guilds#show_members'
+    get 'guilds/:id/requests', to: 'guilds#show_requests'
+    put 'users/:id/leave', to: 'users#remove_from_guild'
+    put 'users/:id/add', to: 'users#add_to_guild'
 
   end
 

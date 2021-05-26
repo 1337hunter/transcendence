@@ -48,4 +48,15 @@ Users.GuildMembersCollection = Backbone.Collection.extend({
     }
 });
 
+Users.GuildRequestsCollection = Backbone.Collection.extend({
+    model: Users.UserModel,
+    initialize: function(model, options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/guilds/' + this.id + '/requests';
+    },
+    comparator:  'id'
+});
+
 export default Users;

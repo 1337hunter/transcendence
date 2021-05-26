@@ -2,9 +2,10 @@ class Api::GuildsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :define_user_filters, only: %i[show_members]
   before_action :check_in_other_guild, only: [:create]
-  before_action :find_guild, only: %i[show update destroy show_master show_officers show_members]
+  before_action :find_guild, only: %i[show update destroy show_master show_officers show_members show_requests]
   before_action :check_master_rights, only: [:destroy, :update]
-  #before_action :check_officer_rights, only: [:update]
+  before_action :check_officer_rights, only: [:show_requests]
+  rescue_from ActiveRecord::RecordNotFound, :with => :guild_not_found
 
   def index
     @guilds = Guild.all.includes(:master).joins(:master).
@@ -26,6 +27,7 @@ class Api::GuildsController < ApplicationController
                                anagram: generate_anagram(params[:name]))
     if guild.save
       @user.guild_master = true
+      @user.guild_accepted = true
       @user.save
       render json: guild, status: :ok
     else
@@ -41,36 +43,21 @@ class Api::GuildsController < ApplicationController
     end
   end
 
-  #delete?
-  def leave
-    if @user.guild_master = true
-      @user.errors.add :base, 'Pass master role before leaving the guild.'
-      #redirect to members list ?
-      render json: @user.errors, status: :forbidden
-    end
-    @user.guild_id = nil
-    @user.guild_officer = false
-    @user.save
-  end
-
   def destroy
     @guild.members.each { |member|
-      member.guild_id = nil
+      member.guild_accepted = false
       member.guild_officer = false
       member.guild_master = false
+      member.guild_id = nil
       member.save
     }
     @guild.destroy
-    respond_to do |format|
-      format.html { redirect_to "/#guilds", notice: 'Guild was successfully deleted.' }
-      format.json { head :no_content }
-    end
   end
 
   def users_available
-    @users = User.all.where(:guild_id => nil)
-    @users = @users.all.where.not(:banned => true)
-    @users = @users.all.where.not(:id => current_user.id)
+    @users = User.all.where(:guild_accepted => false)
+    #@users = @users.all.where.not(:banned => true)
+    # @users = @users.all.where.not(:id => current_user.id)
     render json: @users, only: @filters, status: :ok
   end
 
@@ -95,15 +82,24 @@ class Api::GuildsController < ApplicationController
     render json: @users, only: @filters, status: :ok
   end
 
+  def show_requests
+    @users = @guild.requests
+    render json: @users, only: @filters, status: :ok
+  end
+
   private
 
   def find_guild
     @guild = Guild.find(params[:id])
   end
 
+  def guild_not_found
+    render json: {error: 'Guild not found'}, status: :not_found
+  end
+
   def check_in_other_guild
     @user = current_user
-    if @user.guild_id
+    if (@user.guild_id && @user.guild_accepted)
       @user.errors.add :base, 'You are in the guild already. Leave your guild to continue.'
       render json: @user.errors, status: :bad_request
     end
@@ -112,7 +108,7 @@ class Api::GuildsController < ApplicationController
   def check_master_rights
     check_member
     if @user.guild_master = false
-        @user.errors.add :base, 'Only Guild master can do it'
+        @user.errors.add :base, 'No permission'
         render json: @user.errors, status: :forbidden
     end
   end
@@ -120,15 +116,15 @@ class Api::GuildsController < ApplicationController
   def check_officer_rights
     check_member
     if @user.guild_officer = false &&  @user.guild_master = false
-      @user.errors.add :base, 'You should be the master or an officer for this action'
+      @user.errors.add :base, 'No permission'
       render json: @user.errors, status: :forbidden
     end
   end
 
   def check_member
     @user = current_user
-    if @user.guild_id != @guild.id
-      @user.errors.add :base, 'You are not in this guild'
+    if (@user.guild_id != @guild.id || !@user.guild_accepted)
+      @user.errors.add :base, 'No permission'
       render json: @user.errors, status: :forbidden
     end
   end
@@ -141,15 +137,15 @@ class Api::GuildsController < ApplicationController
   def define_user_filters
     @filters = %i[id nickname displayname email admin banned online last_seen_at
                   wins loses elo avatar_url avatar_default_url
-                  guild_id guild_master guild_officer] #guild_request
+                  guild_id guild_master guild_officer guild_accepted]
   end
 
   def generate_anagram(name)
     charset = "aeiouAEIOU "
+    name = name.delete(" ")
     if name.length < 6 && !Guild.find_by(anagram: name)
       return name
     end
-    name = name.delete(" ")
     if name.length < 6
       tmp = cut_entry(name[0,5].clone)
       if !tmp.empty?

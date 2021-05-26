@@ -51,7 +51,7 @@
                 <h4 class="profile-displayname"><%%= displayname %></h4>
                 <p class="text-secondary mb-1"><%%= online ? 'Online' : 'last seen ' + last_seen_at %></p>
                 <p class="text-muted font-size-sm">
-                  <%%= guild_id == null ? '' : `<a href="#/guilds/${guild_id}" style="text-decoration: inherit; color: inherit;">[${guild.anagram}] ${guild.name}</a>` %>
+                  <%%= guild_accepted == false ? '' : `<a href="#/guilds/${guild_id}" style="text-decoration: inherit; color: inherit;">[${guild.anagram}] ${guild.name}</a>` %>
                 </p>
                 <button class="btn btn-outline-success btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
                   <div class="add-friend-button">
@@ -160,4 +160,117 @@
       </div>
     </div>
   </div>
+</script>
+
+<script type="text/template" id="invite-user-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <!--  <td><label><%%= id %></label></td>-->
+  <td><label><%%= displayname %></label></td>
+  <!--  <td><label><%%= email %></label></td>-->
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
+  <td><label><%%= elo %></label></td>
+  <td><label><%%= nickname %></label></td>
+  <!--  %if already invited%-->
+  <!-- <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="invite-button">cancel invite</button></div>-->
+  <!--  %else%-->
+  <td> <button type="button" class="btn btn-light options-button invite" id="invite-button">invite</button></td>
+  <!--  %end%-->
+</script>
+
+<script type="text/template" id="invited-user-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <!--  <td><label><%%= id %></label></td>-->
+  <td><label><%%= displayname %></label></td>
+  <!--  <td><label><%%= email %></label></td>-->
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
+  <td><label><%%= elo %></label></td>
+  <td><label><%%= nickname %></label></td>
+  <td><button type="button" class="btn btn-danger options-button" id="invite-button">cancel invite</button></td>
+</script>
+
+<script type="text/template" id="guild-request-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <!--  <td><label><%%= id %></label></td>-->
+  <td><label><%%= displayname %></label></td>
+  <!--  <td><label><%%= email %></label></td>-->
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
+  <td><label><%%= elo %></label></td>
+  <td><label><%%= nickname %></label></td>
+  <td><button type="button" class="btn btn-success options-button" id="accept-button">accept</button></td>
+  <td><button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></td>
+</script>
+
+<script type="text/template" id="guildmember-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <!--  <td><label><%%= id %></label></td>-->
+  <td><label><%%= displayname %></label></td>
+  <td><label><%%= guild_master ? 'master' : guild_officer ? 'officer' : '-'%></label></td>
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
+  <td><label><%%= elo %></label></td>
+  <td><label><%%= nickname %></label></td>
+</script>
+
+<script type="text/template" id="guildmember-edit-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <!--  <td><label><%%= id %></label></td>-->
+  <td><label><%%= displayname %></label></td>
+  <td><label><%%= guild_master ? 'master' : guild_officer ? 'officer' : '-'%></label></td>
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
+  <td><label><%%= elo %></label></td>
+  <td><label><%%= nickname %></label></td>
+  <td><button type="button" class="btn btn-danger options-button" <%%= guild_master ? 'style="display:none"' : '' %> id="kick-button">kick</button></td>
+  <%if current_user.guild_master %>
+    <td> <button type="button" class="btn btn-light options-button" <%%= guild_master ? 'style="display:none"' : '' %>  id="promote-button">promote</button></td>
+    <td> <button type="button" class="btn btn-light options-button" <%%= guild_officer ?  '' : 'style="display:none"'%> id="demote-button">demote</button></td>
+<%end %>
+</script>
+
+<script type="text/template" id="guildmembers-template">
+  <h1>Guild members <button type="button" class="button-sm button-refresh" id="refresh-button">
+    <%= show_svg('refresh.svg') %></button></h1>
+  <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
+    <tr><th></th><th></th>
+      <!--  <th>Id</th>-->
+      <th>Display name</th>
+      <th>Rank</th>
+      <th>Wins</th>
+      <th>Loses</th>
+      <th>Elo</th>
+      <th>Intra nickname</th></tr>
+  </table>
 </script>
