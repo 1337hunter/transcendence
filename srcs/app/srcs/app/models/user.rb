@@ -10,6 +10,9 @@ class User < ApplicationRecord
   has_friendship
 
   has_many :matches, foreign_key: "first_player_id"
+  def matches
+    Match.where("first_player_id = ? OR second_player_id = ?", self.id, self.id)
+  end
   has_one :current_match,
             -> { where matches: {status: 2} },
             class_name: "Match",
@@ -19,7 +22,7 @@ class User < ApplicationRecord
             -> { where matches: {status: 1} },
             through: :matches,
             source: :player
-  has_many :pending_matches,
+  has_many :pending_matches,  # mb need to fix later
             -> { where matches: {status: 0} },
             through: :matches,
             source: :player
