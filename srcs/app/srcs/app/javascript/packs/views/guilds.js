@@ -33,14 +33,14 @@ $(function () {
             let id = this.model.get('id');
             this.cur_user.fetch({
                 success: function (model) {
-                    if (model.get('guild_id') == id && model.get('guild_accepted'))
-                        view.$el.html(view.template2(view.model.toJSON()));
-                    else
-                    if (model.get('guild_accepted'))
-                        if (model.get('guild_officer') || model.get('guild_master'))
+                    if (model.get('guild_accepted')) {
+                        if (model.get('guild_id') == id)
+                            view.$el.html(view.template2(view.model.toJSON()));
+                        else if (model.get('guild_officer') || model.get('guild_master'))
                             view.$el.html(view.template4(view.model.toJSON()));
                         else
                             view.$el.html(view.template1(view.model.toJSON()));
+                    }
                     else
                         view.$el.html(view.template3(view.model.toJSON()));
                 }});
