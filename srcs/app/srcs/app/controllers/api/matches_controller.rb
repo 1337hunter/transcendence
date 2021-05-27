@@ -11,8 +11,11 @@ class Api::MatchesController < ApplicationController
         puts "show action"
     end
 
-    def invite_user
-        puts 'USER INVITED'
-        puts params
+    def create
+        @match = Match.create(first_player_id: params["user_id"],
+                                second_player_id: params["invited_user_id"],
+                                status: 1)
+        puts 'MATCH CREATED'
+        render json: [],  status: :ok
     end
 end

@@ -186,7 +186,7 @@ $(function () {
         inviteToBattle: function () {
             console.log("Invite to battle");
             return Backbone.ajax(_.extend({
-                url: 'api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/matches/invite_user',
+                url: 'api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/matches/',
                 method: "POST",
                 data: {invited_user_id: this.model.attributes.id},
                 dataType: "json",
