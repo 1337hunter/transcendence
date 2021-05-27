@@ -21,11 +21,11 @@ class User < ApplicationRecord
   has_many :requested_matches,
             -> { where matches: {status: 1} },
             through: :matches,
-            source: :player
+            source: :player_one
   has_many :pending_matches,  # mb need to fix later
-            -> { where matches: {status: 0} },
+            -> { where matches: {status: 1} },
             through: :matches,
-            source: :player
+            source: :player_two
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
