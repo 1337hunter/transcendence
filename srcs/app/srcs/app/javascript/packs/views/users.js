@@ -99,6 +99,28 @@ $(function () {
         }
     });
 
+    UsersView.SingleMatchView = Backbone.View.extend({
+        template: _.template($('#singlematch-template').html()),
+        events: {},
+        initialize: function () {
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'error', this.onerror);
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+            this.model.attributes = this.model.previousAttributes();
+            this.render();
+        },
+        onsuccess: function () {
+            Utils.appAlert('success', {msg: 'Displayname has been changed'});
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        }
+    });
+
 	UsersView.View = Backbone.View.extend({
 		template: _.template($('#users-template').html()),
 		events: {
@@ -148,7 +170,18 @@ $(function () {
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch({error: this.onerror});
             this.current_user.fetch();
-
+            // add to user profile matches collection
+           this.matches_collection = new Users.MatchesCollection({id :this.model.attributes.id});
+		   this.listenTo(this.matches_collection, 'add', this.addOneMatch);
+		   this.listenTo(this.matches_collection, 'reset', this.addAllMatches);
+           this.matches_collection.fetch({reset: true, error: this.onerror});
+        },
+        addOneMatch: function (match) {
+            match.view = new UsersView.SingleMatchView({model: match});
+            this.$("#matches-table").append(user.view.render().el);
+        },
+        addAllMatches: function () {
+            this.matches_collection.each(this.addOneMatch, this);
         },
         inviteToBattle: function () {
             console.log("Invite to battle");

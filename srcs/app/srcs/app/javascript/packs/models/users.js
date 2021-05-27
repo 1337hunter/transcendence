@@ -23,6 +23,21 @@ Users.UserId = Backbone.Model.extend({
     }
 });
 
+Users.MatchModel = Backbone.Model.extend({
+    initialize: function(options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/users/' + this.id + '/matches';
+    }
+});
+
+Users.MatchesCollection = Backbone.Collection.extend({
+    model: Users.MatchModel,
+    url: '/api/users/:id/matches',
+    comparator: 'id'
+});
+
 Users.UserCollection = Backbone.Collection.extend({
     model: Users.UserModel,
     url: '/api/users',

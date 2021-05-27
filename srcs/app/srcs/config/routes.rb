@@ -7,7 +7,9 @@ Rails.application.routes.draw do
     get 'settings/2fa', to: 'two_factor#status'
     post 'settings/2fa', to: 'two_factor#enable'
     patch 'settings/2fa', to: 'two_factor#disable'
-    resources :users
+    resources :users do
+      resources :matches
+    end
     resources :settings
     resources :rooms
     resources :messages

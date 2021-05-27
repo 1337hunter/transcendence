@@ -15,6 +15,10 @@
   <td><label><%%= nickname %></label></td>
 </script>
 
+<script type="text/template" id="singlematch-template">
+<td><label>Hello, World</label></td>
+</script>
+
 <script type="text/template" id="friends-template">
   <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
     <%= show_svg('user-astronaut.svg') %></div>
@@ -166,7 +170,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-header card-title">Match History</h5>
-              <table>Placeholder</table>
+              <table id="matches-table">Placeholder</table>
             </div>
           </div>
         </div>
