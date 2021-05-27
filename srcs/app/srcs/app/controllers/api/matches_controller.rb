@@ -11,4 +11,8 @@ class Api::MatchesController < ApplicationController
         puts "show action"
     end
 
+    def invite_user
+        puts 'USER INVITED'
+        puts params
+    end
 end

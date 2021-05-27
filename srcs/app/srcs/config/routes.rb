@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     patch 'settings/2fa', to: 'two_factor#disable'
     resources :users do
       resources :matches
+      post 'matches/invite_user', to: 'matches#invite_user'
     end
     resources :settings
     resources :rooms
