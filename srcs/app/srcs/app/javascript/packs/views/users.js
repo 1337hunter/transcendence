@@ -102,6 +102,7 @@ $(function () {
     UsersView.SingleMatchView = Backbone.View.extend({
         template: _.template($('#singlematch-template').html()),
         events: {},
+        tagName: "tr",
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
@@ -177,8 +178,10 @@ $(function () {
            this.matches_collection.fetch({reset: true, error: this.onerror});
         },
         addOneMatch: function (match) {
+            console.log(match);
             match.view = new UsersView.SingleMatchView({model: match});
-            this.$("#matches-table").append(user.view.render().el);
+            console.log(match.view.render().el);
+            this.$("#matches-table").append(match.view.render().el);
         },
         addAllMatches: function () {
             this.matches_collection.each(this.addOneMatch, this);
@@ -264,6 +267,7 @@ $(function () {
                     .prepend("<span class=\"badge rounded-pill bg-primary\">You</span>")
             }
             this.addAll();
+            this.addAllMatches();
             return this;
         }
     });

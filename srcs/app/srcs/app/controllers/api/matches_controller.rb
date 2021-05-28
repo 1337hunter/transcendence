@@ -4,7 +4,8 @@ class Api::MatchesController < ApplicationController
 
     def index
         puts "by my shaggy bark"
-        puts params
+        @matches = Match.where("first_player_id = ? OR second_player_id = ?", params[:user_id], params[:user_id])
+        render json: @matches, status: :ok
     end
 
     def show
