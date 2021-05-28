@@ -238,6 +238,24 @@
   <td><label><%%= nickname %></label></td>
 </script>
 
+<script type="text/template" id="guildmember-kick-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <!--  <td><label><%%= id %></label></td>-->
+  <td><label ><a class="link-light" style="cursor: pointer" id="displayname"><%%= displayname %></a></label></td>
+  <td><label><%%= guild_master ? 'master' : guild_officer ? 'officer' : '-'%></label></td>
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
+  <td><label><%%= elo %></label></td>
+  <td><label><%%= nickname %></label></td>
+  <td><button type="button" class="btn btn-danger options-button" id="kick-button">kick</button></td>
+</script>
+
 <script type="text/template" id="guildmember-edit-template">
   <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
     <%= show_svg('user-astronaut.svg') %></div>
@@ -253,12 +271,12 @@
   <td><label><%%= loses %></label></td>
   <td><label><%%= elo %></label></td>
   <td><label><%%= nickname %></label></td>
-  <td><button type="button" class="btn btn-danger options-button" <%%= guild_master ? 'style="display:none"' : '' %> id="kick-button">kick</button></td>
-
-    <td> <button type="button" class="btn btn-light options-button" id="to-master-button" <%%= guild_master ? 'style="display:none"' : '' %> >promote to master</button></td>
-    <td> <button type="button" class="btn btn-light options-button" id="demote-button" <%%= guild_officer ?  '' : 'style="display:none"'%> >demote</button>
-    <button type="button" class="btn btn-light options-button" id="to-officer-button" <%%= guild_officer || guild_master ? 'style="display:none"' : '' %>   >promote to officer</button></td>
-
+  <td><button type="button" class="btn btn-danger options-button" id="kick-button">kick</button></td>
+  <td><button type="button" class="btn btn-light options-button" id="to-master-button">promote to master</button></td>
+  <td>
+    <button type="button" class="btn btn-light options-button" id="demote-button" <%%= guild_officer ?  '' : 'style="display:none"'%> >demote</button>
+    <button type="button" class="btn btn-light options-button" id="to-officer-button" <%%= guild_officer ? 'style="display:none"' : '' %>>promote to officer</button>
+  </td>
 </script>
 
 <script type="text/template" id="guildmembers-template">

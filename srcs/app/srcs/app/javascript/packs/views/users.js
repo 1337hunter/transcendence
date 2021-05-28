@@ -322,7 +322,8 @@ $(function () {
 
     UsersView.GuildMemberView = Backbone.View.extend({
         template1: _.template($('#guildmember-template').html()),
-        template2: _.template($('#guildmember-edit-template').html()),
+        template2: _.template($('#guildmember-kick-template').html()),
+        template3: _.template($('#guildmember-edit-template').html()),
         cur_user: new Users.CurrentUserModel,
         events: {
             "click #displayname" : "openprofile",
@@ -336,7 +337,7 @@ $(function () {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
-            this.guild_id = guild.id
+            this.guild_id = guild.id;
         },
         openprofile: function () {
             MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
@@ -345,12 +346,15 @@ $(function () {
             let view = this;
             this.cur_user.fetch({
                 success: function (model) {
-                    if (model.get('id') != view.model.get('id') && model.get('guild_id') == view.guild_id
-                        && (model.get('guild_master')
-                            || ((model.get('guild_officer') && !view.model.get('guild_officer') && !view.model.get('guild_master'))))
-                        )
-                        view.$el.html(view.template2(view.model.toJSON()));
-                    else
+                    if (model.get('id') != view.model.get('id') && model.get('guild_id') == view.guild_id) {
+                        if (model.get('guild_master')) {
+                            view.$el.html(view.template3(view.model.toJSON()));
+                        }
+                        else if ((model.get('guild_officer') && !view.model.get('guild_officer') && !view.model.get('guild_master')))
+                            view.$el.html(view.template2(view.model.toJSON()));
+                        else
+                            view.$el.html(view.template1(view.model.toJSON()));
+                    } else
                         view.$el.html(view.template1(view.model.toJSON()));
                 },
                 error: function () {
@@ -360,18 +364,23 @@ $(function () {
             return this;
         },
         update: function (data) {
-                    $.ajax({
-                        url: 'api/users/' + this.model.get('id') + '/add',
-                        type: 'PUT',
-                        data: data,
-                        success: () => {
-                            Utils.appAlert('success', {msg: this.model.get('displayname') + '\'s role changed'});
-                            this.render();
-                        },
-                        error: (response) => {
-                            Utils.alertOnAjaxError(response);
+            $.ajax({
+                url: 'api/users/' + this.model.get('id') + '/add',
+                type: 'PUT',
+                data: data,
+                success: () => {
+                    Utils.appAlert('success', {msg: this.model.get('displayname') + '\'s role changed'});
+                    let view = this;
+                    this.model.fetch({
+                        success: function () {
+                            view.render();
                         }
                     });
+                    },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
         },
         demote: function () {
             this.update(`guild_officer=${false}`);
@@ -381,19 +390,20 @@ $(function () {
         },
         toMaster: function () {
             this.update(`guild_master=${true}`);
+            //render previous master view
         },
         kick:  function() {
-                    $.ajax({
-                        url: 'api/users/' + this.model.get('id') + '/leave',
-                        type: 'PUT',
-                        success: () => {
-                            Utils.appAlert('success', {msg: 'You kicked ' + this.model.get('displayname')});
-                            this.model.destroy(); //404 on backend
-                        },
-                        error: (response) => {
-                            Utils.alertOnAjaxError(response);
-                        }
-                    });
+            $.ajax({
+                url: 'api/users/' + this.model.get('id') + '/leave',
+                type: 'PUT',
+                success: () => {
+                    Utils.appAlert('success', {msg: 'You kicked ' + this.model.get('displayname')});
+                    this.model.destroy(); //404 on backend
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
         }
     });
 
