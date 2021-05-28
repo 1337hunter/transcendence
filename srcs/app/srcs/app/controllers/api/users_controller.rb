@@ -44,9 +44,11 @@ class Api::UsersController < ApplicationController
         render json: @user.errors, status: :forbidden
       end
       @user.update(guild_user_params)
-      if @user.guild_master = true
+      if (@user.guild_master == true)
           @user.guild_officer = false
-            current_user.guild_master = false
+          @user.save
+          current_user.guild_master = false
+          current_user.save
       end
     else
       if (@user == current_user) # && @user is invited
@@ -69,7 +71,7 @@ class Api::UsersController < ApplicationController
       #if @user.guild_master == true
         #  @guild = Guild.find(@user.guild_id)
         #   if @guild.members.size = 1 # ask to destroy guild end
-        #@user.errors.add :base, 'Pass master role before leaving the guild.'
+        #@user.errors.add :base, 'Promote other user to master before leaving the guild.'
             #redirect to members list ?
         # render json: @user.errors, status: :forbidden
         # else

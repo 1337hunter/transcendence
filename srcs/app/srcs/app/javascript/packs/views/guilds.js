@@ -75,14 +75,14 @@ $(function () {
                             },
                             onerror: view.onerror
                     });
-                    //view.render();
+                    view.render();
                     },
                 error: view.onerror
             });
 
             //tmp for test
            //let view = this;
-            this.cur_user.fetch({
+            /*this.cur_user.fetch({
                 success: function (model) {
                     $.ajax({
                         url: 'api/users/' + model.get('id') + '/add',
@@ -98,7 +98,7 @@ $(function () {
                     });
                 },
                 error: view.onerror
-            });
+            });*/
 
         },
         leave:  function() {
@@ -115,7 +115,7 @@ $(function () {
                         type: 'PUT',
                         success: () => {
                             Utils.appAlert('success', {msg: 'You left the guild ' + name});
-                           // view.render();
+                            view.render();
 
                         },
                         error: (response) => {
