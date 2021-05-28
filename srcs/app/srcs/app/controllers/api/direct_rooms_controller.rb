@@ -9,11 +9,6 @@ class Api::DirectRoomsController < ApplicationController
             else
                 @direct_room = DirectRoom.create!(create_direct_room_params)
             end
-            # print ">>>>>>>>>>>>>>>>>>INDEX>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            # # puts params
-            
-            # print @direct_room
-            # print "<<<<<<<<<<<<<<<<<<INDEX<<<<<<<<<<<<<<<<<<<<<<<<<<"
             render json: @direct_room
         else
             @ret = []
@@ -33,9 +28,6 @@ class Api::DirectRoomsController < ApplicationController
     end
 
     def create
-        print ">>>>>>>>>>>>>>>>>>>>CREATE>>>>>>>>>>>>>>>>>>>>>>>"
-        puts params
-        print "<<<<<<<<<<<<<<<<<<<<CREATE<<<<<<<<<<<<<<<<<<<<<<<"
         if DirectRoom.between(params[:sender_id], params[:receiver_id]).present?
             @direct_room = DirectRoom.between(params[:sender_id], params[:receiver_id]).first
         else
@@ -54,9 +46,6 @@ class Api::DirectRoomsController < ApplicationController
     end
 
     def show
-        # print ">>>>>>>>>>>>>>>>>>>>SHOW>>>>>>>>>>>>>>>>>>>>>>>"
-        # puts params
-        # print "<<<<<<<<<<<<<<<<<<<<SHOW<<<<<<<<<<<<<<<<<<<<<<<"
         @room = DirectRoom.find(params[:id])
         if current_user.id == @room.receiver_id
             @user_id = @room.sender_id
