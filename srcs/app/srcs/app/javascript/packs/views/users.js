@@ -6,6 +6,7 @@ import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
 import Messages from "../models/messages";
 import MessagesView from "./messages";
+import Rooms from "../models/rooms"
 
 const UsersView = {};
 
@@ -238,7 +239,25 @@ $(function () {
             });
         },
         message_to_user: function () {
+            var $this = this
+            var room = new Rooms.DirectRoomTwoUsers({
+                sender_id: this.current_user.get("id"),
+                receiver_id: this.model.get("id")
+            })
+            room.save(null, {
+                wait: true,
+                success: function () {
+                    if (!room || room.attributes.blocked1 != "" || room.attributes.blocked2 != "")
+                        Utils.appAlert('danger', {msg: 'Can\'t start private messages [blocked]'});
+                    else
+                        $this.render_direct_messages(room.attributes.id)
+                }
+            })
         },
+        render_direct_messages: function (room_id) {
+			let view = new MessagesView.DirectView(room_id);
+			$(".app_main").html(view.render().el);
+		},
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
         },
