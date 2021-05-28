@@ -9,6 +9,7 @@ class User < ApplicationRecord
 
   has_friendship
 
+#match stuff
   has_many :matches, foreign_key: "first_player_id"
   def matches
     Match.where("first_player_id = ? OR second_player_id = ?", self.id, self.id)
@@ -18,14 +19,8 @@ class User < ApplicationRecord
             class_name: "Match",
             foreign_key: "first_player_id"
 
-  has_many :requested_matches,
-            -> { where matches: {status: 1} },
-            through: :matches,
-            source: :player_one
-  has_many :pending_matches,  # mb need to fix later
-            -> { where matches: {status: 1} },
-            through: :matches,
-            source: :player_two
+  has_many :requested_matches, -> { where matches: {status: 1} }, foreign_key: "first_player_id", class_name: "Match"
+  has_many :pending_matches, -> { where matches: {status: 1} }, foreign_key: "second_player_id", class_name: "Match"
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
