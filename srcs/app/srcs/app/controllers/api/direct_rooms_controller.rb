@@ -3,28 +3,45 @@ class Api::DirectRoomsController < ApplicationController
     before_action :authenticate_user!
 
     def index
-        @ret = []
-        @direct_room = (DirectRoom.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id))
-        @direct_room.each do |dr|
-            if dr.blocked1 == "" and dr.blocked2 == ""
-                if dr.receiver_id == current_user.id
-                    @user = User.where(id: dr.sender_id).first
-                else
-                    @user = User.where(id: dr.receiver_id).first
-                end
-                @ret << get_concat(dr)
+        if params.has_key?(:sender_id) and params.has_key?(:receiver_id)
+            if DirectRoom.between(params[:sender_id], params[:receiver_id]).present?
+                @direct_room = DirectRoom.between(params[:sender_id], params[:receiver_id]).first
+            else
+                @direct_room = DirectRoom.create!(create_direct_room_params)
             end
+            # print ">>>>>>>>>>>>>>>>>>INDEX>>>>>>>>>>>>>>>>>>>>>>>>>>"
+            # # puts params
+            
+            # print @direct_room
+            # print "<<<<<<<<<<<<<<<<<<INDEX<<<<<<<<<<<<<<<<<<<<<<<<<<"
+            render json: @direct_room
+        else
+            @ret = []
+            @direct_room = (DirectRoom.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id))
+            @direct_room.each do |dr|
+                if dr.blocked1 == "" and dr.blocked2 == ""
+                    if dr.receiver_id == current_user.id
+                        @user = User.where(id: dr.sender_id).first
+                    else
+                        @user = User.where(id: dr.receiver_id).first
+                    end
+                    @ret << get_concat(dr)
+                end
+            end
+            render json: @ret
         end
-        render json: @ret
     end
 
     def create
+        print ">>>>>>>>>>>>>>>>>>>>CREATE>>>>>>>>>>>>>>>>>>>>>>>"
+        puts params
+        print "<<<<<<<<<<<<<<<<<<<<CREATE<<<<<<<<<<<<<<<<<<<<<<<"
         if DirectRoom.between(params[:sender_id], params[:receiver_id]).present?
             @direct_room = DirectRoom.between(params[:sender_id], params[:receiver_id]).first
         else
             @direct_room = DirectRoom.create!(create_direct_room_params)
         end
-        render json: [],  status: :ok
+        render json: @direct_room,  status: :ok
     end
 
     def update
@@ -37,6 +54,9 @@ class Api::DirectRoomsController < ApplicationController
     end
 
     def show
+        # print ">>>>>>>>>>>>>>>>>>>>SHOW>>>>>>>>>>>>>>>>>>>>>>>"
+        # puts params
+        # print "<<<<<<<<<<<<<<<<<<<<SHOW<<<<<<<<<<<<<<<<<<<<<<<"
         @room = DirectRoom.find(params[:id])
         if current_user.id == @room.receiver_id
             @user_id = @room.sender_id

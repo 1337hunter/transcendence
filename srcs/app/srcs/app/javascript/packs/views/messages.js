@@ -136,7 +136,7 @@ $(function () {
 			this.collection.each(this.addOne, this);
 		},
 		block_user: function () {
-			if (confirm('Are you sure you want to save this thing into the database?')) {
+			if (confirm('Are you sure you want to block this user?')) {
 				if (this.room_model.attributes.blocked1 != "")
 					this.room_model.set("blocked1", String(this.current_user.attributes.id));
 				else
@@ -151,7 +151,6 @@ $(function () {
 
 			let $this = this;
 			var current_user = new Users.CurrentUserModel();
-			console.log("here")
 			current_user.fetch({
 				success: function () {
 					var mes = new Messages.DirectMessageModel;

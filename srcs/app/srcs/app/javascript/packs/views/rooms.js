@@ -211,6 +211,16 @@ $(function () {
 								},{
 									wait: true,
 									success: function () {
+										var room = new Rooms.DirectRoomTwoUsers({
+											sender_id: current.get("id"),
+											receiver_id: receiver.attributes[0].id
+										})
+										room.fetch({
+											success: function () {
+												console.log(room)
+											}
+										})
+										console.log(room)
 										$this.direct_rooms.fetch({
 											success: function () {
 												let room = $this.direct_rooms.where({sender_id: current.get("id"), receiver_id: receiver.attributes[0].id})[0]
