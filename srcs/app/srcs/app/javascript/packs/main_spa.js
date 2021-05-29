@@ -31,6 +31,7 @@ let AppRouter = Backbone.Router.extend({
         "settings"              : "settings",
         "users"                 : "users",
         "users/:id"             : "profile",
+        "users/:id/guild_invitations" : "guild_invitations",
         "admin(/)(/:section)"   : "admin",
         "users_not_in_guild"    : "guild_users_available",
         "guilds"                : "guilds",
@@ -79,6 +80,10 @@ let AppRouter = Backbone.Router.extend({
     },
     guild_requests: function (id) {
         this.main.view = new UsersView.GuildRequestsView(id);
+        this.main.el.html(this.main.view.render().el);
+    },
+    guild_invitations: function (id) {
+        this.main.view = new GuildsView.GuildInvitationsView(id);
         this.main.el.html(this.main.view.render().el);
     },
     messages: function (id) {

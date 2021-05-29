@@ -31,4 +31,17 @@ Guilds.GuildCollection = Backbone.Collection.extend({
     }
 });
 
+Guilds.GuildInvitationsCollection = Backbone.Collection.extend({
+    model: Guilds.GuildModel,
+    initialize: function(model, options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/users/' + this.id + '/guild_invitations';
+    },
+    comparator : function(model) {
+        return -model.get('score');
+    }
+});
+
 export default Guilds;

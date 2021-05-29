@@ -38,7 +38,7 @@ class Api::UsersController < ApplicationController
   end
 
   def add_to_guild
-    if (guild_master_action && @user != current_user)
+    if (guild_head_action && @user != current_user)
       if !@user.guild_id
         @user.errors.add :base, 'No request found'
         render json: @user.errors, status: :forbidden
@@ -51,12 +51,18 @@ class Api::UsersController < ApplicationController
           current_user.save
       end
     else
-      if (@user == current_user) # && @user is invited
-        # @user.id = .guild_id
-           @user.guild_accepted = true
-           @user.save
+      if (@user == current_user && params[:guild_id] != nil &&
+        (@invitation = GuildInvitation.find_by_user_id_and_guild_id(@user.id, params[:guild_id])))
+        if @user.guild_accepted
+          @user.errors.add :base, 'You are in the guild already'
+          render json: @user.errors, status: :forbidden
+        else
+          @user.update(guild_id: params[:guild_id])
+          @user.guild_accepted = true
+          @user.save
+        end
       else
-        @user.errors.add :base, 'You have no permission'
+        @user.errors.add :base, 'No permission'
         render json: @user.errors, status: :forbidden
       end
     end
@@ -67,21 +73,25 @@ class Api::UsersController < ApplicationController
       @user.errors.add :base, 'User is not any guild member'
       render json: @user.errors, status: :forbidden
     end
-    if (current_user == @user || guild_master_action)
-      #if @user.guild_master == true
-        #  @guild = Guild.find(@user.guild_id)
-        #   if @guild.members.size = 1 # ask to destroy guild end
-        #@user.errors.add :base, 'Promote other user to master before leaving the guild.'
-            #redirect to members list ?
-        # render json: @user.errors, status: :forbidden
-        # else
+    if (current_user == @user || guild_head_action)
+      if @user.guild_master == true
+        @guild = Guild.find(@user.guild_id)
+        if @guild.members.size = 1
+          @user.errors.add :base, 'Not possible, delete the guild instead'
+          #redirect to guild profile
+        else
+          @user.errors.add :base, 'Promote other user to master before leaving the guild.'
+          #redirect to members list
+        end
+        render json: @user.errors, status: :forbidden
+      else
         @user.guild_accepted = false
         @user.guild_id = nil
         @user.guild_officer = false
-        @user.guild_master = false #tmp for test
+        #@user.guild_master = false #tmp for test
         @user.save
         render json: @user, only: @filters, status: :ok
-        #  end
+      end
     else
       @user.errors.add :base, 'You have no permission'
       render json: @user.errors, status: :forbidden
@@ -124,8 +134,11 @@ class Api::UsersController < ApplicationController
     params.permit(%i[guild_accepted guild_officer guild_master])
   end
 
-  def guild_master_action
-    current_user.guild_master = true && current_user.guild_id == @user.guild_id
+  def guild_head_action
+    current_user.guild_id == @user.guild_id &&
+      (current_user.guild_master ||
+        (current_user.guild_officer &&
+        params[:guild_master] == nil && params[:guild_officer] == nil))
   end
 
   def is_numeric(str)

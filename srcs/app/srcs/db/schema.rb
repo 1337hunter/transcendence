@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_21_213955) do
+ActiveRecord::Schema.define(version: 2021_05_29_162324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,15 @@ ActiveRecord::Schema.define(version: 2021_05_21_213955) do
     t.integer "blocker_id"
     t.integer "status"
     t.index ["friendable_id", "friend_id"], name: "index_friendships_on_friendable_id_and_friend_id", unique: true
+  end
+
+  create_table "guild_invitations", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id", null: false
+    t.bigint "guild_id", null: false
+    t.index ["guild_id"], name: "index_guild_invitations_on_guild_id"
+    t.index ["user_id"], name: "index_guild_invitations_on_user_id"
   end
 
   create_table "guilds", force: :cascade do |t|
@@ -111,11 +120,11 @@ ActiveRecord::Schema.define(version: 2021_05_21_213955) do
     t.boolean "otp_validated"
     t.boolean "guild_master", default: false
     t.boolean "guild_officer", default: false
-    t.bigint "guild_id"
     t.string "ban_reason"
     t.boolean "online"
     t.datetime "last_seen_at"
     t.boolean "guild_accepted", default: false
+    t.bigint "guild_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
@@ -125,6 +134,8 @@ ActiveRecord::Schema.define(version: 2021_05_21_213955) do
 
   add_foreign_key "direct_messages", "direct_rooms"
   add_foreign_key "direct_messages", "users"
+  add_foreign_key "guild_invitations", "guilds"
+  add_foreign_key "guild_invitations", "users"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
   add_foreign_key "users", "guilds"

@@ -286,6 +286,114 @@ $(function () {
         }
     });
 
+    GuildsView.GuildInvitationView = Backbone.View.extend({
+        cur_user: new Users.CurrentUserModel,
+        template: _.template($('#guild-template-invite').html()),
+        events: {
+            "click #accept-button": "accept",
+            "click #decline-button": "decline",
+            "click #master" : "masterProfile",
+            "click #guild-profile" : "guildProfile"
+        },
+        tagName: "div",
+        initialize: function (user) {
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'error', this.onerror);
+            this.u_id = user.id;
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        },
+        guildProfile: function () {
+            MainSPA.SPA.router.navigate("#/guilds/" + this.model.get('id'));
+        },
+        masterProfile:  function () {
+            MainSPA.SPA.router.navigate("#/users/" + this.model.get('master_id'));
+        },
+        accept:  function() {
+            $.ajax({
+                url: 'api/users/' + this.u_id + '/add',
+                type: 'PUT',
+                data: `guild_id=${this.model.get('id')}`,
+                success: () => {
+                    Utils.appAlert('success', {msg: this.model.get('name') + '\'s request accepted'});
+                    this.deleteAll(); //delete all invitations?
+                    this.guildProfile();
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
+        },
+        decline:  function() {
+            $.ajax({
+                url: 'api/users/' + this.u_id + '/guild_invitations/' + $.param({"user_id": this.u_id, "guild_id" : this.model.get('id')}),
+                type: 'DELETE',
+                success: () => {
+                    Utils.appAlert('success', {msg: this.model.get('name') + '\'s request declined'});
+                    //remove view?
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
+        },
+        deleteAll:  function() {
+            $.ajax({
+                url: 'api/users/' + this.u_id + '/guild_invitations/' + $.param({"user_id": this.u_id}),
+                type: 'DELETE',
+                success: () => {
+                    Utils.appAlert('success', {msg: 'Other requests declined'});
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
+        },
+        onerror: function (model, response) {
+            if (response.responseJSON == null) //  true for undefined too
+                Utils.appAlert('danger', {msg: 'No response from API'});
+            else
+                Utils.appAlert('danger', {json: response.responseJSON});
+        }
+    });
+
+    GuildsView.GuildInvitationsView = Backbone.View.extend({
+        template: _.template($('#guilds-template').html()),
+        events: {
+            "click #refresh-button" :   "refresh"
+        },
+        initialize: function (id) {
+            this.collection = new Guilds.GuildInvitationsCollection([], {id: id});
+            this.listenTo(this.collection, 'change', this.render);
+            this.listenTo(this.collection, 'add', this.addOne);
+            this.listenTo(this.collection, 'reset', this.addAll);
+            this.collection.fetch({reset: true, error: this.onerror});
+            this.u_id = id;
+        },
+        addOne: function (guild) {
+            guild.view = new GuildsView.GuildInvitationView({model: guild, id: this.u_id});
+            this.el.append(guild.view.render().el);
+        },
+        addAll: function () {
+            this.collection.each(this.addOne, this);
+        },
+        refresh: function () {
+            this.collection.fetch({
+                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
+                error: this.onerror});
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+        },
+        render: function () {
+            this.$el.html(this.template());
+            this.addAll();
+            return this;
+        }
+    });
 });
 
 export default GuildsView;

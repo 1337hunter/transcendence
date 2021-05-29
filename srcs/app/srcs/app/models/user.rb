@@ -3,6 +3,7 @@ require 'open-uri'
 
 class User < ApplicationRecord
   belongs_to :guild, required: false, :foreign_key => :guild_id
+  has_many :guild_invitations, dependent: :destroy, class_name: "GuildInvitation", :foreign_key => :user_id
 
   include ActiveModel::Validations
   validates :email, uniqueness: { case_sensitive: false }, presence: true

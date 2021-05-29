@@ -44,6 +44,18 @@
   </div>
 </script>
 
+<script type="text/template" id="guild-template-invite">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-2"><a class="link-light" style="cursor: pointer" id="guild-profile"><%%= name %></a></div>
+    <div class="col-1"><%%= anagram %></div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-3 "><a class="link-light" style="cursor: pointer" id="master"><%%= master_name %></a></div>
+    <div class="col-3"><%= current_user.guild_id %></div>
+    <div class="col-1"> <button type="button" class="btn btn-light options-button join" id="accept-button">accept</button></div>
+    <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></div>
+  </div>
+</script>
+
 <script>
     function openForm() {
         document.getElementById("newGuildForm").style.display = "block"; }

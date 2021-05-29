@@ -48,7 +48,6 @@ class Api::GuildsController < ApplicationController
       member.guild_accepted = false
       member.guild_officer = false
       member.guild_master = false
-      member.guild_id = nil
       member.save
     }
     @guild.destroy

@@ -7,7 +7,9 @@ Rails.application.routes.draw do
     get 'settings/2fa', to: 'two_factor#status'
     post 'settings/2fa', to: 'two_factor#enable'
     patch 'settings/2fa', to: 'two_factor#disable'
-    resources :users
+    resources :users do
+      resources :guild_invitations
+    end
     resources :settings
     resources :rooms
     resources :messages
@@ -23,9 +25,7 @@ Rails.application.routes.draw do
     get 'admin/chats', to: 'admin#chatlist'
     patch 'admin/chats/:id', to: 'admin#chat_update'
 
-    resources :guilds do
-      resources :users
-    end
+    resources :guilds
     get 'users_not_in_guild', to: 'guilds#users_available'
     get 'guilds/:id/members', to: 'guilds#show_members'
     get 'guilds/:id/requests', to: 'guilds#show_requests'

@@ -155,6 +155,22 @@ $(function () {
         openprofile: function () {
             MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
         },
+        invite: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $.ajax({
+                url: 'api/users/' + this.model.get('id') + '/guild_invitations/',
+                type: 'POST',
+                data: `user_id=${this.model.get('id')}`,
+                success: () => {
+                    Utils.appAlert('success', {msg: 'Invitation to ' + this.model.get('displayname') + ' sent'});
+                    this.render();
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
+        },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
             this.model.attributes = this.model.previousAttributes();
