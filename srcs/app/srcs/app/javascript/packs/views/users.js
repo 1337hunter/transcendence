@@ -270,8 +270,8 @@ $(function () {
                         type: 'PUT',
                         data: `guild_accepted=${true}`,
                         success: () => {
-                            Utils.appAlert('success', {msg: model.get('diaplayname') + '\'s request accepted'});
-                            this.model.destroy(); //404 on backend
+                            Utils.appAlert('success', {msg: model.get('displayname') + '\'s request accepted'});
+                            view.model.destroy(); //404 on backend
                         },
                         error: (response) => {
                             Utils.alertOnAjaxError(response);
@@ -290,7 +290,7 @@ $(function () {
                         type: 'PUT',
                         success: () => {
                             Utils.appAlert('success', {msg: model.get('displayname') + '\'s request declined'});
-                            this.model.destroy(); //404 on backend
+                            view.model.destroy(); //404 on backend
                         },
                         error: (response) => {
                             Utils.alertOnAjaxError(response);
@@ -412,6 +412,7 @@ $(function () {
             $.ajax({
                 url: 'api/users/' + this.model.get('id') + '/leave',
                 type: 'PUT',
+                data: `guild_id=${this.model.get('guild_id')}`, //join request is active
                 success: () => {
                     Utils.appAlert('success', {msg: 'You kicked ' + this.model.get('displayname')});
                     this.model.destroy(); //404 on backend

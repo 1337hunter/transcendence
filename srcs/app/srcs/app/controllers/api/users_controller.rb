@@ -42,38 +42,39 @@ class Api::UsersController < ApplicationController
       if !@user.guild_id
         @user.errors.add :base, 'No request found'
         render json: @user.errors, status: :forbidden
-      end
+      else
       @user.update(guild_user_params)
-      if (@user.guild_master == true)
-          @user.guild_officer = false
-          @user.save
-          current_user.guild_master = false
-          current_user.save
+        if (@user.guild_master == true)
+            @user.guild_officer = false
+            @user.save
+            current_user.guild_master = false
+            current_user.save
+        end
+      end
+    elsif (@user == current_user && params[:guild_id] != nil)
+      if (!(@invitation = GuildInvitation.find_by_user_id_and_guild_id(@user.id, params[:guild_id])))
+        @user.errors.add :base, 'No invitation found'
+        render json: @user.errors, status: :forbidden
+      elsif @user.guild_accepted
+        @user.errors.add :base, 'You are in the guild already'
+        render json: @user.errors, status: :forbidden
+      else
+        @user.update(guild_id: params[:guild_id])
+        @user.guild_accepted = true
+        @user.save
+        @invitation.destroy
       end
     else
-      if (@user == current_user && params[:guild_id] != nil &&
-        (@invitation = GuildInvitation.find_by_user_id_and_guild_id(@user.id, params[:guild_id])))
-        if @user.guild_accepted
-          @user.errors.add :base, 'You are in the guild already'
-          render json: @user.errors, status: :forbidden
-        else
-          @user.update(guild_id: params[:guild_id])
-          @user.guild_accepted = true
-          @user.save
-        end
-      else
         @user.errors.add :base, 'No permission'
         render json: @user.errors, status: :forbidden
-      end
     end
   end
 
   def remove_from_guild
     if (!@user.guild_id)
-      @user.errors.add :base, 'User is not any guild member'
+      @user.errors.add :base, 'User has no guild or guild request'
       render json: @user.errors, status: :forbidden
-    end
-    if (current_user == @user || guild_head_action)
+    elsif (current_user == @user || guild_head_action)
       if @user.guild_master == true
         @guild = Guild.find(@user.guild_id)
         if @guild.members.size = 1
@@ -85,8 +86,10 @@ class Api::UsersController < ApplicationController
         end
         render json: @user.errors, status: :forbidden
       else
+        if (!params[:guild_id]) #kick - join request is active
+          @user.guild_id = nil
+        end
         @user.guild_accepted = false
-        @user.guild_id = nil
         @user.guild_officer = false
         #@user.guild_master = false #tmp for test
         @user.save

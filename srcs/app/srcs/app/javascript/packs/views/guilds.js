@@ -79,27 +79,6 @@ $(function () {
                     },
                 error: view.onerror
             });
-
-            //tmp for test
-           //let view = this;
-            /*this.cur_user.fetch({
-                success: function (model) {
-                    $.ajax({
-                        url: 'api/users/' + model.get('id') + '/add',
-                        type: 'PUT',
-                        data: `guild_accepted=${true}`,
-                        success: () => {
-                            Utils.appAlert('success', {msg: 'You joined the guild ' + view.model.get('name')});
-                            //view.render();
-                        },
-                        error: (response) => {
-                            Utils.alertOnAjaxError(response);
-                        }
-                    });
-                },
-                error: view.onerror
-            });*/
-
         },
         leave:  function() {
             let name = this.model.get('name');
@@ -319,7 +298,7 @@ $(function () {
                 data: `guild_id=${this.model.get('id')}`,
                 success: () => {
                     Utils.appAlert('success', {msg: this.model.get('name') + '\'s request accepted'});
-                    this.deleteAll(); //delete all invitations?
+                    //delete all invitations? (in controller)
                     this.guildProfile();
                 },
                 error: (response) => {
@@ -329,23 +308,11 @@ $(function () {
         },
         decline:  function() {
             $.ajax({
-                url: 'api/users/' + this.u_id + '/guild_invitations/' + $.param({"user_id": this.u_id, "guild_id" : this.model.get('id')}),
+                url: 'api/users/' + this.u_id + '/guild_invitations/' + this.model.get('id'),
                 type: 'DELETE',
                 success: () => {
                     Utils.appAlert('success', {msg: this.model.get('name') + '\'s request declined'});
                     //remove view?
-                },
-                error: (response) => {
-                    Utils.alertOnAjaxError(response);
-                }
-            });
-        },
-        deleteAll:  function() {
-            $.ajax({
-                url: 'api/users/' + this.u_id + '/guild_invitations/' + $.param({"user_id": this.u_id}),
-                type: 'DELETE',
-                success: () => {
-                    Utils.appAlert('success', {msg: 'Other requests declined'});
                 },
                 error: (response) => {
                     Utils.alertOnAjaxError(response);
