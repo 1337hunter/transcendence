@@ -4,7 +4,7 @@ class Api::GuildInvitationsController < ApplicationController
   before_action :check_user_rights, only: %i[index destroy]
 
   def index
-    @invitations = GuildInvitation.where(user_id: params[:user_id])
+    @invitations = @user.guild_invitations
     #if @invitations == nil
     #  render json: {error: 'No invitations'}, status: :not_found
     #else
@@ -46,7 +46,7 @@ class Api::GuildInvitationsController < ApplicationController
       @invitation = find_invitation
       @invitation.destroy
     else
-      @invitations = GuildInvitation.where(user_id: params[:user_id])
+      @invitations = @user.guild_invitations
       @invitations.each { |invitation|
         invitation.destroy
       }
@@ -72,4 +72,5 @@ class Api::GuildInvitationsController < ApplicationController
   def find_invitation
     return GuildInvitation.find_by_user_id_and_guild_id(params[:user_id], current_user.guild_id)
   end
+
 end
