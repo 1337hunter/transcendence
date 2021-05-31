@@ -299,6 +299,9 @@ $(function () {
                 },
                 error: view.onerror
             });
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
         }
     });
 

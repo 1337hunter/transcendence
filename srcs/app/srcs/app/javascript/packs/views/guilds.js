@@ -18,8 +18,13 @@ $(function () {
         template2: _.template($('#guild-template-leave').html()),
         template3: _.template($('#guild-template-join').html()),
         template4: _.template($('#guild-template-other-war').html()),
+        template5: _.template($('#guild-template-accept').html()),
+        template6: _.template($('#guild-template-cancel').html()),
         events: {
             "click #join-button": "join",
+            "click #cancel-button": "cancelRequest",
+            "click #accept-button": "accept",
+            "click #decline-button": "decline",
             "click #leave-button": "leave",
             "click #master" : "masterProfile",
             "click #guild-profile" : "guildProfile"
@@ -41,6 +46,10 @@ $(function () {
                         else
                             view.$el.html(view.template1(view.model.toJSON()));
                     }
+                    else if (model.get('guild_id') == id)
+                        view.$el.html(view.template6(view.model.toJSON()));
+                    else if (model.has_guild_invitation(view.model.get('id'), model.myCallback))
+                        view.$el.html(view.template5(view.model.toJSON()));
                     else
                         view.$el.html(view.template3(view.model.toJSON()));
                 }});
@@ -62,22 +71,59 @@ $(function () {
         },
         join:  function() {
            let view = this;
+           let name;
+           this.cur_user.fetch({
+                success: function (model) {
+                    if (model.get('guild_accepted')) {
+                        Utils.appAlert('danger', {msg: 'You are in the guild already'});
+                        return;
+                    }
+                    if (model.get('guild_id')) {
+                        if (model.get('guild_id') == view.model.get('id')) {
+                            Utils.appAlert('danger', {msg: 'Request already sent'});
+                            return;
+                        }
+                        name = model.attributes.guild.name;
+                    }
+                    model.save({guild_id: view.model.id}, {
+                            patch: true,
+                            success: function () {
+                                Utils.appAlert('success', {msg: 'Request to ' + view.model.get('name') + ' sent'});
+                                if (name)
+                                    Utils.appAlert('success', {msg: 'Request to ' + name + ' canceled'});
+                                view.render();
+                            },
+                            onerror: Utils.alertOnAjaxError
+                    });
+                    },
+                error: Utils.alertOnAjaxError
+            });
+        },
+        cancelRequest:  function() {
+            let view = this;
             this.cur_user.fetch({
                 success: function (model) {
                     if (model.get('guild_accepted')) {
                         Utils.appAlert('danger', {msg: 'You are in the guild already'});
                         return;
                     }
-                    model.save({guild_id: view.model.id}, {
-                            patch: true,
-                            success: function () {
-                                Utils.appAlert('success', {msg: 'Request to ' + view.model.get('name') + ' sent'});
-                            },
-                            onerror: view.onerror
+                    if (!model.get('guild_id') || model.get('guild_id') != view.model.get('id')) {
+                        Utils.appAlert('danger', {msg: 'Request not found'});
+                        return;
+                    }
+                    $.ajax({
+                        url: 'api/users/' + model.get('id') + '/leave',
+                        type: 'PUT',
+                        success: () => {
+                            Utils.appAlert('success', {msg: 'Request canceled'});
+                            view.render();
+                        },
+                        error: (response) => {
+                            Utils.alertOnAjaxError(response);
+                        }
                     });
-                    view.render();
-                    },
-                error: view.onerror
+                },
+                error: Utils.alertOnAjaxError
             });
         },
         leave:  function() {
@@ -102,14 +148,16 @@ $(function () {
                         }
                     });
                 },
-                error: view.onerror
+                error: Utils.alertOnAjaxError
             });
         },
-        onerror: function (model, response) {
-            if (response.responseJSON == null) //  true for undefined too
-                Utils.appAlert('danger', {msg: 'No response from API'});
-            else
-                Utils.appAlert('danger', {json: response.responseJSON});
+        accept: function() {
+            Utils.accept_invite(this.model.get('id'), this.model.get('name'));
+            this.render();
+        },
+        decline:  function() {
+            Utils.decline_invite(this.model.get('id'), this.model.get('name'));
+            this.render();
         }
     });
 
@@ -122,7 +170,7 @@ $(function () {
             "submit #create-guild": "createGuild"
         },
         initialize: function () {
-            this.cur_user.fetch();
+            this.cur_user.fetch({reset: true, error: this.onFetchError});
             this.collection = new Guilds.GuildCollection;
             this.listenTo(this.cur_user.model, 'change', this.render);
             this.listenTo(this.collection, 'change', this.render);
@@ -143,7 +191,7 @@ $(function () {
                 error: this.onFetchError});
         },
         onFetchError: function () {
-            Utils.appAlert('danger', {msg: 'Guilds fetch from API failed'});
+            Utils.appAlert('danger', {msg: 'Fetch from API failed'});
         },
         createGuild: function(e) {
             e.preventDefault();
@@ -247,8 +295,7 @@ $(function () {
             if (e.keyCode !== 13) return;
             let newanagram = $('#anagram').val().trim();
             let view = this;
-            if (this.model.get('anagram') !== newanagram)
-            {
+            if (this.model.get('anagram') !== newanagram) {
                 e.preventDefault();
                 e.stopPropagation();
                 this.model.save({anagram: newanagram},
@@ -266,7 +313,7 @@ $(function () {
     });
 
     GuildsView.GuildInvitationView = Backbone.View.extend({
-        cur_user: new Users.CurrentUserModel,
+        //cur_user: new Users.CurrentUserModel,
         template: _.template($('#guild-template-invite').html()),
         events: {
             "click #accept-button": "accept",
@@ -275,11 +322,11 @@ $(function () {
             "click #guild-profile" : "guildProfile"
         },
         tagName: "div",
-        initialize: function (user) {
+        initialize: function (/*user*/) {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
-            this.u_id = user.id;
+           // this.u_id = user.id;
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
@@ -292,38 +339,15 @@ $(function () {
             MainSPA.SPA.router.navigate("#/users/" + this.model.get('master_id'));
         },
         accept:  function() {
-            $.ajax({
-                url: 'api/users/' + this.u_id + '/add',
-                type: 'PUT',
-                data: `guild_id=${this.model.get('id')}`,
-                success: () => {
-                    Utils.appAlert('success', {msg: this.model.get('name') + '\'s request accepted'});
-                    //delete all invitations? (in controller)
-                    this.guildProfile();
-                },
-                error: (response) => {
-                    Utils.alertOnAjaxError(response);
-                }
-            });
+            Utils.accept_invite(this.model.get('id'), this.model.get('name'));
+            //remove view
         },
         decline:  function() {
-            $.ajax({
-                url: 'api/users/' + this.u_id + '/guild_invitations/' + this.model.get('id'),
-                type: 'DELETE',
-                success: () => {
-                    Utils.appAlert('success', {msg: this.model.get('name') + '\'s request declined'});
-                    //remove view?
-                },
-                error: (response) => {
-                    Utils.alertOnAjaxError(response);
-                }
-            });
+            Utils.decline_invite(this.model.get('id'), this.model.get('name'));
+            //remove view
         },
         onerror: function (model, response) {
-            if (response.responseJSON == null) //  true for undefined too
-                Utils.appAlert('danger', {msg: 'No response from API'});
-            else
-                Utils.appAlert('danger', {json: response.responseJSON});
+            Utils.alertOnAjaxError(response);
         }
     });
 

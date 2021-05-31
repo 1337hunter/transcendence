@@ -45,4 +45,31 @@ export default class Utils {
             }).done(resolve).fail(reject);
         }));
     }
+
+    static accept_invite(guild_id, guild_name) {
+        $.ajax({
+            url: 'api/users/current/' + '/add',
+            type: 'PUT',
+            data: `guild_id=${guild_id}`,
+            success: () => {
+                Utils.appAlert('success', {msg: guild_name + '\'s request accepted'});
+                MainSPA.SPA.router.navigate("#/guilds/" + guild_id);
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+    static decline_invite(guild_id, guild_name) {
+        $.ajax({
+            url: 'api/users/current/' + '/guild_invitations/' + guild_id,
+            type: 'DELETE',
+            success: () => {
+                Utils.appAlert('success', {msg: guild_name + '\'s request declined'});
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
 }

@@ -1,7 +1,6 @@
 import Backbone from "backbone";
-import Admin from "./admin";
-//import Utils from "../helpers/utils";
-import Users from "./users";
+import Utils from "../helpers/utils";
+import MainSPA from "../main_spa";
 
 const Guilds = {};
 
