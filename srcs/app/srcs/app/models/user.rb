@@ -70,4 +70,18 @@ class User < ApplicationRecord
   def on_friendship_destroyed(friendship)
     puts "friendship ended"
   end
+
+  class << self
+    def current_user=(user)
+      Thread.current[:current_user] = user
+    end
+
+    def current_user
+      Thread.current[:current_user]
+    end
+  end
+
+  def is_current
+    self == User.current_user
+  end
 end

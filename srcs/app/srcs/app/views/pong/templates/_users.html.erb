@@ -98,13 +98,13 @@
                 <h4 class="profile-displayname"><%%= displayname %></h4>
                 <p class="text-secondary mb-1"><%%= online ? 'Online' : 'last seen ' + last_seen_at %></p>
                 <p class="text-muted font-size-sm"><%%= email %></p>
-                <button class="btn btn-outline-success btn-profile-actions add-friend-button" <%%= banned ? 'disabled' : '' %>>
+                <button class="btn btn-outline-success btn-profile-actions add-friend-button" <%%= banned || is_current ? 'disabled' : '' %>>
                   Add Friend
                 </button>
-                <button id="message_btn" class="btn btn-outline-primary btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
+                <button id="message_btn" class="btn btn-outline-primary btn-profile-actions" <%%= banned || is_current ? 'disabled' : '' %>>
                   Message
                 </button>
-                <button class="btn btn-outline-warning btn-profile-actions invite-to-battle" <%%= banned ? 'disabled' : '' %>>
+                <button class="btn btn-outline-warning btn-profile-actions invite-to-battle" <%%= banned || is_current ? 'disabled' : '' %>>
                   Invite to Battle
                 </button>
               </div>
@@ -126,6 +126,9 @@
           <div class="card-body">
             <h5 class="card-title">Badges/Roles</h5>
             <div class="profile-badges">
+              <span class="badge rounded-pill bg-primary" <%%= is_current ? '' : 'style="display:none"' %>>
+                You
+              </span>
               <span class="badge rounded-pill bg-admin text-dark" <%%= admin ? '' : 'style="display:none"' %>>
                 Admin
               </span>

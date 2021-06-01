@@ -16,9 +16,11 @@ class Api::UsersController < ApplicationController
 
   # GET /api/users/id.json
   def show
+    set_current_user
     render json: @user.as_json(
       only: @filters,
-      include: { friends: { only: @filters }, requested_friends: {only: @filters} }
+      include: { friends: { only: @filters }, requested_friends: {only: @filters} },
+      :methods => :is_current
     )
   end
 
@@ -84,4 +86,7 @@ class Api::UsersController < ApplicationController
     render json: {error: 'User not found'}, status: :not_found
   end
 
+  def set_current_user
+    User.current_user = current_user
+  end
 end

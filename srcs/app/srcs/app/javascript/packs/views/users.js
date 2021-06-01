@@ -307,11 +307,6 @@ $(function () {
                     this.$('.add-friend-button').attr('class', 'btn btn-outline-danger btn-profile-actions remove-friend-button');
                 }
             }
-            if (current_user.get('id') === this.model.get('id')) {
-                this.$('button.btn-profile-actions').prop('disabled', true);
-                this.$('div.profile-badges')
-                    .prepend("<span class=\"badge rounded-pill bg-primary\">You</span>")
-            }
             this.addAll();
             this.addAllMatches();
             return this;
