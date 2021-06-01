@@ -86,7 +86,7 @@ $(function () {
             this.render();
         },
         onsuccess: function () {
-            Utils.appAlert('success', {msg: 'Displayname has been changed'});
+            Utils.appAlert('success', {msg: 'Changed'});
         },
         render: function() {
             if (this.model.attributes.status == "no" && this.model.attributes.main_id != this.model.attributes.current_user_id)
@@ -102,12 +102,28 @@ $(function () {
 
     UsersView.SingleMatchView = Backbone.View.extend({
         template: _.template($('#singlematch-template').html()),
-        events: {},
+        events: {
+            "click .accept-match-button" : "acceptMatch",
+            "click .decline-match-button" : "declineMatch",
+        },
         tagName: "tr",
-        initialize: function () {
+        initialize: function (e) {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
+            this.model.attributes.current_user_id = MainSPA.SPA.router.currentuser.get('id');
+            this.model.attributes.main_id = e.main_id;
+            // fetch the user model that's id is opposite to ours
+            if (this.model.attributes.main_id == this.model.attributes.first_player_id)
+                this.model.user_model = new Users.UserId({id: this.model.attributes.second_player_id});
+            else
+                this.model.user_model = new Users.UserId({id: this.model.attributes.first_player_id});
+        },
+        acceptMatch: function () {
+            console.log("accept match event");
+        },
+        declineMatch: function () {
+            console.log("decline match event");
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
@@ -115,10 +131,22 @@ $(function () {
             this.render();
         },
         onsuccess: function () {
-            Utils.appAlert('success', {msg: 'Displayname has been changed'});
+            Utils.appAlert('success', {msg: 'Changed'});
         },
         render: function() {
-            this.$el.html(this.template(this.model.toJSON()));
+            // uncoment this to disable oportunity to accept or decline matches of other players
+        //    if (this.model.attributes.status == 1 && this.model.attributes.main_id != this.model.attributes.user_id)
+        //        return (this);
+            let $this = this;
+            let model = this.model;
+            this.model.user_model.fetch({success: function () {
+                model.attributes.admin = model.user_model.attributes.admin;
+                model.attributes.displayname = model.user_model.attributes.displayname;
+                model.attributes.online = model.user_model.attributes.online;
+                model.attributes.avatar_url = model.user_model.attributes.avatar_url;
+                model.attributes.banned = model.user_model.attributes.banned;
+                $this.$el.html($this.template($this.model.toJSON()));
+             }});
             return this;
         }
     });
@@ -179,9 +207,7 @@ $(function () {
            this.matches_collection.fetch({reset: true, error: this.onerror});
         },
         addOneMatch: function (match) {
-            console.log(match);
-            match.view = new UsersView.SingleMatchView({model: match});
-            console.log(match.view.render().el);
+            match.view = new UsersView.SingleMatchView({model: match, main_id: this.model.attributes.id});
             this.$("#matches-table").append(match.view.render().el);
         },
         addAllMatches: function () {

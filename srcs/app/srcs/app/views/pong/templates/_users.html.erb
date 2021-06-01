@@ -16,7 +16,26 @@
 </script>
 
 <script type="text/template" id="singlematch-template">
-<td><label>Hello, World</label></td>
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+      <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+      width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <td width="60%" class="users-displayname"><label><%%= displayname %></label></td>
+  <td width="10%"><button class="btn btn-outline-success btn-profile-actions" <%%= (status == 1) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+    <div class="accept-match-button">
+      Accept
+    </div>
+  </button></td>
+  <td width="8%">
+  <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == 1) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+    <div class="decline-match-button">
+      Decline
+    </div>
+  </button>
+  </td>
 </script>
 
 <script type="text/template" id="friends-template">
