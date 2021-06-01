@@ -220,6 +220,7 @@ $(function () {
                 method: "POST",
                 data: {invited_user_id: this.model.attributes.id},
                 dataType: "json",
+                error: this.onerror,
             }));
         },
         addFriend: function () {
