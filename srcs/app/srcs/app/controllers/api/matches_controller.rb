@@ -12,14 +12,11 @@ class Api::MatchesController < ApplicationController
     end
 
     def update
-    #    @match = current_user
-    #    if (params.has_key?(:displayname))
-    #        @user.update(displayname: params[:displayname])
-    #    end
-        puts "!!!!!!!!!!!!!!!!!!!!"
-        puts params
-        puts "!!!!!!!!!!!!!!!!!!!!"
-        
+        @match = Match.find(params[:id])
+        if (params.has_key?(:status))
+            @match.update(status: params[:status])
+        end
+        render json: [], status: :ok
     end
 
     def create
@@ -32,6 +29,11 @@ class Api::MatchesController < ApplicationController
             puts 'MATCH CREATED'
             render json: @match, status: :ok
         end
+    end
+
+    def destroy
+        Match.find(params[:id]).destroy
+        render json: [], status: :ok
     end
 
     private

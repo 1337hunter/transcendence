@@ -127,9 +127,11 @@ $(function () {
         },
         declineMatch: function () {
             console.log("decline match event");
+            this.model.destroy();
         },
         cancelInvite: function () {
             console.log("cancel invite event");
+            this.model.destroy();
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
