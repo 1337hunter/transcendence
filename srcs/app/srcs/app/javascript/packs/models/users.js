@@ -1,4 +1,5 @@
 import Backbone from "backbone";
+import MainSPA from "../main_spa";
 
 const Users = {};
 
@@ -24,11 +25,9 @@ Users.UserId = Backbone.Model.extend({
 });
 
 Users.MatchModel = Backbone.Model.extend({
-    initialize: function(options) {
-        this.id = options.id;
-    },
+    idAttribute: "id",
     url: function () {
-        return '/api/users/' + this.id + '/matches'
+        return '/api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/matches/' + this.id
     }
 });
 
