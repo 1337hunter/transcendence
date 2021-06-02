@@ -32,6 +32,8 @@ Rails.application.routes.draw do
     put 'users/:id/leave', to: 'users#remove_from_guild'
     put 'users/:id/add', to: 'users#add_to_guild'
 
+    resources :wars
+
   end
 
   get '/pong', to: 'pong#index'

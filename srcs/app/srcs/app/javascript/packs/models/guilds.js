@@ -1,6 +1,4 @@
 import Backbone from "backbone";
-import Utils from "../helpers/utils";
-import MainSPA from "../main_spa";
 
 const Guilds = {};
 

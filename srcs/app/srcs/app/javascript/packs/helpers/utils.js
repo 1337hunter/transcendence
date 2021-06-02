@@ -60,16 +60,53 @@ export default class Utils {
             }
         });
     }
-    static decline_invite(guild_id, guild_name) {
+
+    static decline_invite(user_id, guild_id, msg) {
         $.ajax({
-            url: 'api/users/current/' + '/guild_invitations/' + guild_id,
+            url: '/api/users/' + user_id  + '/guild_invitations/' + guild_id,
             type: 'DELETE',
             success: () => {
-                Utils.appAlert('success', {msg: guild_name + '\'s request declined'});
+                Utils.appAlert('success', {msg: msg});
             },
             error: (response) => {
                 Utils.alertOnAjaxError(response);
             }
         });
+    }
+
+    static decline_join_guild_request(user_id, username) {
+        $.ajax({
+            url: 'api/users/' + user_id + '/leave',
+            type: 'PUT',
+            success: () => {
+                Utils.appAlert('success', {msg: username + '\'s request declined'});
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+
+    static accept_join_guild_request(user_id, username) {
+        $.ajax({
+            url: 'api/users/' + user_id + '/add',
+            type: 'PUT',
+            data: `guild_accepted=${true}`,
+            success: () => {
+                Utils.appAlert('success', {msg: username + '\'s request accepted'});
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+
+    static has_guild_invitation(user_id, guild_id) {
+        let response = $.ajax({
+            url: '/api/users/' + user_id + '/guild_invitations/' + guild_id,
+            type: 'GET',
+            async: false,
+        }).responseText;
+        return response ? true : false;
     }
 }

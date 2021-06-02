@@ -5,15 +5,7 @@ import MainSPA from "../main_spa";
 const Users = {};
 
 Users.CurrentUserModel = Backbone.Model.extend({
-    url: '/api/users/current',
-    has_guild_invitation: function (guild_id) {
-        let response = $.ajax({
-            url: '/api/users/current' + '/guild_invitations/' + guild_id,
-            type: 'GET',
-            async: false,
-            }).responseText;
-            return response ? true : false;
-    }
+    url: '/api/users/current'
 });
 /*
                 var value = $.ajax({

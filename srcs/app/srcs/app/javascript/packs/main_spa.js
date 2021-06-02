@@ -38,7 +38,7 @@ let AppRouter = Backbone.Router.extend({
         "guilds/:id"            : "guild_profile",
         "guilds/:id/requests"   : "guild_requests",
         "guilds/:id/members"    : "guild_members",
-     //   "guilds/:id/edit"       : "guild_edit",
+     //   "wars"       : "wars",
         ".*"                    : "pong" // 404???
     },
     home: function () {

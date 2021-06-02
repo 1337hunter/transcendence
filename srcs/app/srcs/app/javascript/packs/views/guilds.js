@@ -26,6 +26,7 @@ $(function () {
             "click #accept-button": "accept",
             "click #decline-button": "decline",
             "click #leave-button": "leave",
+            "click #war-button": "declareWar",
             "click #master" : "masterProfile",
             "click #guild-profile" : "guildProfile"
         },
@@ -48,7 +49,7 @@ $(function () {
                     }
                     else if (model.get('guild_id') == id)
                         view.$el.html(view.template6(view.model.toJSON()));
-                    else if (model.has_guild_invitation(view.model.get('id'), model.myCallback))
+                    else if (Utils.has_guild_invitation(model.get('id'), view.model.get('id')))
                         view.$el.html(view.template5(view.model.toJSON()));
                     else
                         view.$el.html(view.template3(view.model.toJSON()));
@@ -156,8 +157,25 @@ $(function () {
             this.render();
         },
         decline:  function() {
-            Utils.decline_invite(this.model.get('id'), this.model.get('name'));
+            Utils.decline_invite('current', this.model.get('id'), this.model.get('name') + '\'s request declined');
             this.render();
+        },
+        declareWar:  function() {
+            $.ajax({
+                url: 'api/wars/',
+                type: 'POST',
+                data: {
+                    guild2_id: this.model.get('id'),
+                    stake: 0 //take all other from form
+                },
+                success: () => {
+                    Utils.appAlert('success', {msg: 'You declared war to the ' + this.model.get('name')});
+                    //this.render();
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
         }
     });
 
@@ -343,7 +361,7 @@ $(function () {
             //remove view
         },
         decline:  function() {
-            Utils.decline_invite(this.model.get('id'), this.model.get('name'));
+            Utils.decline_invite('current', this.model.get('id'), this.model.get('name') + '\'s request declined');
             //remove view
         },
         onerror: function (model, response) {

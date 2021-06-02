@@ -139,12 +139,16 @@ $(function () {
     });
 
     UsersView.InviteUserView = Backbone.View.extend({
-        template: _.template($('#invite-user-template').html()),
-        //template2: _.template($('#invited-user-template').html()),
+        cur_user: new Users.CurrentUserModel,
+        template1: _.template($('#invite-user-template').html()),
+        template2: _.template($('#invited-user-template').html()),
+        template3: _.template($('#guild-request-template').html()),
         events: {
             "click #displayname" : "openprofile",
             "click #invite-button" :   "invite",
-            "click #cancel-invite-button" :   "cancelInvite"
+            "click #cancel-invite-button" :   "cancelInvite",
+            "click #accept-button" :   "accept",
+            "click #decline-button" :   "decline"
         },
         tagName: "tr",
         initialize: function () {
@@ -170,6 +174,29 @@ $(function () {
                     Utils.alertOnAjaxError(response);
                 }
             });
+            this.render();
+        },
+        cancelInvite: function () {
+            let view = this;
+            this.cur_user.fetch({
+                success: function (model) {
+                    Utils.decline_invite(view.model.get('id'), model.get('guild_id'), 'Invitation to ' + view.model.get('displayname') +  ' canceled');
+                    view.render();
+                    }}
+            );
+        },
+        accept: function () {
+            Utils.accept_join_guild_request(this.model.get('id'), this.model.get('displayname'));
+            this.model.destroy(); //404 on backend
+        },
+        decline: function () {
+            Utils.decline_join_guild_request(this.model.get('id'), this.model.get('displayname'));
+            let view = this;
+            this.model.fetch({
+                success: function () {
+                    view.render();
+                }
+            });
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
@@ -180,15 +207,16 @@ $(function () {
             Utils.appAlert('success', {msg: 'Done'});
         },
         render: function() {
-            /*let view = this;
-            this.model.fetch({
+            let view = this;
+            view.cur_user.fetch({
                 success: function (model) {
-                    if (invited)
-                        view.$el.html(view.template1(view.model.toJSON()));
-                    else
+                    if (Utils.has_guild_invitation(view.model.get('id'), model.get('guild_id'), model.attributes.guild.name))
                         view.$el.html(view.template2(view.model.toJSON()));
-                }});*/
-            this.$el.html(this.template(this.model.toJSON()));
+                    else if (view.model.get('guild_id') == model.get('guild_id'))
+                        view.$el.html(view.template3(view.model.toJSON()));
+                    else
+                        view.$el.html(view.template1(view.model.toJSON()));
+                }});
             return this;
         }
     });
@@ -262,43 +290,12 @@ $(function () {
             return this;
         },
         accept: function () {
-            let view = this;
-            this.model.fetch({
-                success: function (model) {
-                    $.ajax({
-                        url: 'api/users/' + model.get('id') + '/add',
-                        type: 'PUT',
-                        data: `guild_accepted=${true}`,
-                        success: () => {
-                            Utils.appAlert('success', {msg: model.get('displayname') + '\'s request accepted'});
-                            view.model.destroy(); //404 on backend
-                        },
-                        error: (response) => {
-                            Utils.alertOnAjaxError(response);
-                        }
-                    });
-                },
-                error: view.onerror
-            });
+            Utils.accept_join_guild_request(this.model.get('id'), this.model.get('displayname'));
+            this.model.destroy(); //404 on backend
         },
         decline: function () {
-            let view = this;
-            this.model.fetch({
-                success: function (model) {
-                    $.ajax({
-                        url: 'api/users/' + model.get('id') + '/leave',
-                        type: 'PUT',
-                        success: () => {
-                            Utils.appAlert('success', {msg: model.get('displayname') + '\'s request declined'});
-                            view.model.destroy(); //404 on backend
-                        },
-                        error: (response) => {
-                            Utils.alertOnAjaxError(response);
-                        }
-                    });
-                },
-                error: view.onerror
-            });
+            Utils.decline_join_guild_request(this.model.get('id'), this.model.get('displayname'));
+            this.model.destroy(); //404 on backend
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);

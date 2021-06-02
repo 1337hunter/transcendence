@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_29_162324) do
+ActiveRecord::Schema.define(version: 2021_06_01_210009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,6 +132,35 @@ ActiveRecord::Schema.define(version: 2021_05_29_162324) do
     t.index ["uid"], name: "index_users_on_uid"
   end
 
+  create_table "wars", force: :cascade do |t|
+    t.bigint "guild1_id", null: false
+    t.bigint "guild2_id", null: false
+    t.boolean "finished", default: false
+    t.boolean "accepted", default: false
+    t.datetime "start"
+    t.datetime "end"
+    t.integer "stake"
+    t.integer "g1_score", default: 0
+    t.integer "g2_score", default: 0
+    t.datetime "wartime_start"
+    t.datetime "wartime_end"
+    t.integer "wait_minutes", default: 10
+    t.integer "max_unanswered", default: 5
+    t.integer "matches_total", default: 0
+    t.integer "g1_matches_won", default: 0
+    t.integer "g1_matches_unanswered", default: 0
+    t.integer "g2_matches_won", default: 0
+    t.integer "g2_matches_unanswered", default: 0
+    t.boolean "ladder", default: false
+    t.boolean "tournament", default: false
+    t.boolean "duel", default: false
+    t.integer "winner"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["guild1_id"], name: "index_wars_on_guild1_id"
+    t.index ["guild2_id"], name: "index_wars_on_guild2_id"
+  end
+
   add_foreign_key "direct_messages", "direct_rooms"
   add_foreign_key "direct_messages", "users"
   add_foreign_key "guild_invitations", "guilds"
@@ -139,4 +168,6 @@ ActiveRecord::Schema.define(version: 2021_05_29_162324) do
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
   add_foreign_key "users", "guilds"
+  add_foreign_key "wars", "guilds", column: "guild1_id"
+  add_foreign_key "wars", "guilds", column: "guild2_id"
 end
