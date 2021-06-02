@@ -2,7 +2,8 @@ class CreateRooms < ActiveRecord::Migration[6.1]
   def change
     create_table :rooms do |t|
       t.string      :name
-      t.string      :password
+      t.boolean     :password_present
+      t.string      :password_digest
       t.string      :owner_name
       t.string      :owner_id
       t.boolean     :private

@@ -1,7 +1,7 @@
 <script type="text/template" id="room-template">
   <a class="room-click" href="#/room_<%%= id %>">
     <div class="card mb-2">
-      <div style="width: 3%; float:left; margin-top: 2.2%;" class="lock_icon"><div class="lock" <%%= password? '' : 'style="display:none"' %>><%= show_svg('lock.svg') %></div></div>
+      <div style="width: 3%; float:left; margin-top: 2.2%;" class="lock_icon"><div class="lock" <%%= password_present? '' : 'style="display:none"' %>><%= show_svg('lock.svg') %></div></div>
       <div style="width: 3%; float:left; margin-top: 2.2%;" class="lock_icon"><div class="private" <%%= private? '' : 'style="display:none"' %>><%= show_svg('private.svg') %></div></div>
       <div style="width: 93%; float:right;%;"><p class="room_name"><%%= name %></p></th>
       <td><input style="display:none" class="form-control" type="text" id="input-room-password_<%%= id %>" placeholder="Password" autocomplete="off"></td>
