@@ -143,8 +143,10 @@ $(function () {
         },
         render: function() {
             // uncoment this to disable oportunity to accept or decline matches of other players
-        //    if (this.model.attributes.status == 1 && this.model.attributes.main_id != this.model.attributes.user_id)
-        //        return (this);
+            console.log("main: " + this.model.attributes.main_id);
+            console.log("current: " + this.model.attributes.current_user_id);
+            if (this.model.attributes.status == 1 && this.model.attributes.main_id != this.model.attributes.current_user_id)
+                return (this);
             let $this = this;
             let model = this.model;
             this.model.user_model.fetch({success: function () {
