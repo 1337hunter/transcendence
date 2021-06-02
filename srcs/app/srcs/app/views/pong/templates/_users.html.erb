@@ -24,13 +24,18 @@
       width="30px" height="30px" src="<%%= avatar_url %>">
   </td>
   <td width="60%" class="users-displayname"><label><%%= displayname %></label></td>
-  <td width="10%"><button class="btn btn-outline-success btn-profile-actions" <%%= (status == 1) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+  <td width="8%">
+  <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == 1) && first_player_id == main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+    <div class="cancel-invite-button">
+      Cancel
+    </div>
+  <td width="10%"><button class="btn btn-outline-success btn-profile-actions" <%%= (status == 1) && first_player_id != main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
     <div class="accept-match-button">
       Accept
     </div>
   </button></td>
   <td width="8%">
-  <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == 1) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+  <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == 1) && first_player_id != main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
     <div class="decline-match-button">
       Decline
     </div>

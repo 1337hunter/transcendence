@@ -11,6 +11,17 @@ class Api::MatchesController < ApplicationController
         puts "show action"
     end
 
+    def update
+    #    @match = current_user
+    #    if (params.has_key?(:displayname))
+    #        @user.update(displayname: params[:displayname])
+    #    end
+        puts "!!!!!!!!!!!!!!!!!!!!"
+        puts params
+        puts "!!!!!!!!!!!!!!!!!!!!"
+        
+    end
+
     def create
         if find_invitation(params[:user_id], params[:invited_user_id], 1) or find_invitation(params[:invited_user_id], params[:user_id], 1)
             render json: {error: 'Invitation already exists'}, status: :unprocessable_entity

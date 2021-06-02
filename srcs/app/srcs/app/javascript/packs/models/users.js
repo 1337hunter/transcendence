@@ -28,7 +28,7 @@ Users.MatchModel = Backbone.Model.extend({
         this.id = options.id;
     },
     url: function () {
-        return '/api/users/' + this.id + '/matches';
+        return '/api/users/' + this.id + '/matches'
     }
 });
 

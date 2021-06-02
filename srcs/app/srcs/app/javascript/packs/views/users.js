@@ -105,6 +105,7 @@ $(function () {
         events: {
             "click .accept-match-button" : "acceptMatch",
             "click .decline-match-button" : "declineMatch",
+            "click .cancel-invite-button" : "cancelInvite",
         },
         tagName: "tr",
         initialize: function (e) {
@@ -121,9 +122,14 @@ $(function () {
         },
         acceptMatch: function () {
             console.log("accept match event");
+            console.log(this.model);
+            this.model.save({status: 2}, {patch: true});
         },
         declineMatch: function () {
             console.log("decline match event");
+        },
+        cancelInvite: function () {
+            console.log("cancel invite event");
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
