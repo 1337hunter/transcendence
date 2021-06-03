@@ -6,6 +6,15 @@ Wars.WarModel = Backbone.Model.extend({
     urlRoot: '/api/wars'
 });
 
+Wars.WarId = Backbone.Model.extend({
+    initialize: function(options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/wars/' + this.id;
+    }
+});
+
 Wars.WarCollection = Backbone.Collection.extend({
     model: Wars.WarModel,
     url: '/api/wars',

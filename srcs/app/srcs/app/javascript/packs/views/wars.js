@@ -3,6 +3,7 @@ import _ from "underscore";
 import Wars from "../models/wars";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
+import Users from "../models/users";
 
 const WarsView = {};
 
@@ -250,6 +251,33 @@ $(function () {
         render: function () {
             this.$el.html(this.template());
             this.addAll();
+            return this;
+        }
+    });
+
+    WarsView.ProfileView = Backbone.View.extend({
+        //cur_user : new Users.CurrentUserModel,
+        template: _.template($('#war-profile-template').html()),
+        events: {
+            "click #refresh-button" :   "refresh"
+        },
+        initialize: function (id) {
+            this.model = new Wars.WarId({id: id});
+            this.listenTo(this.model, 'change', this.render);
+            this.model.fetch({error: this.onerror});
+        },
+        refresh: function () {
+            this.model.fetch({
+                success: function () {
+                    Utils.appAlert('success', {msg: 'Up to date'});},
+                error: this.onerror
+            });
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+        },
+        render: function () {
+            this.$el.html(this.template(this.model.toJSON()));
             return this;
         }
     });

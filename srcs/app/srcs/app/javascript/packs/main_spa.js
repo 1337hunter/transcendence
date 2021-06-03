@@ -43,6 +43,7 @@ let AppRouter = Backbone.Router.extend({
         "guilds/:id/war_requests": "war_requests",
         "guilds/:id/wars"       : "guild_wars",
         "wars"                  : "wars",
+        "wars/:id"              : "war_profile",
         ".*"                    : "pong" // 404???
     },
     home: function () {
@@ -105,6 +106,10 @@ let AppRouter = Backbone.Router.extend({
     wars: function () {
         this.main.view = new WarsView.View();
         this.main.el.html(this.main.view.render().el);
+    },
+    war_profile: function (id) {
+        this.main.view = new WarsView.ProfileView(id);
+        this.main.el.html(this.main.view.el);
     },
     messages: function (id) {
         this.main.view = new MessagesView.View(id);

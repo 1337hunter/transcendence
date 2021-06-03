@@ -4,6 +4,7 @@ class Api::WarsController < ApplicationController
   before_action :find_current_guild, only: %i[destroy accept create]
   before_action :find_guild, only: %i[index_war_requests index_war_invites]
   before_action :check_active_war, only: %i[create accept]
+  rescue_from ActiveRecord::RecordNotFound, :with => :war_not_found
 
   def index
     wars = War.all.where(accepted:true)
@@ -75,6 +76,10 @@ private
 
   def find_war
     @war = War.find(params[:id])
+  end
+
+  def war_not_found
+    render json: {error: 'War not found'}, status: :not_found
   end
 
   def check_active_war
