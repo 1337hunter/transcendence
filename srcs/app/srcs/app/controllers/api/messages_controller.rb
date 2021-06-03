@@ -9,7 +9,7 @@ class Api::MessagesController < ApplicationController
 
     def create
         @block = BlockUserRoom.where(room_id: params["room_id"]).select("user_id").as_json
-        if @block.exclude?(current_user.id)
+        if !(@block.any? {|h| h["user_id"] == current_user.id})
             @message = Message.create(room_id: params["room_id"],
                                     content: params["content"],
                                     user: current_user)
