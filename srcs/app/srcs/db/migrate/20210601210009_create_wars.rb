@@ -1,13 +1,15 @@
 class CreateWars < ActiveRecord::Migration[6.1]
   def change
     create_table :wars do |t|
-      t.references :guild1, null: false
-      t.references :guild2, null: false
+      t.references :guild1
+      t.references :guild2
+      t.string  :g1_name
+      t.string  :g2_name
       t.boolean :finished, default: false
       t.boolean :accepted, default: false
       t.datetime :start
       t.datetime :end
-      t.integer :stake
+      t.integer :stake, default: 0
       t.integer :g1_score, default: 0
       t.integer :g2_score, default: 0
       t.datetime :wartime_start

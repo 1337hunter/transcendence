@@ -7,7 +7,8 @@ class Guild < ApplicationRecord
   has_many :guild_invitations, dependent: :destroy, class_name: "GuildInvitation", :foreign_key => :guild_id
   has_many :war_requests, -> { where(accepted: false) }, dependent: :destroy,   class_name: "War", foreign_key: "guild1_id"
   has_many :war_invites, -> { where(accepted: false) }, dependent: :destroy,   class_name: "War", foreign_key: "guild2_id"
-  #has_many :finished_wars, -> { where(finished: true) }, class_name: "War", foreign_key: "guild1_id"
+  has_many :wars_started, -> { where(accepted: true) },  dependent: :nullify, class_name: "War", foreign_key: "guild1_id"
+  has_many :wars_accepted, -> { where(accepted: true) },  dependent: :nullify, class_name: "War", foreign_key: "guild2_id"
 
   include ActiveModel::Validations
   validates :name, uniqueness: { case_sensitive: false }, presence: true

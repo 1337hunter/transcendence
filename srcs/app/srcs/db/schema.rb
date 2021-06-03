@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_01_210009) do
+ActiveRecord::Schema.define(version: 2021_06_02_154827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,17 @@ ActiveRecord::Schema.define(version: 2021_06_01_210009) do
     t.integer "place", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.integer "first_player_id"
+    t.integer "second_player_id"
+    t.integer "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "winner"
+    t.index ["first_player_id"], name: "index_matches_on_first_player_id"
+    t.index ["second_player_id"], name: "index_matches_on_second_player_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -133,13 +144,15 @@ ActiveRecord::Schema.define(version: 2021_06_01_210009) do
   end
 
   create_table "wars", force: :cascade do |t|
-    t.bigint "guild1_id", null: false
-    t.bigint "guild2_id", null: false
+    t.bigint "guild1_id"
+    t.bigint "guild2_id"
+    t.string "g1_name"
+    t.string "g2_name"
     t.boolean "finished", default: false
     t.boolean "accepted", default: false
     t.datetime "start"
     t.datetime "end"
-    t.integer "stake"
+    t.integer "stake", default: 0
     t.integer "g1_score", default: 0
     t.integer "g2_score", default: 0
     t.datetime "wartime_start"

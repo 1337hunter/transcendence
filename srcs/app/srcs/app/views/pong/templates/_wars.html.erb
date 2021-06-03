@@ -1,13 +1,13 @@
 <script type="text/template" id="war-template">
   <div class="row" style="max-width: 1000px; min-width: 300px">
     <div class="col-4">
-      <a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= guild1_id %></a>&nbsp;vs.&nbsp;
-      <a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= guild2_id %></a>
+      <a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= g1_name %></a>&nbsp;vs.&nbsp;
+      <a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= g2_name %></a>
     </div>
     <div class="col-1"><%%= stake %></div>
     <div class="col-1"><%%= start %></div>
     <div class="col-1"><%%= end %></div>
-    <div class="col-2"><%%= (winner == guild1_id) ? guild1_id : ((winner == guild2_id) ? guild2_id : '-' )%></div>
+    <div class="col-2"><%%= (winner == guild1_id) ? g1_name : ((winner == guild2_id) ? g2_name : '-' )%></div>
     <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
   </div>
 </script>
@@ -27,7 +27,7 @@
   <script type="text/template" id="war-invite-template">
     <div class="row" style="max-width: 1000px; min-width: 300px">
       <div class="col-2">
-        <a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= guild1_id %></a>
+        <a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= g1_name %></a>
       </div>
       <div class="col-1"><%%= stake %></div>
       <div class="col-1"><%%= start %></div>
@@ -42,7 +42,7 @@
 <script type="text/template" id="war-request-template">
   <div class="row" style="max-width: 1000px; min-width: 300px">
     <div class="col-2">
-      <a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= guild2_id %></a>
+      <a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= g2_name %></a>
     </div>
     <div class="col-1"><%%= stake %></div>
     <div class="col-1"><%%= start %></div>
