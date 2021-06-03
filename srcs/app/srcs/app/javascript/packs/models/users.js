@@ -7,13 +7,7 @@ const Users = {};
 Users.CurrentUserModel = Backbone.Model.extend({
     url: '/api/users/current'
 });
-/*
-                var value = $.ajax({
-                    url: '/api/users/current' + '/guild_invitations/' + guild_id,
-                    async: false
-                }).responseText;
-                return value ? true : false;
- */
+
 Users.TwoFactorModel = Backbone.Model.extend({
     url: '/api/settings/2fa'
 });
@@ -29,6 +23,24 @@ Users.UserId = Backbone.Model.extend({
     url: function () {
         return '/api/users/' + this.id;
     }
+});
+
+Users.MatchModel = Backbone.Model.extend({
+    idAttribute: "id",
+    url: function () {
+        return '/api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/matches/' + this.id
+    }
+});
+
+Users.MatchesCollection = Backbone.Collection.extend({
+    initialize: function (option) {
+        this.id = option.id;
+    },
+    model: Users.MatchModel,
+    url: function () {
+        return '/api/users/' + this.id + '/matches';
+    },
+    comparator: 'id'
 });
 
 Users.UserCollection = Backbone.Collection.extend({

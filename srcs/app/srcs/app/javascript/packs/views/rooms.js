@@ -72,7 +72,6 @@ $(function () {
             this.$("#rooms").append(room.view.render().el);
         },
 		addDirectOne: function (direct_room) {
-			//console.log(direct_room)
 			direct_room.view = new RoomsView.DirectRoomView({model: direct_room});
 			this.$("#rooms").append(direct_room.view.render().el);
 		},
@@ -90,7 +89,8 @@ $(function () {
 		room_click: function (e) {
 			let regex =  /\d+/;
 			let room_id = String(e.currentTarget)
-			room_id = room_id.substr(room_id.length - 1)
+			room_id = room_id.substr(room_id.length - 5)
+			room_id = room_id.match(regex)
 			var room = this.rooms.where({id: Number(room_id)})[0]
 			
 			if (room.get("password") != "" && room.get("password") != null)
@@ -113,6 +113,11 @@ $(function () {
 			return this;
 		},
 		direct_room_click: function (e) {
+			let regex =  /\d+/;
+			let room_id = String(e.currentTarget)
+			room_id = room_id.substr(room_id.length - 10)
+			room_id = room_id.match(regex)
+			this.render_direct_messages(Number(room_id))
 
 		},
 		check_keypress_event: function (e) {
@@ -206,17 +211,27 @@ $(function () {
 								},{
 									wait: true,
 									success: function () {
+										var room = new Rooms.DirectRoomTwoUsers({
+											sender_id: current.get("id"),
+											receiver_id: receiver.attributes[0].id
+										})
+										room.fetch({
+											success: function () {
+												console.log(room)
+											}
+										})
+										console.log(room)
 										$this.direct_rooms.fetch({
 											success: function () {
 												let room = $this.direct_rooms.where({sender_id: current.get("id"), receiver_id: receiver.attributes[0].id})[0]
-												if (room.attributes.blocked == true)
+												if (!room || room.attributes.blocked1 != "" || room.attributes.blocked2 != "")
 												{
 													Utils.appAlert('danger', {msg: 'Can\'t start private messages [blocked]'});
 													$("#nickname_input").val('')
 													$("#new_message_input").css("display", "none");
 													return this;
 												}
-												$this.render_direct_messages(room)
+												$this.render_direct_messages(room.attributes.id)
 											}
 										})
 									}
@@ -231,8 +246,8 @@ $(function () {
 				});
 			}
 		},
-		render_direct_messages: function (room) {
-			let view = new MessagesView.DirectMessagesView(room.attributes.id);
+		render_direct_messages: function (room_id) {
+			let view = new MessagesView.DirectView(room_id);
 			$(".app_main").html(view.render().el);
 		}
 	});

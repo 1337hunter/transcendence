@@ -8,8 +8,12 @@ class DirectRoom < ApplicationRecord
         self[:sender_id]
     end
 
-    def blocked
-        self[:blocked]
+    def blocked_user1
+        self[:blocked_user1]
+    end
+
+    def blocked_user2
+        self[:blocked_user2]
     end
     
     belongs_to :sender, class_name: "User", foreign_key: "sender_id"

@@ -15,6 +15,58 @@
   <td><label><%%= nickname %></label></td>
 </script>
 
+<script type="text/template" id="singlematch-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+      <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+      width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <td width="60%" class="users-displayname"><label><%%= displayname %></label></td>
+  <td width="8%">
+  <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == 1) && first_player_id == main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+    <div class="cancel-invite-button">
+      Cancel
+    </div>
+  <td width="10%"><button class="btn btn-outline-success btn-profile-actions" <%%= (status == 1) && first_player_id != main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+    <div class="accept-match-button">
+      Accept
+    </div>
+  </button></td>
+  <td width="8%">
+  <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == 1) && first_player_id != main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+    <div class="decline-match-button">
+      Decline
+    </div>
+  </button>
+  </td>
+</script>
+
+<script type="text/template" id="friends-template">
+  <td><div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <%= show_svg('user-astronaut.svg') %></div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <td width="60%" class="users-displayname"><label><%%= displayname %></label></td>
+  <td>
+    <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == "friend" && current_user_id == main_id) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+      <div class="remove-friend-button">
+        Remove
+      </div>
+    </button>
+  </td>
+  <td><button class="btn btn-outline-success btn-profile-actions" <%%= (status == "no" && current_user_id == main_id) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+  <div class="accept-friend-button">
+    Accept Friend
+  </div>
+</button></td>
+</script>
+
+
 <script type="text/template" id="users-template">
   <h1>Users <button type="button" class="button-sm button-refresh" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
@@ -50,6 +102,9 @@
               <div class="mt-3">
                 <h4 class="profile-displayname"><a class="link-light" style="cursor: pointer" id="displayname"><%%= displayname %></a></h4>
                 <p class="text-secondary mb-1"><%%= online ? 'Online' : 'last seen ' + last_seen_at %></p>
+                <p class="text-muted font-size-sm"><%%= email %></p>
+                <button class="btn btn-outline-success btn-profile-actions add-friend-button" <%%= banned || is_current ? 'disabled' : '' %>>
+                  Add Friend
                 <p class="text-muted font-size-sm">
                   <%%= guild_accepted == false ? '' : `<a href="#/guilds/${guild_id}" style="text-decoration: inherit; color: inherit;">[${guild.anagram}] ${guild.name}</a>` %>
                 </p>
@@ -58,10 +113,10 @@
                     Add Friend
                   </div>
                 </button>
-                <button class="btn btn-outline-primary btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
+                <button id="message_btn" class="btn btn-outline-primary btn-profile-actions" <%%= banned || is_current ? 'disabled' : '' %>>
                   Message
                 </button>
-                <button class="btn btn-outline-primary btn-profile-actions" <%%= banned ? 'disabled' : '' %>>
+                <button class="btn btn-outline-warning btn-profile-actions invite-to-battle" <%%= banned || is_current ? 'disabled' : '' %>>
                   Invite to Battle
                 </button>
               </div>
@@ -83,6 +138,9 @@
           <div class="card-body">
             <h5 class="card-title">Badges/Roles</h5>
             <div class="profile-badges">
+              <span class="badge rounded-pill bg-primary" <%%= is_current ? '' : 'style="display:none"' %>>
+                You
+              </span>
               <span class="badge rounded-pill bg-admin text-dark" <%%= admin ? '' : 'style="display:none"' %>>
                 Admin
               </span>
@@ -137,13 +195,6 @@
             <h5 class="card-header card-title">Friends (<%%= number_of_friends %>)</h5>
               <table id="friends-table" border-spacing="20px" padding="0 2em 1em 0">
               <tr><th></th><th></th>
-          <!--  <th>Id</th>-->
-                <th class="users-displayname">Display name</th>
-          <!--  <th>Email</th>-->
-                <th>Wins</th>
-                <th>Loses</th>
-                <th>Elo</th>
-                <th>Intra nickname</th></tr>
             </table>
           </div>
         </div>
@@ -153,7 +204,7 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-header card-title">Match History</h5>
-              <table>Placeholder</table>
+              <table id="matches-table"></table>
             </div>
           </div>
         </div>

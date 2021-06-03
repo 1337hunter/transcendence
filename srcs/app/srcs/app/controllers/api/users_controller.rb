@@ -5,7 +5,7 @@ class Api::UsersController < ApplicationController
   before_action :check_2fa!
   before_action :define_filters
   before_action :sign_out_if_banned
-  before_action :find_user, only: %i[show update destroy add_to_guild remove_from_guild]
+  before_action :find_user, only: %i[show update destroy add_to_guild remove_from_guild accept_friend remove_friend]
   rescue_from ActiveRecord::RecordNotFound, :with => :user_not_found
 
   # GET /api/users.json
@@ -16,16 +16,19 @@ class Api::UsersController < ApplicationController
 
   # GET /api/users/id.json
   def show
+    set_current_user
     render json: @user.as_json(
       only: @filters,
       include: { friends: { only: @filters },
-                 guild: { only: @guildfilters } }
+                 requested_friends: {only: @filters},
+                  guild: { only: @guildfilters } },
+    :methods => :is_current
     )
   end
 
   # PATCH/PUT /api/users/id.json
   def update
-    if (current_user.admin? && @user != current_user && !@user.admin?) || current_user == @user
+    if current_user == @user
       if @user.update(user_params)
         render json: @user, only: @filters, status: :ok
       else
@@ -107,6 +110,16 @@ class Api::UsersController < ApplicationController
     render json: {}, status: :ok
   end
 
+  def accept_friend
+    @user.accept_request(User.find(params[:friend_id]))
+    render json: {}, status: :ok
+  end
+
+  def remove_friend
+    @user.remove_friend(User.find(params[:friend_id]))
+    render json: {}, status: :ok
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -119,7 +132,6 @@ class Api::UsersController < ApplicationController
               User.where(displayname: params[:id])
             end
   end
-
   # DRY filters for json responses
   def define_filters
     @filters = %i[id nickname displayname email admin banned online last_seen_at
@@ -153,4 +165,7 @@ class Api::UsersController < ApplicationController
     render json: {error: 'User not found'}, status: :not_found
   end
 
+  def set_current_user
+    User.current_user = current_user
+  end
 end

@@ -6,6 +6,7 @@ import Users from "../models/users";
 import Rooms from "../models/rooms";
 import MainSPA from "../main_spa";
 import SubToChannel from "../../channels/chat_channel"
+import SubToDirect from "../../channels/direct_channel"
 
 const MessagesView = {};
 
@@ -44,7 +45,7 @@ $(function () {
 
 			this.room_model.fetch({
 				success: function () {
-					$this.$("#room-name").html($this.room_model.attributes[0].name)
+					$this.$("#room-name").html("#" + $this.room_model.attributes[0].name)
 				}
 			});
 			this.$el.html(this.template(this.room_model.toJSON()));
@@ -91,25 +92,28 @@ $(function () {
 		}
 	});
 
-	MessagesView.DirectMessagesView = Backbone.View.extend({
-		template: _.template($('#messages-template').html()),
+	MessagesView.DirectView = Backbone.View.extend({
+		template: _.template($('#direct_messages_template').html()),
         tagName: "p",
         initialize: function (id) {
 			this.room_id = id;
-			this.cable = SubToChannel.join(id);
+			this.cable = SubToDirect.join(id);
 			this.listenTo(this.collection, 'add', this.addOne);
-			this.collection = new Messages.MessageCollection(null, {id: this.room_id});
-			this.room_model = new Rooms.RoomId({id: this.room_id});
+			this.collection = new Messages.DirectMessageCollection(null, {id: this.room_id});
+			this.room_model = new Rooms.DirectRoomId({id: this.room_id});
+			this.current_user = new Users.CurrentUserModel();
+			this.current_user.fetch();
         },
 		events: {
-			"keypress #chat-input" : "send_msg",
+			"keypress #chat-input"	: "send_msg",
+			"click .block_user"		: "block_user"
 		},
         render: function () {
 			var $this = this;
 
 			this.room_model.fetch({
 				success: function () {
-					$this.$("#room-name").html($this.room_model.attributes[0].name)
+					$this.$("#receiver_name").html("@" + $this.room_model.attributes.receiver_name)
 				}
 			});
 			this.$el.html(this.template(this.room_model.toJSON()));
@@ -131,6 +135,16 @@ $(function () {
 		addAll: function () {
 			this.collection.each(this.addOne, this);
 		},
+		block_user: function () {
+			if (confirm('Are you sure you want to block this user?')) {
+				if (this.room_model.attributes.blocked1 != "")
+					this.room_model.set("blocked1", String(this.current_user.attributes.id));
+				else
+					this.room_model.set("blocked2", String(this.current_user.attributes.id));
+				this.room_model.save();
+				window.history.back();
+			}
+		},
 		send_msg: function (e) {
 			if (e.keyCode !== 13) return;
 			if ($('#chat-input').val().trim() === "") return;
@@ -139,13 +153,15 @@ $(function () {
 			var current_user = new Users.CurrentUserModel();
 			current_user.fetch({
 				success: function () {
-					var mes = new Messages.MessageModel;
-					mes.save({content: $('#chat-input').val().trim(), room_id: $this.room_id,
-						user_id: current_user.get("id")}, {patch: true});
-					if ($this.room_model.attributes[0].private === true)
-						mes.set({displayname: "anonimous"});
-					else
-						mes.set({displayname: current_user.get("displayname")});
+					var mes = new Messages.DirectMessageModel;
+					mes.save({
+						content: $('#chat-input').val().trim(),
+						room_id: $this.room_id,
+						user_id: current_user.get("id")
+					}, {
+						patch: true
+					});
+					mes.set({displayname: current_user.get("displayname")});
 					mes.set({avatar: current_user.get("avatar_url")});
 					var	mes_view = new MessagesView.MessageView({model: mes});
 					$("#messages").scrollTop($("#messages")[0].scrollHeight);

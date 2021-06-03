@@ -29,4 +29,4 @@ expose	3000
 entrypoint ["entrypoint.sh"]
 
 # Start the main process.
-cmd		["rails", "server", "-b", "0.0.0.0"]
+# cmd		["rails", "server", "-b", "0.0.0.0"]
