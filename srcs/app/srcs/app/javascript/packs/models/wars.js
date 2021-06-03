@@ -9,8 +9,41 @@ Wars.WarModel = Backbone.Model.extend({
 Wars.WarCollection = Backbone.Collection.extend({
     model: Wars.WarModel,
     url: '/api/wars',
-    comparator : function(model) {
+    comparator: function(model) {
         return [model.get('finished'), model.get('start')];
+    }
+});
+
+Wars.GuildWarsCollection = Backbone.Collection.extend({
+    model: Wars.WarModel,
+    initialize: function(model, options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/guilds/' + this.id + '/wars';
+    },
+    comparator: function(model) {
+        return [model.get('finished'), model.get('start')];
+    }
+});
+
+Wars.WarInvitesCollection = Backbone.Collection.extend({
+    model: Wars.WarModel,
+    initialize: function(model, options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/guilds/' + this.id + '/war_invites'; //from others to the current guild
+    }
+});
+
+Wars.WarRequestsCollection = Backbone.Collection.extend({
+    model: Wars.WarModel,
+    initialize: function(model, options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/guilds/' + this.id + '/war_requests'; //sent by the current guild
     }
 });
 

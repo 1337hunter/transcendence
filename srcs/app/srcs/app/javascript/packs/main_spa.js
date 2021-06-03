@@ -10,6 +10,7 @@ import AdminView from "./views/admin";
 import GuildsView from "./views/guilds";
 import pong_game from "./pong_game";
 import MessagesView from "./views/messages";
+import WarsView from "./views/wars";
 
 const MainSPA = {};
 
@@ -38,7 +39,10 @@ let AppRouter = Backbone.Router.extend({
         "guilds/:id"            : "guild_profile",
         "guilds/:id/requests"   : "guild_requests",
         "guilds/:id/members"    : "guild_members",
-     //   "wars"       : "wars",
+        "guilds/:id/war_invites": "war_invites",
+        "guilds/:id/war_requests": "war_requests",
+        "guilds/:id/wars"       : "guild_wars",
+        "wars"                  : "wars",
         ".*"                    : "pong" // 404???
     },
     home: function () {
@@ -84,6 +88,22 @@ let AppRouter = Backbone.Router.extend({
     },
     guild_invitations: function (id) {
         this.main.view = new GuildsView.GuildInvitationsView(id);
+        this.main.el.html(this.main.view.render().el);
+    },
+    war_invites: function (id) {
+        this.main.view = new WarsView.WarInvitesView(id);
+        this.main.el.html(this.main.view.render().el);
+    },
+    war_requests: function (id) {
+        this.main.view = new WarsView.WarRequestsView(id);
+        this.main.el.html(this.main.view.render().el);
+    },
+    guild_wars: function (id) {
+        this.main.view = new WarsView.GuildWarsView(id);
+        this.main.el.html(this.main.view.render().el);
+    },
+    wars: function () {
+        this.main.view = new WarsView.View();
         this.main.el.html(this.main.view.render().el);
     },
     messages: function (id) {

@@ -25,12 +25,17 @@ Rails.application.routes.draw do
     get 'admin/chats', to: 'admin#chatlist'
     patch 'admin/chats/:id', to: 'admin#chat_update'
 
-    resources :guilds
+    resources :guilds do
+      resources :wars
+    end
     get 'users_not_in_guild', to: 'guilds#users_available'
     get 'guilds/:id/members', to: 'guilds#show_members'
     get 'guilds/:id/requests', to: 'guilds#show_requests'
-    put 'users/:id/leave', to: 'users#remove_from_guild'
-    put 'users/:id/add', to: 'users#add_to_guild'
+    put 'users/:id/leave_guild', to: 'users#remove_from_guild'
+    put 'users/:id/join_guild', to: 'users#add_to_guild'
+    get 'guilds/:id/war_invites', to: 'wars#index_war_invites'
+    put 'guilds/:guild_id/war_invites/:id', to: 'wars#accept'
+    get 'guilds/:id/war_requests', to: 'wars#index_war_requests'
 
     resources :wars
 

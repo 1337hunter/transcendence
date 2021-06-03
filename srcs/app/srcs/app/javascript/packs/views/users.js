@@ -180,7 +180,7 @@ $(function () {
             let view = this;
             this.cur_user.fetch({
                 success: function (model) {
-                    Utils.decline_invite(view.model.get('id'), model.get('guild_id'), 'Invitation to ' + view.model.get('displayname') +  ' canceled');
+                    Utils.decline_guild_invite(view.model.get('id'), model.get('guild_id'), 'Invitation to ' + view.model.get('displayname') +  ' canceled');
                     view.render();
                     }}
             );
@@ -381,7 +381,7 @@ $(function () {
         },
         update: function (data) {
             $.ajax({
-                url: 'api/users/' + this.model.get('id') + '/add',
+                url: 'api/users/' + this.model.get('id') + '/join_guild',
                 type: 'PUT',
                 data: data,
                 success: () => {
@@ -410,7 +410,7 @@ $(function () {
         },
         kick:  function() {
             $.ajax({
-                url: 'api/users/' + this.model.get('id') + '/leave',
+                url: 'api/users/' + this.model.get('id') + '/leave_guild',
                 type: 'PUT',
                 data: `guild_id=${this.model.get('guild_id')}`, //join request is active
                 success: () => {

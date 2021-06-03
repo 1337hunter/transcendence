@@ -44,6 +44,9 @@ class Api::GuildsController < ApplicationController
   end
 
   def destroy
+    if @guild.has_active_war
+      render json: {error: "You have a war in progress"}, status: :forbidden
+    end
     @guild.members.each { |member|
       member.guild_accepted = false
       member.guild_officer = false

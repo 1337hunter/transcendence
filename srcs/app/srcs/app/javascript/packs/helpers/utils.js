@@ -46,9 +46,9 @@ export default class Utils {
         }));
     }
 
-    static accept_invite(guild_id, guild_name) {
+    static accept_guild_invite(guild_id, guild_name) {
         $.ajax({
-            url: 'api/users/current/' + '/add',
+            url: 'api/users/current/' + '/join_guild',
             type: 'PUT',
             data: `guild_id=${guild_id}`,
             success: () => {
@@ -61,7 +61,7 @@ export default class Utils {
         });
     }
 
-    static decline_invite(user_id, guild_id, msg) {
+    static decline_guild_invite(user_id, guild_id, msg) {
         $.ajax({
             url: '/api/users/' + user_id  + '/guild_invitations/' + guild_id,
             type: 'DELETE',
@@ -76,7 +76,7 @@ export default class Utils {
 
     static decline_join_guild_request(user_id, username) {
         $.ajax({
-            url: 'api/users/' + user_id + '/leave',
+            url: 'api/users/' + user_id + '/leave_guild',
             type: 'PUT',
             success: () => {
                 Utils.appAlert('success', {msg: username + '\'s request declined'});
@@ -89,7 +89,7 @@ export default class Utils {
 
     static accept_join_guild_request(user_id, username) {
         $.ajax({
-            url: 'api/users/' + user_id + '/add',
+            url: 'api/users/' + user_id + '/join_guild',
             type: 'PUT',
             data: `guild_accepted=${true}`,
             success: () => {

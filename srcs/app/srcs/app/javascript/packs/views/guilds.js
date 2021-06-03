@@ -4,10 +4,6 @@ import Guilds from "../models/guilds";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
-import moment from "moment";
-import UsersView from "./users";
-import Admin from "../models/admin";
-import AdminView from "./admin";
 
 const GuildsView = {};
 
@@ -113,7 +109,7 @@ $(function () {
                         return;
                     }
                     $.ajax({
-                        url: 'api/users/' + model.get('id') + '/leave',
+                        url: 'api/users/' + model.get('id') + '/leave_guild',
                         type: 'PUT',
                         success: () => {
                             Utils.appAlert('success', {msg: 'Request canceled'});
@@ -137,7 +133,7 @@ $(function () {
                         return;
                     }
                     $.ajax({
-                        url: 'api/users/' + model.get('id') + '/leave',
+                        url: 'api/users/' + model.get('id') + '/leave_guild',
                         type: 'PUT',
                         success: () => {
                             Utils.appAlert('success', {msg: 'You left the guild ' + name});
@@ -153,11 +149,11 @@ $(function () {
             });
         },
         accept: function() {
-            Utils.accept_invite(this.model.get('id'), this.model.get('name'));
+            Utils.accept_guild_invite(this.model.get('id'), this.model.get('name'));
             this.render();
         },
         decline:  function() {
-            Utils.decline_invite('current', this.model.get('id'), this.model.get('name') + '\'s request declined');
+            Utils.decline_guild_invite('current', this.model.get('id'), this.model.get('name') + '\'s request declined');
             this.render();
         },
         declareWar:  function() {
@@ -357,11 +353,11 @@ $(function () {
             MainSPA.SPA.router.navigate("#/users/" + this.model.get('master_id'));
         },
         accept:  function() {
-            Utils.accept_invite(this.model.get('id'), this.model.get('name'));
+            Utils.accept_guild_invite(this.model.get('id'), this.model.get('name'));
             //remove view
         },
         decline:  function() {
-            Utils.decline_invite('current', this.model.get('id'), this.model.get('name') + '\'s request declined');
+            Utils.decline_guild_invite('current', this.model.get('id'), this.model.get('name') + '\'s request declined');
             //remove view
         },
         onerror: function (model, response) {
@@ -403,6 +399,7 @@ $(function () {
             return this;
         }
     });
+
 });
 
 export default GuildsView;

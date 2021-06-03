@@ -1,0 +1,67 @@
+<script type="text/template" id="war-template">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-4">
+      <a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= guild1_id %></a>&nbsp;vs.&nbsp;
+      <a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= guild2_id %></a>
+    </div>
+    <div class="col-1"><%%= stake %></div>
+    <div class="col-1"><%%= start %></div>
+    <div class="col-1"><%%= end %></div>
+   <!-- <div class="col-2"><%%= (winner == guild1_id) ? guild1.name : ((winner == guild2_id) ? guild2.name : '-' )%></div>
+    -->
+    <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
+  </div>
+</script>
+
+<script type="text/template" id="wars-template">
+  <h1>Wars <button type="button" class="button-sm" id="refresh-button">
+    <%= show_svg('refresh.svg') %></button></h1>
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-4">Guilds</div>
+    <div class="col-1">Stake</div>
+    <div class="col-1">Starts</div>
+    <div class="col-1">Ends</div>
+    <div class="col-2">Winner</div>
+  </div>
+</script>
+
+  <script type="text/template" id="war-invite-template">
+    <div class="row" style="max-width: 1000px; min-width: 300px">
+      <div class="col-2">
+        <a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= guild1_id %></a>
+      </div>
+      <div class="col-1"><%%= stake %></div>
+      <div class="col-1"><%%= start %></div>
+      <div class="col-1"><%%= end %></div>
+      <div class="col-3"><%%= wartime_start %> &nbsp;-&nbsp; <%%= wartime_end %></div>
+      <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
+      <div class="col-1"> <button type="button" class="btn btn-success options-button" id="accept-button">accept</button></div>
+      <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></div>
+    </div>
+  </script>
+
+<script type="text/template" id="war-request-template">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-2">
+      <a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= guild2_id %></a>
+    </div>
+    <div class="col-1"><%%= stake %></div>
+    <div class="col-1"><%%= start %></div>
+    <div class="col-1"><%%= end %></div>
+    <div class="col-3"><%%= wartime_start %> &nbsp;-&nbsp; <%%= wartime_end %></div>
+    <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
+    <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="cancel-button">cancel request</button></div>
+  </div>
+</script>
+
+<script type="text/template" id="war-invites-template">
+    <h1>War invitations <button type="button" class="button-sm" id="refresh-button">
+      <%= show_svg('refresh.svg') %></button></h1>
+    <div class="row" style="max-width: 1000px; min-width: 300px">
+      <div class="col-2">Opposite guild</div>
+      <div class="col-1">Stake</div>
+      <div class="col-1">Starts</div>
+      <div class="col-1">Ends</div>
+      <div class="col-3">Wartime</div>
+    </div>
+</script>
