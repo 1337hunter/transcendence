@@ -6,6 +6,7 @@ import Messages from "../models/messages";
 import MessagesView from "./messages";
 import Users from "../models/users";
 import RoomMembers from "../models/room_members"
+import MainSPA from "../main_spa";
 
 const RoomsView = {};
 

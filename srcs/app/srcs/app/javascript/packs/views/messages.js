@@ -5,21 +5,49 @@ import Messages from "../models/messages";
 import Users from "../models/users";
 import Rooms from "../models/rooms";
 import MainSPA from "../main_spa";
+import RoomMembers from "../models/room_members"
 import SubToChannel from "../../channels/chat_channel"
 import SubToDirect from "../../channels/direct_channel"
+import { relativeTimeThreshold } from "moment";
 
 const MessagesView = {};
 
 $(function () {
 	MessagesView.MessageView = Backbone.View.extend({
 		template: _.template($('#message-template').html()),
+		initialize: function () {
+		},
 		events: {
-			"click .message" : "open_user_profile"
+			"click .user_icon" : "open_user_profile",
+			"click #block_user_room" : "block_user",
+			"click #make_adm" : "make_adm"
 		},
 		open_user_profile: function () {
 			var $this = this;
 			var u_id = $this.$('.message').attr("data-user-id");
 			MainSPA.SPA.router.navigate("#/users/" + u_id);
+		},
+		block_user: function () {
+			let dname = this.model.get("displayname");
+			var BlockTime = prompt("Are you sure you want to block " + dname + "?\nEnter time in minutes:", "");
+			if (isNaN(BlockTime) || BlockTime.length == 0)
+			{
+				Utils.appAlert('danger', {msg: 'Time must be integer'});
+				return this;
+			}
+			var BlockToRoom = new RoomMembers.RoomMembersModel({
+				user_id: this.model.get("user_id"),
+				room_id: this.model.get("room_id"),
+				time: BlockTime
+			})
+			BlockToRoom.save();
+
+		},
+		make_adm: function () {
+			let dname = this.model.get("displayname");
+			if (!confirm('Are you sure you want make ' + dname + "chat administrator?")) {
+				return this;
+			}
 		},
 		render: function() {
             this.$el.html(this.template(this.model.toJSON()));
@@ -36,30 +64,34 @@ $(function () {
 			this.listenTo(this.collection, 'add', this.addOne);
 			this.collection = new Messages.MessageCollection(null, {id: this.room_id});
 			this.room_model = new Rooms.RoomId({id: this.room_id});
+			this.current_user_id = MainSPA.SPA.router.currentuser.get('id');
         },
 		events: {
 			"keypress #chat-input" : "send_msg",
 		},
         render: function () {
 			var $this = this;
-
 			this.room_model.fetch({
 				success: function () {
+					_.defer(function() {
+						$this.$('#chat-input').focus();
+				  	});
+					$this.$el.html($this.template($this.room_model.toJSON()[0]));
+					$this.collection.fetch({
+						success: function() {
+							$this.addAll();
+						}
+					})
 					$this.$("#room-name").html("#" + $this.room_model.attributes[0].name)
 				}
 			});
-			this.$el.html(this.template(this.room_model.toJSON()));
-			_.defer(function() {
-  				$this.$('#chat-input').focus();
-			});
-			this.collection.fetch({
-				success: function() {
-					$this.addAll();
-				}
-			})
 			return this;
 		},
 		addOne: function (msg) {
+			if (this.current_user_id == this.room_model.attributes[0].owner_id && this.current_user_id != msg.attributes.user_id)
+				msg.set("display_block", true)
+			else
+				msg.set("display_block", false)
 			msg.view = new MessagesView.MessageView({model: msg});
 			this.$("#messages").append(msg.view.render().el);
 			$("#messages").scrollTop($("#messages")[0].scrollHeight);
@@ -76,8 +108,13 @@ $(function () {
 			current_user.fetch({
 				success: function () {
 					var mes = new Messages.MessageModel;
-					mes.save({content: $('#chat-input').val().trim(), room_id: $this.room_id,
-						user_id: current_user.get("id")}, {patch: true});
+					mes.save({
+						content: $('#chat-input').val().trim(), 
+						room_id: $this.room_id,
+						user_id: current_user.get("id"),
+						owner_id: $this.room_model.attributes[0].owner_id
+					}, {patch: true}
+					);
 					if ($this.room_model.attributes[0].private === true)
 						mes.set({displayname: "anonimous"});
 					else
@@ -90,6 +127,22 @@ $(function () {
 			}
 			);
 		}
+	});
+
+	MessagesView.DirectMessageView = Backbone.View.extend({
+		template: _.template($('#direct_message_template').html()),
+		events: {
+			"click .user_icon" : "open_user_profile"
+		},
+		open_user_profile: function () {
+			var $this = this;
+			var u_id = $this.$('.message').attr("data-user-id");
+			MainSPA.SPA.router.navigate("#/users/" + u_id);
+		},
+		render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        }
 	});
 
 	MessagesView.DirectView = Backbone.View.extend({
@@ -128,7 +181,7 @@ $(function () {
 			return this;
 		},
 		addOne: function (msg) {
-			msg.view = new MessagesView.MessageView({model: msg});
+			msg.view = new MessagesView.DirectMessageView({model: msg});
 			this.$("#messages").append(msg.view.render().el);
 			$("#messages").scrollTop($("#messages")[0].scrollHeight);
 		},
@@ -163,7 +216,6 @@ $(function () {
 					});
 					mes.set({displayname: current_user.get("displayname")});
 					mes.set({avatar: current_user.get("avatar_url")});
-					var	mes_view = new MessagesView.MessageView({model: mes});
 					$("#messages").scrollTop($("#messages")[0].scrollHeight);
 					$('#chat-input').val('');
 				}

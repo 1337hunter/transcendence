@@ -8,18 +8,23 @@ class Api::MessagesController < ApplicationController
     end
 
     def create
-        @message = Message.create(room_id: params["room_id"],
-                                  content: params["content"],
-                                  user: current_user)
-        ActionCable.server.broadcast("room_#{@message.room_id}", 
-        {
-            user_id: @message.user_id,
-            room_id: @message.room_id,
-            avatar: current_user.avatar_url,
-            displayname: current_user.displayname,
-            content: params['content'] 
-        })
-        render json: @message
+        @block = BlockUserRoom.where(room_id: params["room_id"]).select("user_id").as_json
+        if @block.exclude?(current_user.id)
+            @message = Message.create(room_id: params["room_id"],
+                                    content: params["content"],
+                                    user: current_user)
+            ActionCable.server.broadcast("room_#{@message.room_id}", 
+            {
+                user_id: @message.user_id,
+                room_id: @message.room_id,
+                room_owner_id: params[:owner_id],
+                avatar: current_user.avatar_url,
+                displayname: current_user.displayname,
+                content: params['content'],
+                block: @block
+            })
+            render json: @message
+        end
     end
 
     def show
@@ -40,4 +45,5 @@ class Api::MessagesController < ApplicationController
     def message_params
         params.require(:message).permit(:content, :room_id)
     end
+
 end

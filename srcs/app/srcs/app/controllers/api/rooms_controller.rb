@@ -3,7 +3,16 @@ class Api::RoomsController < ApplicationController
     skip_before_action :verify_authenticity_token
 
     def index
-        @rooms = Room.all
+        @block = BlockUserRoom.where(user_id: current_user.id)
+        @block_array = []
+        @block.each do |b|
+            if Time.now  - b.created_at > b.time
+                BlockUserRoom.find(b.id).destroy
+            else
+                @block_array << b.room_id
+            end
+        end
+        @rooms = Room.where.not(id: @block_array)
         render json: @rooms
     end
 
@@ -32,11 +41,12 @@ class Api::RoomsController < ApplicationController
                     @room.password = params[:password]
                 else
                     @room.password_present = false
+                    @room.password = ""
                 end
                 @room.owner_id = current_user.id
                 @room.owner_name = current_user.displayname
                 @room.private = params[:private]
-                @room.save
+                @room.save!
                 render json: @room, status: :ok
             end
         end
