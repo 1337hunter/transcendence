@@ -42,8 +42,8 @@ class Api::WarsController < ApplicationController
         render json: {error: @opponent.name + " doesn't have enough points"}, status: :forbidden
       else
         war = @guild_cur.war_requests.create(war_params)
-        war = war.update(g1_name: @guild_cur.name, g2_name: @opponent.name)
         if war.save
+          war = war.update(g1_name: @guild_cur.name, g2_name: @opponent.name)
           render json: war, status: :ok
         else
           render json: war.errors, status: :unprocessable_entity

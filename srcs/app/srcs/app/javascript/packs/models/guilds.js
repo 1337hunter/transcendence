@@ -3,12 +3,7 @@ import Backbone from "backbone";
 const Guilds = {};
 
 Guilds.GuildModel = Backbone.Model.extend({
-    urlRoot: '/api/guilds',
-    defaults: {
-        place: 0,
-        score: 0,
-        anagram: ''
-    }
+    urlRoot: '/api/guilds'
 });
 
 Guilds.GuildId = Backbone.Model.extend({

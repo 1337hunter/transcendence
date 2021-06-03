@@ -1,13 +1,13 @@
 <script type="text/template" id="war-template">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-4">
+    <div class="col-5">
       <a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= g1_name %></a>&nbsp;vs.&nbsp;
       <a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= g2_name %></a>
     </div>
     <div class="col-1"><%%= stake %></div>
     <div class="col-1"><%%= start %></div>
     <div class="col-1"><%%= end %></div>
-    <div class="col-2"><%%= (winner == guild1_id) ? g1_name : ((winner == guild2_id) ? g2_name : '-' )%></div>
+    <div class="col-2"><%%= winner ? (winner == 1 ? g1_name : g2_name) : '' %></div>
     <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
   </div>
 </script>
@@ -16,7 +16,7 @@
   <h1>Wars <button type="button" class="button-sm" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-4">Guilds</div>
+    <div class="col-5">Guilds</div>
     <div class="col-1">Stake</div>
     <div class="col-1">Starts</div>
     <div class="col-1">Ends</div>
@@ -49,7 +49,7 @@
     <div class="col-1"><%%= end %></div>
     <div class="col-3"><%%= wartime_start %> &nbsp;-&nbsp; <%%= wartime_end %></div>
     <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
-    <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="cancel-button">cancel request</button></div>
+    <div class="col-2"> <button type="button" class="btn btn-danger options-button" id="cancel-button">cancel request</button></div>
   </div>
 </script>
 
@@ -76,9 +76,9 @@
     </button>
   </h1>
   <div class="row">
-    <div class="col-3"><a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= guild1_id %></a></div>
+    <div class="col-3"><a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= g1_name %></a></div>
     <div class="col-1">&nbsp;vs.&nbsp;</div>
-    <div class="col-3"><a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= guild2_id %></a></div>
+    <div class="col-3"><a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= g2_name %></a></div>
   </div>
   <div class="row">
     <div class="col-3"><%%= g1_score %> &nbsp;points</div>
@@ -97,7 +97,7 @@
   </div>
   <br>
 
-  <div class="row" <%%=winner ? '' : 'style="display:none"' %>><div class="col-3">Winner: &nbsp;<%%= winner %></div></div>
+  <div class="row" <%%=winner ? '' : 'style="display:none"' %>><div class="col-3">Winner: &nbsp;<%%= winner == 1 ? g1_name : g2_name %></div></div>
   <div class="row"><div class="col-3">Matches in total: &nbsp;<%%= stake %></div></div>
   <div class="row"><div class="col-3">Stake: &nbsp;<%%= stake %></div></div>
   <div class="row"><div class="col-9">Start: &nbsp;<%%= start %></div></div>
@@ -106,8 +106,8 @@
   <br>
   <div class="row"><div class="col-3">Included matches:</div></div>
   <ul class="options">
-    <%%=duel ?  '<li><i class="material-icons">done</i>duels</li>' : ''%>
-    <%%=ladder ?  '<li><i class="material-icons">done</i>ladder</li>' : ''%>
-    <%%=tournament ?  '<li><i class="material-icons">done</i>tournaments</li>' : ''%>
+    <%%=duel ?  '<li class="w"><i class="material-icons">done</i>duels</li>' : ''%>
+    <%%=ladder ?  '<li class="w"><i class="material-icons">done</i>ladder</li>' : ''%>
+    <%%=tournament ?  '<li class="w"><i class="material-icons">done</i>tournaments</li>' : ''%>
   </ul>
 </script>

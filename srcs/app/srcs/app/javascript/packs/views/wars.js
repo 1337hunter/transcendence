@@ -3,7 +3,6 @@ import _ from "underscore";
 import Wars from "../models/wars";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
-import Users from "../models/users";
 
 const WarsView = {};
 

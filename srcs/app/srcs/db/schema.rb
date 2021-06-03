@@ -75,17 +75,6 @@ ActiveRecord::Schema.define(version: 2021_06_02_154827) do
     t.index ["second_player_id"], name: "index_matches_on_second_player_id"
   end
 
-  create_table "matches", force: :cascade do |t|
-    t.integer "first_player_id"
-    t.integer "second_player_id"
-    t.integer "status"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "winner"
-    t.index ["first_player_id"], name: "index_matches_on_first_player_id"
-    t.index ["second_player_id"], name: "index_matches_on_second_player_id"
-  end
-
   create_table "messages", force: :cascade do |t|
     t.string "content"
     t.bigint "user_id", null: false
@@ -181,7 +170,7 @@ ActiveRecord::Schema.define(version: 2021_06_02_154827) do
     t.boolean "ladder", default: false
     t.boolean "tournament", default: false
     t.boolean "duel", default: false
-    t.integer "winner"
+    t.integer "winner" # numbers 1 or 2
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["guild1_id"], name: "index_wars_on_guild1_id"

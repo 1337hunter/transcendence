@@ -4,10 +4,8 @@ import moment, { relativeTimeThreshold } from "moment";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
-import Messages from "../models/messages";
 import MessagesView from "./messages";
 import Rooms from "../models/rooms"
-import Guilds from "../models/guilds";
 
 const UsersView = {};
 
