@@ -59,7 +59,6 @@ ActiveRecord::Schema.define(version: 2021_06_02_154827) do
     t.string "name"
     t.string "anagram", limit: 5
     t.integer "score", default: 0
-    t.integer "place", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

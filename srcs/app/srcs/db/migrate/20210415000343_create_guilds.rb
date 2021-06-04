@@ -4,7 +4,6 @@ class CreateGuilds < ActiveRecord::Migration[6.1]
       t.string :name
       t.string :anagram, limit: 5
       t.integer :score, default: 0
-      t.integer :place, default: 0
 
       t.timestamps
     end
