@@ -5,7 +5,6 @@
 
 import Rails from "@rails/ujs"
 import * as ActiveStorage from "@rails/activestorage"
-import "channels"
 let $ = require("jquery");
 let _ = require("underscore");
 let Backbone = require("backbone");

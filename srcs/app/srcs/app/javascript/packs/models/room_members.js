@@ -17,7 +17,6 @@ RoomMembers.RoomMemmersID = Backbone.Model.extend({
     }
 });
 
-
 RoomMembers.RoomMembersCollection = Backbone.Collection.extend({
     model: RoomMembers.RoomMembersModel,
     url: '/api/room_members',

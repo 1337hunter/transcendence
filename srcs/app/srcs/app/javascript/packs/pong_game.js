@@ -93,7 +93,7 @@ export default function pong_game(view) {
 
     function drawLeftPad() {
         ctx.beginPath();
-        ctx.rect(view.getLeftPadX(), view.getLeftPadY(), padHeight, padWidth);
+        ctx.rect(leftPadX, view.getLeftPadY(), padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -101,7 +101,7 @@ export default function pong_game(view) {
 
     function drawRightPad() {
         ctx.beginPath()
-        ctx.rect(view.getRightPadX(), view.getRightPadY(), padHeight, padWidth);
+        ctx.rect(rightPadX, view.getRightPadY(), padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -420,24 +420,29 @@ export default function pong_game(view) {
             leftPadY -= 7;
             if (leftPadY < 0)
                 leftPadY = 0
+            view.broadcastLeft(leftPadY);
         }
         else if(leftDownBtn) {
             leftPadY += 7;
             if (leftPadY + padWidth > canvas.height)
                 leftPadY = canvas.height - padWidth;
+            view.broadcastLeft(leftPadY);
         }
 
         if (rightUpBtn) {
             rightPadY -= 7;
             if (rightPadY < 0)
                 rightPadY = 0
+            view.broadcastRight(rightPadY);
         }
         else if (rightDownBtn) {
             rightPadY += 7;
             if (rightPadY + padWidth > canvas.height)
                 rightPadY = canvas.height - padWidth;
+            view.broadcastRight(rightPadY);
         }
-        view.broadcastData(rightPadX, rightPadY, leftPadX, leftPadY);
+        //view.broadcastAll(rightPadY, leftPadY);
+        //view.broadcastData(rightPadX, rightPadY, leftPadX, leftPadY);
         drawLeftPad()
         drawRightPad()
         x += dx;
@@ -448,9 +453,9 @@ export default function pong_game(view) {
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         startTime -= 10
-        view.broadcastData(rightPadX, rightPadY, leftPadX, leftPadY);
-        drawLeftPad()
-        drawRightPad()
+        //view.broadcastData(rightPadX, rightPadY, leftPadX, leftPadY);
+    //    drawLeftPad()
+    //    drawRightPad()
         if (startTime > 2000)
             Three(CENTER_X, CENTER_Y)
         else if (startTime > 1000)

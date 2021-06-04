@@ -6,6 +6,7 @@ import Messages from "../models/messages";
 import MessagesView from "./messages";
 import Users from "../models/users";
 import RoomMembers from "../models/room_members"
+import MainSPA from "../main_spa";
 
 const RoomsView = {};
 
@@ -92,8 +93,7 @@ $(function () {
 			room_id = room_id.substr(room_id.length - 5)
 			room_id = room_id.match(regex)
 			var room = this.rooms.where({id: Number(room_id)})[0]
-			
-			if (room.get("password") != "" && room.get("password") != null)
+			if (room.get("password_present"))
 			{
 				if ($("#input-room-password_" + room_id).css("display") == 'block')
 				{
@@ -133,18 +133,21 @@ $(function () {
 		},
 		verify_password: function (room_id) {
 			var $this = this;
-			this.rooms.fetch({
+			var password = $('#input-room-password_' + room_id).val()
+			var checkroom = new Rooms.RoomId({
+				id: room_id,
+				password: password,
+				verify_password: true})
+			checkroom.save(null, {
+				wait: true,
 				success: function () {
-					let password = $('#input-room-password_' + room_id).val();
-					let room = $this.rooms.where({id: Number(room_id)})[0]
-					if (room.get("password") == password) {
-						$this.render_messages(room_id)
-					}
-					else {
-						Utils.appAlert('danger', {msg: 'Wrong password'});
-					}
+					$this.render_messages(room_id)
+				},
+				error: function () {
+					Utils.appAlert('danger', {msg: 'Wrong password'});
 				}
-			})
+			}
+			)
 		},
 		click_new_chat_btn: function() {
 			$("#new_message_input").css("display", "none");
@@ -211,16 +214,6 @@ $(function () {
 								},{
 									wait: true,
 									success: function () {
-										var room = new Rooms.DirectRoomTwoUsers({
-											sender_id: current.get("id"),
-											receiver_id: receiver.attributes[0].id
-										})
-										room.fetch({
-											success: function () {
-												console.log(room)
-											}
-										})
-										console.log(room)
 										$this.direct_rooms.fetch({
 											success: function () {
 												let room = $this.direct_rooms.where({sender_id: current.get("id"), receiver_id: receiver.attributes[0].id})[0]
