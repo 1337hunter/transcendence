@@ -1,4 +1,5 @@
 import consumer from "./consumer"
+import MainSPA from "../main_spa";
 
 var obtainedValues = 
 {
@@ -11,22 +12,25 @@ var obtainedValues =
 var GameRoomInit = 
 {
     createGameRoom: function (args) {
-        const GameRoom = consumer.subscriptions.create({channel: "GameRoomChannel", match_id: args.id}, {
+        let $this = this;
+        const GameRoom = consumer.subscriptions.create({channel: "GameRoomChannel", match_id: args.match_id}, {
             connected() {
             // Called when the subscription is ready for use on the server
-                console.log("Connected to game room channel " + args.id);
-                consumer.subscriptions.subscriptions.forEach((subscription) => {
-                   console.log(subscription);
-                  } )
+                console.log("Connected to game room channel " + args.match_id);
+                $this.user_id = args.user_id;
+                consumer.id = args.user_id;
+                console.log(consumer);
             },
 
             disconnected() {
-				console.log("Disconnected from game channel " + args.id);
+				console.log("Disconnected from game channel " + args.match_id);
               // Called when the subscription has been terminated by the server
             },
 
             received(data) {
                 console.log(data)
+                if (data == "start")
+                    MainSPA.SPA.router.navigate("#/play");
             //    obtainedValues.rightPadX = data.x1;
             //    obtainedValues.rightPadY = data.y1;
 			//	obtainedValues.leftPadX = data.x2;
@@ -34,7 +38,8 @@ var GameRoomInit =
             }
       });
       return GameRoom;
-    }
+    }, 
+
 }
 export {obtainedValues};
 export default GameRoomInit;

@@ -2,7 +2,8 @@ class GameRoomChannel < ApplicationCable::Channel
   def subscribed
     puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     puts params
-    stream_from "game_room_channel#{params[:room_id]}"
+    stream_from "game_room_channel_#{params[:match_id]}"
+  #  ActionCable.server.broadcast("game_room_channel_#{params[:match_id]}", "start")
   end
 
   def receive(data)
