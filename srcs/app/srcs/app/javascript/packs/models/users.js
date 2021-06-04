@@ -32,8 +32,8 @@ Users.MatchModel = Backbone.Model.extend({
 });
 
 Users.MatchesCollection = Backbone.Collection.extend({
-    initialize: function (option) {
-        this.id = option.id;
+    initialize: function(model, options) {
+        this.id = options.id;
     },
     model: Users.MatchModel,
     url: function () {

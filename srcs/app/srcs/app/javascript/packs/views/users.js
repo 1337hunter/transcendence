@@ -218,7 +218,7 @@ $(function () {
             this.model.fetch({error: this.onerror});
             this.current_user.fetch();
             // add to user profile matches collection
-           this.matches_collection = new Users.MatchesCollection({id :this.model.attributes.id});
+           this.matches_collection = new Users.MatchesCollection(null, {id: this.model.attributes.id});
 		   this.listenTo(this.matches_collection, 'add', this.addOneMatch);
 		   this.listenTo(this.matches_collection, 'reset', this.addAllMatches);
            this.matches_collection.fetch({reset: true, error: this.onerror});
