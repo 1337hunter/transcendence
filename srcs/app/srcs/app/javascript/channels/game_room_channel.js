@@ -31,9 +31,11 @@ var GameRoomInit =
             //    console.log(data)
                 if (data == "start")
                     MainSPA.SPA.router.navigate("#/play/" + args.match_id);
-                obtainedValues.rightPadY = data.right;
-                obtainedValues.leftPadY = data.left;
-                console.log(data);
+                if (data.right)
+                    obtainedValues.rightPadY = data.right;
+                if (data.left)
+                    obtainedValues.leftPadY = data.left;
+            //    console.log(data);
             //    obtainedValues.rightPadX = data.x1;
             //    obtainedValues.rightPadY = data.y1;
 			//	obtainedValues.leftPadX = data.x2;

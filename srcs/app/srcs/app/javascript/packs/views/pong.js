@@ -37,6 +37,14 @@ $(function () {
 		{
 			this.cable.send({right: right, left: left});
 		},
+		broadcastRight: function (right)
+		{
+			this.cable.send({right: right});
+		},
+		broadcastLeft: function (left)
+		{
+			this.cable.send({left: left});
+		},
 		getRightPadX: function ()
 		{
 			return (obtainedValues.rightPadX);

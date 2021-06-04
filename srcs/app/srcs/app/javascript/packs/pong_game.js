@@ -420,24 +420,28 @@ export default function pong_game(view) {
             leftPadY -= 7;
             if (leftPadY < 0)
                 leftPadY = 0
+            view.broadcastLeft(leftPadY);
         }
         else if(leftDownBtn) {
             leftPadY += 7;
             if (leftPadY + padWidth > canvas.height)
                 leftPadY = canvas.height - padWidth;
+            view.broadcastLeft(leftPadY);
         }
 
         if (rightUpBtn) {
             rightPadY -= 7;
             if (rightPadY < 0)
                 rightPadY = 0
+            view.broadcastRight(rightPadY);
         }
         else if (rightDownBtn) {
             rightPadY += 7;
             if (rightPadY + padWidth > canvas.height)
                 rightPadY = canvas.height - padWidth;
+            view.broadcastRight(rightPadY);
         }
-        view.broadcastAll(rightPadY, leftPadY);
+        //view.broadcastAll(rightPadY, leftPadY);
         //view.broadcastData(rightPadX, rightPadY, leftPadX, leftPadY);
         drawLeftPad()
         drawRightPad()
