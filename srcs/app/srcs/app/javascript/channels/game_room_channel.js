@@ -1,5 +1,5 @@
 import consumer from "./consumer"
-import MainSPA from "../main_spa";
+import MainSPA from "../packs/main_spa";
 
 var obtainedValues = 
 {
@@ -13,7 +13,7 @@ var GameRoomInit =
 {
     createGameRoom: function (args) {
         let $this = this;
-        const GameRoom = consumer.subscriptions.create({channel: "GameRoomChannel", match_id: args.match_id}, {
+        const GameRoom = consumer.subscriptions.create({channel: "GameRoomChannel", match_id: args.match_id, user_id: args.user_id}, {
             connected() {
             // Called when the subscription is ready for use on the server
                 console.log("Connected to game room channel " + args.match_id);

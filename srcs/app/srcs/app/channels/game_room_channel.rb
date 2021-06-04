@@ -1,4 +1,5 @@
 class GameRoomChannel < ApplicationCable::Channel
+  @users = []
   def subscribed
     puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     puts params
