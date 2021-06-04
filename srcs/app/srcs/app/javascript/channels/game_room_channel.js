@@ -10,24 +10,27 @@ var obtainedValues =
 
 var GameRoomInit = 
 {
-    $this: this,
-    createGameRoom: function ($this) {
-        const GameRoom = consumer.subscriptions.create("GameRoomChannel", {
+    createGameRoom: function (args) {
+        const GameRoom = consumer.subscriptions.create({channel: "GameRoomChannel", match_id: args.id}, {
             connected() {
             // Called when the subscription is ready for use on the server
-                console.log("Connected to game room channel");
+                console.log("Connected to game room channel " + args.id);
+                consumer.subscriptions.subscriptions.forEach((subscription) => {
+                   console.log(subscription);
+                  } )
             },
 
             disconnected() {
-				console.log("Disconnected from game channel.");
+				console.log("Disconnected from game channel " + args.id);
               // Called when the subscription has been terminated by the server
             },
 
             received(data) {
-                obtainedValues.rightPadX = data.x1;
-                obtainedValues.rightPadY = data.y1;
-				obtainedValues.leftPadX = data.x2;
-                obtainedValues.leftPadY = data.y2;
+                console.log(data)
+            //    obtainedValues.rightPadX = data.x1;
+            //    obtainedValues.rightPadY = data.y1;
+			//	obtainedValues.leftPadX = data.x2;
+            //    obtainedValues.leftPadY = data.y2;
             }
       });
       return GameRoom;

@@ -10,9 +10,9 @@ $(function () {
 		template: _.template($('#pong-template').html()),
 		events: {},
 		initialize: function () {
-			this.room = GameRoomInit;
-			this.cable = this.room.createGameRoom();
-			this.cable.send({str: "test"});
+		//	this.room = GameRoomInit;
+		//	this.cable = this.room.createGameRoom();
+		//	this.cable.send({str: "test"});
 		},
 		render: function () {
 			this.$el.html(this.template());

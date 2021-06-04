@@ -86,8 +86,7 @@ ActiveRecord::Schema.define(version: 2021_06_03_172619) do
 
   create_table "rooms", force: :cascade do |t|
     t.string "name"
-    t.boolean "password_present"
-    t.string "password_digest"
+    t.string "password"
     t.string "owner_name"
     t.string "owner_id"
     t.boolean "private"

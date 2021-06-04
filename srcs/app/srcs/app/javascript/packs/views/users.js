@@ -7,6 +7,9 @@ import MainSPA from "../main_spa";
 import Messages from "../models/messages";
 import MessagesView from "./messages";
 import Rooms from "../models/rooms"
+// game stuff
+import GameRoomInit from "../../channels/game_room_channel";
+import {obtainedValues} from "../../channels/game_room_channel";
 
 const UsersView = {};
 
@@ -123,7 +126,10 @@ $(function () {
         acceptMatch: function () {
             console.log("accept match event");
             console.log(this.model);
-            this.model.save({status: 2}, {patch: true});
+            let $this = this;
+            this.model.save({status: 2}, {patch: true, success: function() {
+                $this.model.set({game_room: GameRoomInit.createGameRoom({id: $this.model.id})});
+            }});
         },
         declineMatch: function () {
             console.log("decline match event");
@@ -224,6 +230,7 @@ $(function () {
             this.matches_collection.each(this.addOneMatch, this);
         },
         inviteToBattle: function () {
+            let $this = this;
             console.log("Invite to battle");
             return Backbone.ajax(_.extend({
                 url: 'api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/matches/',
@@ -231,6 +238,12 @@ $(function () {
                 data: {invited_user_id: this.model.attributes.id},
                 dataType: "json",
                 error: this.onerror,
+                success: function () {
+                    $this.matches_collection.fetch({reset: true, error: this.onerror, success: function () {
+                        let $match = $this.matches_collection.findWhere({first_player_id: MainSPA.SPA.router.currentuser.get('id'), second_player_id: $this.model.attributes.id});
+                        $match.set($match, {game_room: GameRoomInit.createGameRoom({id: $match.id})});
+                    }})
+                }
             }));
         },
         addFriend: function () {
