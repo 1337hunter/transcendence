@@ -35,12 +35,7 @@ class Api::WarsController < ApplicationController
   def create
       @opponent = Guild.find(params[:guild2_id])
       check_opponent
-      stake = params[:stake].to_i
-      if  stake > @guild_cur.score
-        render json: {error: "Your guild doesn't have enough points"}, status: :forbidden
-      elsif stake > @opponent.score
-        render json: {error: @opponent.name + " doesn't have enough points"}, status: :forbidden
-      else
+      check_points
         war = @guild_cur.war_requests.create(war_params)
         if war.save
           war = war.update(g1_name: @guild_cur.name, g2_name: @opponent.name)
@@ -59,6 +54,7 @@ class Api::WarsController < ApplicationController
     else
       @opponent = Guild.find(@war.guild1_id)
       check_opponent
+      check_points
       @war.update(accepted:true)
     end
   end
@@ -97,6 +93,14 @@ private
     elsif @opponent.has_active_war
       render json: {error: @opponent.name + " has a war in progress"}, status: :forbidden
     end
+  end
+
+  def check_points
+    stake = params[:stake].to_i
+    if  stake > @guild_cur.score
+      render json: {error: "Your guild doesn't have enough points"}, status: :forbidden
+    elsif stake > @opponent.score
+      render json: {error: @opponent.name + " doesn't have enough points"}, status: :forbidden
   end
 
   def find_current_guild

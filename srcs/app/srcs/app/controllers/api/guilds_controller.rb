@@ -8,7 +8,7 @@ class Api::GuildsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, :with => :guild_not_found
 
   def index
-    @guilds = Guild.all.includes(:master).joins(:master).
+    @guilds = Guild.all.joins(:master).
       select([
                Guild.arel_table[Arel.star],
                User.arel_table[:displayname].as("master_name"),
@@ -73,26 +73,25 @@ class Api::GuildsController < ApplicationController
 
   def users_available
     @users = User.all.where(:guild_accepted => false)
-    #@users = @users.all.where.not(:banned => true)
-    # @users = @users.all.where.not(:id => current_user.id)
+    @users = @users.all.where.not(:banned => true)
     render json: @users, only: @filters, status: :ok
   end
 
-  #delete?
-  def  show_master
-    @master = @guild.master
-    render json: @master, only: @filters, status: :ok
-  end
-  #delete?
-  def  show_officers
-    @officers = @guild.officers
-    render json: @officers, only: @filters, status: :ok
-  end
-  #delete?
-  def show_soldiers
-    @soldiers = @guild.soldiers
-    render json: @soldiers, only: @filters, status: :ok
-  end
+  #def  show_master
+  #  @master = @guild.master
+  #  render json: @master, only: @filters, status: :ok
+  #end
+
+  #def  show_officers
+  #  @officers = @guild.officers
+  #  render json: @officers, only: @filters, status: :ok
+  #end
+
+  #def show_soldiers
+  #  @soldiers = @guild.soldiers
+  #  render json: @soldiers, only: @filters, status: :ok
+  #end
+
 
   def show_members
     @users = @guild.members

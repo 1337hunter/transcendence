@@ -50,16 +50,6 @@ $(function () {
                 }});
             return this;
         },
-        /*guildProfile: function () {
-            /*let id = this.model.get('id');
-            this.cur_user.fetch({
-                success: function (model) {
-                    if (model.get('guild_id') == id && (model.get('guild_master') || model.get('guild_officer')))
-                        MainSPA.SPA.router.navigate("#/guilds/" + id + "/edit");
-                    else
-                        MainSPA.SPA.router.navigate("#/guilds/" + id);
-                }});
-        },*/
         join:  function() {
            let view = this;
            let name;
@@ -367,10 +357,10 @@ $(function () {
             this.listenTo(this.collection, 'add', this.addOne);
             this.listenTo(this.collection, 'reset', this.addAll);
             this.collection.fetch({reset: true, error: this.onerror});
-            this.u_id = id;
+            //this.u_id = id;
         },
         addOne: function (guild) {
-            guild.view = new GuildsView.GuildInvitationView({model: guild, id: this.u_id});
+            guild.view = new GuildsView.GuildInvitationView({model: guild/*, id: this.u_id*/});
             this.el.append(guild.view.render().el);
         },
         addAll: function () {

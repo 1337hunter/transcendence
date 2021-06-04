@@ -12,7 +12,7 @@ class Api::GuildInvitationsController < ApplicationController
       @invitations.each { |invitation|
         @ids << invitation.guild_id
       }
-        @guilds = Guild.all.where(id: @ids).includes(:master).joins(:master).
+        @guilds = Guild.all.where(id: @ids).joins(:master).
         select([
                  Guild.arel_table[Arel.star],
                  User.arel_table[:displayname].as("master_name"),

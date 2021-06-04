@@ -1,8 +1,7 @@
 
 <script type="text/template" id="guild-template-join">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
-    <div class="col-1"><%%= anagram %></div>
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
     <div class="col-1"><%%= score %></div>
     <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
@@ -12,8 +11,7 @@
 
 <script type="text/template" id="guild-template-cancel">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
-    <div class="col-1"><%%= anagram %></div>
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
     <div class="col-1"><%%= score %></div>
     <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
@@ -23,8 +21,7 @@
 
 <script type="text/template" id="guild-template-accept">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
-    <div class="col-1"><%%= anagram %></div>
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
     <div class="col-1"><%%= score %></div>
     <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
@@ -35,8 +32,7 @@
 
 <script type="text/template" id="guild-template-leave">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
-    <div class="col-1"><%%= anagram %></div>
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
     <div class="col-1"><%%= score %></div>
     <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
@@ -48,8 +44,7 @@
 
 <script type="text/template" id="guild-template-other">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
-    <div class="col-1"><%%= anagram %></div>
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
     <div class="col-1"><%%= score %></div>
     <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
@@ -58,8 +53,7 @@
 
 <script type="text/template" id="guild-template-other-war">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
-    <div class="col-1"><%%= anagram %></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
     <div class="col-1"><%%= score %></div>
     <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
@@ -69,8 +63,7 @@
 
 <script type="text/template" id="guild-template-invite">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
-    <div class="col-1"><%%= anagram %></div>
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
     <div class="col-1"><%%= score %></div>
     <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
@@ -88,11 +81,12 @@
 </script>
 
 <script type="text/template" id="guilds-template">
-  <h1>Guilds <button type="button" class="button-sm" id="refresh-button">
-    <%= show_svg('refresh.svg') %></button></h1>
+  <h1>Guilds
+    <button type="button" class="button-sm" id="refresh-button">
+    <%= show_svg('refresh.svg') %></button>
+  </h1>
     <div class="row" style="max-width: 1000px; min-width: 300px">
-      <div class="col-2">Name</div>
-      <div class="col-1">Anagram</div>
+      <div class="col-3">Name</div>
       <div class="col-1">Score</div>
       <div class="col-2">Master</div>
       <div class="col-2">Wars</div>
@@ -111,8 +105,7 @@
   <h1>Guilds <button type="button" class="button-sm" id="refresh-button">
     <%= show_svg('refresh.svg') %></button></h1>
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2">Name</div>
-    <div class="col-1">Anagram</div>
+    <div class="col-3">Name</div>
     <div class="col-1">Score</div>
     <div class="col-2">Master</div>
     <div class="col-2">Wars</div>

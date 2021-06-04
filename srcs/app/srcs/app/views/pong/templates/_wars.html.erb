@@ -77,9 +77,9 @@
     </button>
   </h1>
   <div class="row">
-    <div class="col-3"><a class="link-light" style="cursor: pointer" id="guild1-profile"><%%= g1_name %></a></div>
+    <div class="col-3"> <%%=`<a class="link-light" href="#/guilds/${guild1_id}">`%><%%= g1_name %></a></div>
     <div class="col-1">&nbsp;vs.&nbsp;</div>
-    <div class="col-3"><a class="link-light" style="cursor: pointer" id="guild2-profile"><%%= g2_name %></a></div>
+    <div class="col-3"> <%%=`<a class="link-light" href="#/guilds/${guild2_id}">`%><%%= g2_name %></a></div>
   </div>
 <div <%%=accepted ? '' : 'style="display:none"' %>>
   <div class="row">
@@ -97,11 +97,11 @@
     <div class="col-1">&nbsp;&nbsp;&nbsp;</div>
     <div class="col-3"><%%= g2_matches_unanswered %> &nbsp;matches unanswered</div>
   </div>
-</div>
   <br>
-
   <div class="row"><div class="col-3">Matches in total: &nbsp;<%%= stake %></div></div>
   <div class="row" <%%=winner ? '' : 'style="display:none"' %>><div class="col-3">Winner: &nbsp;<%%= winner == 1 ? g1_name : g2_name %></div></div>
+  </div>
+  <br>
   <div class="row"><div class="col-3">Stake: &nbsp;<%%= stake %></div></div>
   <div class="row"><div class="col-9">Start: &nbsp;<%%= start %></div></div>
   <div class="row"><div class="col-9">End: &nbsp;<%%= end %></div></div>
