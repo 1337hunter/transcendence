@@ -8,7 +8,7 @@ import UsersView from "./views/users"
 import AlertsView from "./views/alerts";
 import AdminView from "./views/admin";
 import pong_game from "./pong_game";
-import MessagesView from "./views/messages";
+import "channels"
 
 const MainSPA = {};
 
