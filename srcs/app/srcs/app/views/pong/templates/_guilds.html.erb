@@ -1,10 +1,10 @@
 
 <script type="text/template" id="guild-template-join">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="guild-profile"><%%= name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
     <div class="col-1"><%%= anagram %></div>
     <div class="col-1"><%%= score %></div>
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="master"><%%= master_name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
     <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="join-button">send request</button></div>
   </div>
@@ -12,10 +12,10 @@
 
 <script type="text/template" id="guild-template-cancel">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="guild-profile"><%%= name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
     <div class="col-1"><%%= anagram %></div>
     <div class="col-1"><%%= score %></div>
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="master"><%%= master_name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
     <div class="col-2"> <button type="button" class="btn btn-danger options-button" id="cancel-button">cancel request</button></div>
   </div>
@@ -23,10 +23,10 @@
 
 <script type="text/template" id="guild-template-accept">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="guild-profile"><%%= name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
     <div class="col-1"><%%= anagram %></div>
     <div class="col-1"><%%= score %></div>
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="master"><%%= master_name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
     <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="accept-button">accept invite</button></div>
     <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></div>
@@ -35,10 +35,10 @@
 
 <script type="text/template" id="guild-template-leave">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="guild-profile"><%%= name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
     <div class="col-1"><%%= anagram %></div>
     <div class="col-1"><%%= score %></div>
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="master"><%%= master_name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
     <%if !current_user.guild_master %>
     <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="leave-button">leave</button></div>
@@ -48,20 +48,20 @@
 
 <script type="text/template" id="guild-template-other">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="guild-profile"><%%= name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
     <div class="col-1"><%%= anagram %></div>
     <div class="col-1"><%%= score %></div>
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="master"><%%= master_name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
   </div>
 </script>
 
 <script type="text/template" id="guild-template-other-war">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="guild-profile"><%%= name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
     <div class="col-1"><%%= anagram %></div>
     <div class="col-1"><%%= score %></div>
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="master"><%%= master_name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
     <div class="col-2"> <button type="button" class="btn btn-light options-button" id="war-button">declare war</button></div>
   </div>
@@ -69,10 +69,10 @@
 
 <script type="text/template" id="guild-template-invite">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="guild-profile"><%%= name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a></div>
     <div class="col-1"><%%= anagram %></div>
     <div class="col-1"><%%= score %></div>
-    <div class="col-2"><a class="link-light" style="cursor: pointer" id="master"><%%= master_name %></a></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
     <div class="col-1"> <button type="button" class="btn btn-light options-button join" id="accept-button">accept</button></div>
     <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></div>
@@ -131,6 +131,7 @@
   </h1>
   <div class="row"><a>Current score:&nbsp;<%%= score %></a></div>
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/members">members</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/wars">war history</a>`%></div>
 </script>
 
 <script type="text/template" id="guild-edit-officer-template">
@@ -145,6 +146,7 @@
   </h1>
   <div class="row">Current score:&nbsp;<%%= score %></div>
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/members">members</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/wars">war history</a>`%></div>
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/requests">join requests</a>`%></div>
   <div class="row"><%%=`<a class="link-light" href="#/users_not_in_guild">invite users</a>`%></div>
 </script>
@@ -172,6 +174,7 @@
   </div>
   <div class="row" style="margin-left: 0px">Current score:&nbsp;<%%= score %></div>
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/members">members</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/wars">war history</a>`%></div>
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/requests">join requests</a>`%></div>
   <div class="row"><%%=`<a class="link-light" href="#/users_not_in_guild">invite users</a>`%></div>
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/war_invites">war invites from other guilds</a>`%></div>

@@ -10,8 +10,6 @@ $(function () {
     WarsView.WarView = Backbone.View.extend({
         template: _.template($('#war-template').html()),
         events: {
-            "click #guild1-profile" : "guild1Profile",
-            "click #guild2-profile" : "guild2Profile",
             "click #more-button" :   "warProfile"
         },
         tagName: "div",
@@ -19,14 +17,10 @@ $(function () {
             this.listenTo(this.model, 'destroy', this.remove);
         },
         render: function() {
+            this.model.attributes.start = Utils.getShortDate(this.model.attributes.start);
+            this.model.attributes.end = Utils.getShortDate(this.model.attributes.end)
             this.$el.html(this.template(this.model.toJSON()));
             return this;
-        },
-        guild1Profile: function () {
-            MainSPA.SPA.router.navigate("#/guilds/" + this.model.get('guild1_id'));
-        },
-        guild2Profile: function () {
-            MainSPA.SPA.router.navigate("#/guilds/" + this.model.get('guild2_id'));
         },
         warProfile: function () {
             MainSPA.SPA.router.navigate("#/wars/" + this.model.get('id'));
@@ -107,7 +101,6 @@ $(function () {
         events: {
             "click #accept-button": "accept",
             "click #decline-button": "decline",
-            "click #guild1-profile" : "guild1Profile",
             "click #more-button" :   "warProfile"
         },
         tagName: "div",
@@ -118,11 +111,10 @@ $(function () {
             this.g_id = guild.id;
         },
         render: function() {
+            this.model.attributes.start = Utils.getShortDate(this.model.attributes.start);
+            this.model.attributes.end = Utils.getShortDate(this.model.attributes.end)
             this.$el.html(this.template(this.model.toJSON()));
             return this;
-        },
-        guild1Profile: function () {
-            MainSPA.SPA.router.navigate("#/guilds/" + this.model.get('guild1_id'));
         },
         warProfile: function () {
             MainSPA.SPA.router.navigate("#/wars/" + this.model.get('id'));
@@ -133,16 +125,21 @@ $(function () {
                 type: 'PUT',
                 success: () => {
                     Utils.appAlert('success', {msg: 'Request accepted'});
+                    this.remove();
                 },
                 error: (response) => {
                     Utils.alertOnAjaxError(response);
                 }
             });
-            //remove view
         },
         decline:  function() {
             this.model.destroy();
-            //feedback on error
+            //TODO:feedback on error
+        },
+        remove: function() {
+            this.$el.empty().off();
+            this.stopListening();
+            return this;
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
@@ -189,7 +186,6 @@ $(function () {
         template: _.template($('#war-request-template').html()),
         events: {
             "click #cancel-button": "cancelRequest",
-            "click #guild2-profile" : "guild2Profile",
             "click #more-button" :   "warProfile"
         },
         tagName: "div",
@@ -200,19 +196,17 @@ $(function () {
             // this.u_id = user.id;
         },
         render: function() {
+            this.model.attributes.start = Utils.getShortDate(this.model.attributes.start);
+            this.model.attributes.end = Utils.getShortDate(this.model.attributes.end)
             this.$el.html(this.template(this.model.toJSON()));
             return this;
-        },
-        guild2Profile: function () {
-            MainSPA.SPA.router.navigate("#/guilds/" + this.model.get('guild2_id'));
         },
         warProfile: function () {
             MainSPA.SPA.router.navigate("#/wars/" + this.model.get('id'));
         },
         cancelRequest:  function() {
             this.model.destroy();
-            //feedback on error
-            //remove view
+           // TODO:feedback on error
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
@@ -276,6 +270,10 @@ $(function () {
             Utils.alertOnAjaxError(response);
         },
         render: function () {
+            this.model.attributes.wartime_start = Utils.getTime(this.model.attributes.wartime_start);
+            this.model.attributes.wartime_end = Utils.getTime(this.model.attributes.wartime_end);
+            this.model.attributes.start = new Date(this.model.attributes.start);
+            this.model.attributes.end = new Date(this.model.attributes.end);
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         }

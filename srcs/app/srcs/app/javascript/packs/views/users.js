@@ -371,7 +371,9 @@ $(function () {
         },
         accept: function () {
             Utils.accept_join_guild_request(this.model.get('id'), this.model.get('displayname'));
-            this.model.destroy(); //404 on backend
+            this.$el.empty().off();
+            this.stopListening();
+            return this;
         },
         decline: function () {
             Utils.decline_join_guild_request(this.model.get('id'), this.model.get('displayname'));
@@ -475,11 +477,16 @@ $(function () {
         },
         accept: function () {
             Utils.accept_join_guild_request(this.model.get('id'), this.model.get('displayname'));
-            this.model.destroy(); //404 on backend
+            this.remove();
         },
         decline: function () {
             Utils.decline_join_guild_request(this.model.get('id'), this.model.get('displayname'));
-            this.model.destroy(); //404 on backend
+            this.remove();
+        },
+        remove: function() {
+            this.$el.empty().off(); /* off to unbind the events */
+            this.stopListening();
+            return this;
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
@@ -599,7 +606,9 @@ $(function () {
                 data: `guild_id=${this.model.get('guild_id')}`, //join request is active
                 success: () => {
                     Utils.appAlert('success', {msg: 'You kicked ' + this.model.get('displayname')});
-                    this.model.destroy(); //404 on backend
+                    this.$el.empty().off();
+                    this.stopListening();
+                    return this;
                 },
                 error: (response) => {
                     Utils.alertOnAjaxError(response);

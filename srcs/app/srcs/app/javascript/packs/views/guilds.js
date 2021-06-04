@@ -22,9 +22,7 @@ $(function () {
             "click #accept-button": "accept",
             "click #decline-button": "decline",
             "click #leave-button": "leave",
-            "click #war-button": "declareWar",
-            "click #master" : "masterProfile",
-            "click #guild-profile" : "guildProfile"
+            "click #war-button": "declareWar"
         },
         tagName: "div",
         initialize: function () {
@@ -52,7 +50,7 @@ $(function () {
                 }});
             return this;
         },
-        guildProfile: function () {
+        /*guildProfile: function () {
             /*let id = this.model.get('id');
             this.cur_user.fetch({
                 success: function (model) {
@@ -60,12 +58,8 @@ $(function () {
                         MainSPA.SPA.router.navigate("#/guilds/" + id + "/edit");
                     else
                         MainSPA.SPA.router.navigate("#/guilds/" + id);
-                }});*/
-            MainSPA.SPA.router.navigate("#/guilds/" + this.model.get('id'));
-        },
-        masterProfile:  function () {
-            MainSPA.SPA.router.navigate("#/users/" + this.model.get('master_id'));
-        },
+                }});
+        },*/
         join:  function() {
            let view = this;
            let name;
@@ -331,9 +325,7 @@ $(function () {
         template: _.template($('#guild-template-invite').html()),
         events: {
             "click #accept-button": "accept",
-            "click #decline-button": "decline",
-            "click #master" : "masterProfile",
-            "click #guild-profile" : "guildProfile"
+            "click #decline-button": "decline"
         },
         tagName: "div",
         initialize: function (/*user*/) {
@@ -346,19 +338,18 @@ $(function () {
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         },
-        guildProfile: function () {
-            MainSPA.SPA.router.navigate("#/guilds/" + this.model.get('id'));
-        },
-        masterProfile:  function () {
-            MainSPA.SPA.router.navigate("#/users/" + this.model.get('master_id'));
-        },
         accept:  function() {
             Utils.accept_guild_invite(this.model.get('id'), this.model.get('name'));
-            //remove view
+            this.remove();
         },
         decline:  function() {
             Utils.decline_guild_invite('current', this.model.get('id'), this.model.get('name') + '\'s request declined');
-            //remove view
+            this.remove();
+        },
+        remove: function() {
+            this.$el.empty().off();
+            this.stopListening();
+            return this;
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);

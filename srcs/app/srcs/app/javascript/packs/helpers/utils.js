@@ -1,4 +1,5 @@
 import MainSPA from "../main_spa";
+import {toString} from "underscore/modules/_setup";
 
 export default class Utils {
     // replaces avatar with default from db
@@ -44,6 +45,16 @@ export default class Utils {
                 headers: {'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')}
             }).done(resolve).fail(reject);
         }));
+    }
+
+    static getShortDate(s) {
+        let date = new Date(s);
+        return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear().toString().substring(2,5);
+    }
+
+    static getTime(s) {
+        let date = new Date(s);
+        return date.getHours() + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
     }
 
     static accept_guild_invite(guild_id, guild_name) {

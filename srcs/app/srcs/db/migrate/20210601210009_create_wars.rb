@@ -12,8 +12,8 @@ class CreateWars < ActiveRecord::Migration[6.1]
       t.integer :stake, default: 0
       t.integer :g1_score, default: 0
       t.integer :g2_score, default: 0
-      t.datetime :wartime_start
-      t.datetime :wartime_end
+      t.time :wartime_start
+      t.time :wartime_end
       t.integer :wait_minutes, default: 10
       t.integer :max_unanswered, default: 5
       t.integer :matches_total, default: 0
@@ -24,7 +24,7 @@ class CreateWars < ActiveRecord::Migration[6.1]
       t.boolean :ladder, default: false
       t.boolean :tournament, default: false
       t.boolean :duel, default: false
-      t.integer :winner
+      t.integer :winner # numbers 1 or 2
 
       t.timestamps
     end
