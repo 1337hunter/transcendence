@@ -13,7 +13,7 @@ var GameRoomInit =
 {
     createGameRoom: function (args) {
         let $this = this;
-        const GameRoom = consumer.subscriptions.create({channel: "GameRoomChannel", match_id: args.match_id, user_id: args.user_id}, {
+        const GameRoom = consumer.subscriptions.create({channel: "GameRoomChannel", match_id: args.match_id}, {
             connected() {
             // Called when the subscription is ready for use on the server
                 console.log("Connected to game room channel " + args.match_id);
@@ -28,9 +28,12 @@ var GameRoomInit =
             },
 
             received(data) {
-                console.log(data)
+            //    console.log(data)
                 if (data == "start")
-                    MainSPA.SPA.router.navigate("#/play");
+                    MainSPA.SPA.router.navigate("#/play/" + args.match_id);
+                obtainedValues.rightPadY = data.right;
+                obtainedValues.leftPadY = data.left;
+                console.log(data);
             //    obtainedValues.rightPadX = data.x1;
             //    obtainedValues.rightPadY = data.y1;
 			//	obtainedValues.leftPadX = data.x2;

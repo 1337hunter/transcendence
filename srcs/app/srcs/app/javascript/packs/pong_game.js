@@ -93,7 +93,7 @@ export default function pong_game(view) {
 
     function drawLeftPad() {
         ctx.beginPath();
-        ctx.rect(leftPadX, leftPadY, padHeight, padWidth);
+        ctx.rect(leftPadX, view.getLeftPadY(), padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -101,7 +101,7 @@ export default function pong_game(view) {
 
     function drawRightPad() {
         ctx.beginPath()
-        ctx.rect(rightPadX, rightPadY, padHeight, padWidth);
+        ctx.rect(rightPadX, view.getRightPadY(), padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -437,6 +437,7 @@ export default function pong_game(view) {
             if (rightPadY + padWidth > canvas.height)
                 rightPadY = canvas.height - padWidth;
         }
+        view.broadcastAll(rightPadY, leftPadY);
         //view.broadcastData(rightPadX, rightPadY, leftPadX, leftPadY);
         drawLeftPad()
         drawRightPad()
@@ -449,8 +450,8 @@ export default function pong_game(view) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         startTime -= 10
         //view.broadcastData(rightPadX, rightPadY, leftPadX, leftPadY);
-        drawLeftPad()
-        drawRightPad()
+    //    drawLeftPad()
+    //    drawRightPad()
         if (startTime > 2000)
             Three(CENTER_X, CENTER_Y)
         else if (startTime > 1000)

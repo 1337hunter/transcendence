@@ -129,7 +129,7 @@ $(function () {
             let $this = this;
             this.model.save({status: 2}, {patch: true, success: function() {
                 console.log($this.model);
-                $this.model.set({game_room: GameRoomInit.createGameRoom({match_id: $this.model.id, user_id: $this.model.attributes.current_user_id})});
+                $this.model.set({game_room: GameRoomInit.createGameRoom({match_id: $this.model.id})});
             }});
         },
         declineMatch: function () {
@@ -242,7 +242,7 @@ $(function () {
                 success: function () {
                     $this.matches_collection.fetch({reset: true, error: this.onerror, success: function () {
                         let $match = $this.matches_collection.findWhere({first_player_id: MainSPA.SPA.router.currentuser.get('id'), second_player_id: $this.model.attributes.id});
-                        $match.set($match, {game_room: GameRoomInit.createGameRoom({match_id: $match.id, user_id: $this.current_user.id})});
+                        $match.set($match, {game_room: GameRoomInit.createGameRoom({match_id: $match.id, match: $match})});
                     }})
                 }
             }));

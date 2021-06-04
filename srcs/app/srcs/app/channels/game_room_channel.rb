@@ -1,18 +1,26 @@
 class GameRoomChannel < ApplicationCable::Channel
-  @users = []
   def subscribed
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     puts params
+    
     stream_from "game_room_channel_#{params[:match_id]}"
-  #  ActionCable.server.broadcast("game_room_channel_#{params[:match_id]}", "start")
+    if current_user.id == Match.find(params[:match_id]).second_player_id
+      start_match
+    end
   end
 
   def receive(data)
-  #  puts data
-    ActionCable.server.broadcast("game_room_channel", data)
+    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    puts data
+    puts params
+    ActionCable.server.broadcast("game_room_channel_#{params[:match_id]}", data)
   end
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
+  end
+
+  private
+  def start_match
+    ActionCable.server.broadcast("game_room_channel_#{params[:match_id]}", "start")
   end
 end
