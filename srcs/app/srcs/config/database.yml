@@ -2,13 +2,13 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  #username: admin
-  #password: admin
-  #username: postgres
-  #password: password
-  host: 0.0.0.0
-  #host: postgresql
-  #  timeout: 5000
+  # username: admin
+  # password: admin
+  # username: postgres
+  # password: password
+  # host: 0.0.0.0
+  # host: postgresql
+  # timeout: 5000
   port: 5432
 
 development:
