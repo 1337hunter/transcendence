@@ -1,5 +1,5 @@
 .open-button {
-    background-color: #21f3e1;
+    background-color: #60c7c1;
     color: white;
     font-size: 15px;
     font-weight: bold;
@@ -16,16 +16,17 @@
 }
 
 .options-button {
-    height: 20px;
-    line-height: 10px;
-    font-size: 80%;
-    border-radius: 3px !important;
-    opacity: 0.8
+  height: 20px;
+  line-height: 10px;
+  font-size: 80%;
+  border-radius: 3px !important;
+  opacity: 0.8;
+  margin-left: 20px
 }
 
 .join {
-  background-color: #43eeaa;
-  border-color : #43eeaa;
+  background-color:  #60c7c1;
+  border-color :  #60c7c1;
   color : white;
 }
 
@@ -102,8 +103,13 @@
 .modal-confirm .modal-body {
   color: #999;
 }
-.modal-confirm .modal-footer {
+
+.modal-footer {
   border: none;
+}
+
+.modal-confirm .modal-footer {
+  justify-content: center;
   text-align: center;
   border-radius: 5px;
   font-size: 13px;
@@ -137,7 +143,6 @@
   min-width: 120px;
   border: none;
   min-height: 40px;
-  border-radius: 3px;
   margin: 0 5px;
 }
 .modal-confirm .btn-secondary {
@@ -155,4 +160,14 @@
 .trigger-btn {
   display: inline-block;
   margin: 100px auto;
+}
+
+.from-div,  {
+  width: 48%;
+  float: left;
+}
+
+.to-div {
+  width: 48%;
+  float: right;
 }

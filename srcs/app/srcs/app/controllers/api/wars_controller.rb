@@ -4,6 +4,7 @@ class Api::WarsController < ApplicationController
   before_action :find_current_guild, only: %i[destroy accept create]
   before_action :find_guild, only: %i[index_war_requests index_war_invites]
   before_action :check_active_war, only: %i[create accept]
+  before_action :check_guild_permissions, only: [:destroy]
   rescue_from ActiveRecord::RecordNotFound, :with => :war_not_found
 
   def index
@@ -17,7 +18,8 @@ class Api::WarsController < ApplicationController
 
   def show
     if !@war.accepted #for invites & requests
-      find_guild
+      find_current_guild
+      check_guild_permissions
     end
     render json: @war
   end
@@ -60,9 +62,7 @@ class Api::WarsController < ApplicationController
   end
 
   def destroy
-    if (@guild_cur.id != @war.guild1_id) &&  (@guild_cur.id != @war.guild2_id)
-      render json: {error: "No permission"}, status: :forbidden
-    elsif @war.accepted
+    if @war.accepted
       render json: {error: "Accepted war request can't be cancelled"}, status: :forbidden
     else
       @war.destroy
@@ -109,6 +109,12 @@ private
       render json: {error: "You are not a guild master"}, status: :forbidden
     end
   end
+
+    def check_guild_permissions
+      if (@guild_cur.id != @war.guild1_id) &&  (@guild_cur.id != @war.guild2_id)
+        render json: {error: "No permission"}, status: :forbidden
+      end
+    end
 
   def find_guild
     if current_user.guild_id != params[:id].to_i || !current_user.guild_master

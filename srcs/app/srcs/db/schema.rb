@@ -177,7 +177,7 @@ ActiveRecord::Schema.define(version: 2021_06_03_172619) do
     t.boolean "ladder", default: false
     t.boolean "tournament", default: false
     t.boolean "duel", default: false
-    t.integer "winner" # numbers 1 or 2
+    t.integer "winner"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["guild1_id"], name: "index_wars_on_guild1_id"

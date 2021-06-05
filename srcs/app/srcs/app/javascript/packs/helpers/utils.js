@@ -120,4 +120,17 @@ export default class Utils {
         }).responseText;
         return response ? true : false;
     }
+
+    static decline_war_invite(id, msg) {
+        $.ajax({
+            url: '/api/wars/' + id,
+            type: 'DELETE',
+            success: () => {
+                Utils.appAlert('success', {msg: msg});
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
 }

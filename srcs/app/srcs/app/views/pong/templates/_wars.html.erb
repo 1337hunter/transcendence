@@ -8,7 +8,7 @@
     <div class="col-1"><%%= stake %></div>
     <div class="col-1"><%%= start %></div>
     <div class="col-1"><%%= end %></div>
-    <div class="col-2"><%%= winner ? (winner == 1 ? g1_name : g2_name) : '' %></div>
+    <div class="col-2"><%%= finished ? (winner ? (winner == 1 ? g1_name : g2_name) : 'even') : '-' %></div>
     <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
   </div>
 </script>
@@ -99,7 +99,7 @@
   </div>
   <br>
   <div class="row"><div class="col-3">Matches in total: &nbsp;<%%= stake %></div></div>
-  <div class="row" <%%=winner ? '' : 'style="display:none"' %>><div class="col-3">Winner: &nbsp;<%%= winner == 1 ? g1_name : g2_name %></div></div>
+  <div class="row" <%%=finished ? '' : 'style="display:none"' %>><div class="col-3">Winner: &nbsp;<%%= winner ? (winner == 1 ? g1_name : g2_name) : 'even' %></div></div>
   </div>
   <br>
   <div class="row"><div class="col-3">Stake: &nbsp;<%%= stake %></div></div>
@@ -107,7 +107,7 @@
   <div class="row"><div class="col-9">End: &nbsp;<%%= end %></div></div>
   <div class="row"><div class="col-9">Wartime: &nbsp;<%%= wartime_start %> &nbsp;-&nbsp; <%%= wartime_end %></div></div>
   <div class="row"><div class="col-3">Wait time: &nbsp;<%%= wait_minutes %>&nbsp;minutes</div></div>
-
+  <div class="row"><div class="col-3">Unanswered calls permitted: &nbsp;<%%= max_unanswered %></div></div>
   <br>
   <div class="row"><div class="col-3">Included match types:</div></div>
   <ul class="options">

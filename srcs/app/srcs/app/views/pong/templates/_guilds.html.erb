@@ -53,11 +53,71 @@
 
 <script type="text/template" id="guild-template-other-war">
   <div class="row" style="max-width: 1000px; min-width: 300px">
-    <div class="col-2"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
     <div class="col-1"><%%= score %></div>
     <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-2"><%= current_user.guild_id %></div>
-    <div class="col-2"> <button type="button" class="btn btn-light options-button" id="war-button">declare war</button></div>
+    <div class="col-2"> <button type="button" class="btn btn-light options-button" data-toggle="modal" data-target="#declareWarModal">declare war</button></div>
+  </div>
+
+  <!-- Modal -->
+  <div id="declareWarModal" class="modal" tabindex="-1" style="border-radius: 20%">
+    <div class="modal-dialog" >
+      <div class="modal-content" style="background-color: #2E2F30; justify-content: left!important;">
+        <div class="modal-header text-center flex-column">
+          <h4 class="modal-title w-100">War declaration</h4>
+        </div>
+        <form id="war">
+        <div class="modal-body">
+            <div class="input-group input-group-sm mb-3" style="margin-bottom: 0!important;">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Wager Points:</span>
+              </div>
+              <input id="stake" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="from 1 to 1000" pattern="[0-9]{1,1000}" title="value range is from 1 to 1000, only numbers" required>
+            </div>
+            <p style="font-size: small">Both sides must have enough points to bet!</p>
+
+            <div class="input-group input-group-sm mb-3" style="margin-bottom: 0!important;">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Max number of unanswered Calls:</span>
+              </div>
+              <input id="max-unanswered"  type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" pattern="[0-9]" title="numbers only">
+            </div>
+            <p style="font-size: small">(default: 5)</p>
+
+            <div class="input-group input-group-sm mb-3" style="margin-bottom: 0!important;">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Max wait for call time:</span>
+              </div>
+              <input id="wait-time"  type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="from 10 to 1440 (=24h)" pattern="[0-9]{10,1440}" title="value range is from 10 to 1440, only numbers">
+            </div>
+             <p style="font-size: small">(in minutes, default: 10)</p>
+
+            <div style="margin-top: 20px">
+              <div class="from-div">War starts</div>
+              <div class="to-div">War ends</div>
+              <input id="war-start" class="from-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="from" type="date" name="date"></input>
+              <input id="war-end" class="to-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="to" type="date" name="date">
+            </div>
+
+              <div style="margin-top: 90px">
+              Select War hours<br>
+                <input id="wartime-start" class="from-div" placeholder="from">
+                <input id="wartime-end" class="to-div" placeholder="to">
+              </div>
+
+              <ul class="options" style="margin-top: 50px">Include matches of types:
+                <li class="w"> <input type="checkbox" id="include-tournament">&nbsp;Tournament</li>
+                <li class="w"><input type="checkbox" id="include-duel">&nbsp;Duel</li>
+                <li class="w"><input type="checkbox" id="include-ladder">&nbsp;Ladder</li>
+              </ul>
+        </div>
+        <div class="modal-confirm modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit"  class="btn btn-primary">Declare war</button> </div>
+          </form>
+      </div>
+    </div>
   </div>
 </script>
 
@@ -156,7 +216,7 @@
   </h1>
   <div class="row" style="margin-bottom: 20px">
     <div class="col-2"><button type="button" class="btn btn-danger options-button"
-                               data-target="#myModal" data-toggle="modal">Delete guild
+                               data-target="#deleteGuildModal" data-toggle="modal">Delete guild
     </button></div>
   </div>
   <div class="row" style="margin-left: 0px">Anagram:&nbsp;
@@ -174,7 +234,7 @@
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/war_requests">war requests sent by you</a>`%></div>
 
   <!-- Modal HTML -->
-  <div id="myModal" class="modal">
+  <div id="deleteGuildModal" class="modal">
     <div class="modal-dialog modal-confirm">
       <div class="modal-content">
         <div class="modal-header flex-column">

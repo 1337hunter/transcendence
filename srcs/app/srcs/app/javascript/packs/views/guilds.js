@@ -22,7 +22,7 @@ $(function () {
             "click #accept-button": "accept",
             "click #decline-button": "decline",
             "click #leave-button": "leave",
-            "click #war-button": "declareWar"
+            "submit #war": "declareWar"
         },
         tagName: "div",
         initialize: function () {
