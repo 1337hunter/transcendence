@@ -121,7 +121,7 @@ export default class Utils {
         return response ? true : false;
     }
 
-    static decline_war_invite(id, msg) {
+    /*static decline_war_invite(id, msg) {
         $.ajax({
             url: '/api/wars/' + id,
             type: 'DELETE',
@@ -132,5 +132,5 @@ export default class Utils {
                 Utils.alertOnAjaxError(response);
             }
         });
-    }
+    }*/
 }

@@ -272,8 +272,9 @@ $(function () {
         render: function () {
             this.model.attributes.wartime_start = Utils.getTime(this.model.attributes.wartime_start);
             this.model.attributes.wartime_end = Utils.getTime(this.model.attributes.wartime_end);
-            this.model.attributes.start = new Date(this.model.attributes.start);
-            this.model.attributes.end = new Date(this.model.attributes.end);
+            //TODO:js sets+3 to time
+            //this.model.attributes.start = new Date(this.model.attributes.start);
+            //this.model.attributes.end = new Date(this.model.attributes.end);
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         }

@@ -140,17 +140,36 @@ $(function () {
             Utils.decline_guild_invite('current', this.model.get('id'), this.model.get('name') + '\'s request declined');
             this.render();
         },
-        declareWar:  function() {
+        declareWar:  function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            let start = $('#war-start').val().trim();
+            let end = $('#war-end').val().trim();
+            //let wartime_start = ;
+            //let wartime_end = ;
+            //TODO:get dates, error if ((start > end) || ((Date.now() - start) > 120000))) on backend (+accept)?
+            let data = 'guild2_id='+ this.model.get('id');
+            data += '&stake=' + $('#stake').val().trim();
+            data += '&start=' + start;
+            data += '&end=' + end;
+            let max_unanswered = $('#max-unanswered').val().trim();
+            if (max_unanswered)
+                data += '&max_unanswered=' + max_unanswered;
+            let wait_time = $('#wait-time').val().trim();
+            if (wait_time)
+                data += '&wait_minutes=' + wait_time;
+            if($('#include-tournament').is(":checked"))
+                data += '&tournament=true';
+            if($('#include-ladder').is(":checked"))
+                data += '&ladder=true';
+            if($('#include-duel').is(":checked"))
+                data += '&duel=true';
             $.ajax({
                 url: 'api/wars/',
                 type: 'POST',
-                data: {
-                    guild2_id: this.model.get('id'),
-                    stake: 0 //take all other from form
-                },
+                data: data,
                 success: () => {
                     Utils.appAlert('success', {msg: 'You declared war to the ' + this.model.get('name')});
-                    //this.render();
                 },
                 error: (response) => {
                     Utils.alertOnAjaxError(response);

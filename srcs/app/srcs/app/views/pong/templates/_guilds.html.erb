@@ -61,7 +61,7 @@
   </div>
 
   <!-- Modal -->
-  <div id="declareWarModal" class="modal" tabindex="-1" style="border-radius: 20%">
+  <div id="declareWarModal" class="modal" style="border-radius: 20%">
     <div class="modal-dialog" >
       <div class="modal-content" style="background-color: #2E2F30; justify-content: left!important;">
         <div class="modal-header text-center flex-column">
@@ -71,39 +71,43 @@
         <div class="modal-body">
             <div class="input-group input-group-sm mb-3" style="margin-bottom: 0!important;">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-sm">Wager Points:</span>
+                <span class="input-group-text" id="inputWager">Wager Points:</span>
               </div>
-              <input id="stake" type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="from 1 to 1000" pattern="[0-9]{1,1000}" title="value range is from 1 to 1000, only numbers" required>
+              <input id="stake" type="number" min="0" class="form-control" aria-label="Wager Points:" aria-describedby="inputWager" placeholder="1 point or more" required>
+            <!-- change min to 1 -->
             </div>
             <p style="font-size: small">Both sides must have enough points to bet!</p>
 
             <div class="input-group input-group-sm mb-3" style="margin-bottom: 0!important;">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-sm">Max number of unanswered Calls:</span>
+                <span class="input-group-text" id="inputUnans">Max number of unanswered Calls per day:</span>
               </div>
-              <input id="max-unanswered"  type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" pattern="[0-9]" title="numbers only">
+              <input id="max-unanswered"  type="number" class="form-control" aria-describedby="inputUnans">
             </div>
             <p style="font-size: small">(default: 5)</p>
 
             <div class="input-group input-group-sm mb-3" style="margin-bottom: 0!important;">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-sm">Max wait for call time:</span>
+                <span class="input-group-text" id="inputWt">Max wait for call time:</span>
               </div>
-              <input id="wait-time"  type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="from 10 to 1440 (=24h)" pattern="[0-9]{10,1440}" title="value range is from 10 to 1440, only numbers">
+              <input id="wait-time"  type="number" min="10" max="1440" class="form-control" aria-describedby="inputWt" placeholder="from 10 to 1440 (=24h)">
             </div>
-             <p style="font-size: small">(in minutes, default: 10)</p>
+             <p style="font-size: small">(in minutes, default: 10)<br>
+               If no one of the other guild answer the match call after a this amount of time, the match is automatically won
+             </p>
 
             <div style="margin-top: 20px">
               <div class="from-div">War starts</div>
               <div class="to-div">War ends</div>
-              <input id="war-start" class="from-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="from" type="date" name="date"></input>
-              <input id="war-end" class="to-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="to" type="date" name="date">
+              <input id="war-start" class="from-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="from" type="datetime" name="date"></input>
+              <input id="war-end" class="to-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="to" type="datetime" name="date">
             </div>
 
               <div style="margin-top: 90px">
               Select War hours<br>
                 <input id="wartime-start" class="from-div" placeholder="from">
                 <input id="wartime-end" class="to-div" placeholder="to">
+                <p style="font-size: small">(the period of day when rival guilds can ask for a fight) </p>
               </div>
 
               <ul class="options" style="margin-top: 50px">Include matches of types:
@@ -114,7 +118,8 @@
         </div>
         <div class="modal-confirm modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="submit"  class="btn btn-primary">Declare war</button> </div>
+          <button type="submit"  class="btn btn-primary">Declare war</button>
+        </div>
           </form>
       </div>
     </div>
@@ -242,7 +247,6 @@
             <i class="material-icons">&#xE5CD;</i>
           </div>
           <h4 class="modal-title w-100">Are you sure?</h4>
-          <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
          </div>
          <div class="modal-body">
            <p style="color:gray">Guild will be deleted permanently</p>

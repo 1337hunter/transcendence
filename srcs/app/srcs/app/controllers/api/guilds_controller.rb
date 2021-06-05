@@ -22,7 +22,6 @@ class Api::GuildsController < ApplicationController
   end
 
   def create
-    puts "Creating new guild"
     guild = @user.create_guild(name: params[:name],
                                anagram: generate_anagram(params[:name]))
     if guild.save
@@ -45,7 +44,7 @@ class Api::GuildsController < ApplicationController
 
   def destroy
     if @guild.has_active_war
-      render json: {error: "You have a war in progress"}, status: :forbidden
+      render json: { error: "You have a war in progress" }, status: :forbidden
       return
     end
     @guild.wars_started.each do |war|
@@ -110,7 +109,7 @@ class Api::GuildsController < ApplicationController
   end
 
   def guild_not_found
-    render json: {error: 'Guild not found'}, status: :not_found
+    render json: { error: 'Guild not found' }, status: :not_found
   end
 
   def check_in_other_guild
@@ -122,26 +121,23 @@ class Api::GuildsController < ApplicationController
   end
 
   def check_master_rights
-    check_member
-    if @user.guild_master = false
-        @user.errors.add :base, 'No permission'
-        render json: @user.errors, status: :forbidden
+    unless check_member
+      return
     end
-  end
+    render json: { error: 'No permission' }, status: :forbidden unless @user.guild_master
+    end
 
   def check_officer_rights
-    check_member
-    if @user.guild_officer = false &&  @user.guild_master = false
-      @user.errors.add :base, 'No permission'
-      render json: @user.errors, status: :forbidden
+    unless check_member
+      return
     end
+    render json: { error: 'No permission' }, status: :forbidden if !@user.guild_officer && !@user.guild_master
   end
 
   def check_member
     @user = current_user
-    if (@user.guild_id != @guild.id || !@user.guild_accepted)
-      @user.errors.add :base, 'No permission'
-      render json: @user.errors, status: :forbidden
+    unless @user.guild_id == @guild.id && @user.guild_accepted
+      render json: { error: 'No permission' }, status: :forbidden
     end
   end
 
@@ -159,22 +155,18 @@ class Api::GuildsController < ApplicationController
   def generate_anagram(name)
     charset = "aeiouAEIOU "
     name = name.delete(" ")
-    if name.length < 6 && !Guild.find_by(anagram: name)
-      return name
-    end
+    return name if name.length < 6 && !Guild.find_by(anagram: name)
+
     if name.length < 6
       tmp = cut_entry(name[0,5].clone)
-      if !tmp.empty?
-        return tmp
-      end
+      return tmp unless tmp.empty?
     end
     anagram = name[1, name.size]
     anagram = anagram.delete(charset)
     anagram = name[0] + anagram[0,4]
     same = Guild.find_by(anagram: anagram)
-    if !same
-      return anagram
-    end
+    return anagram unless same
+
     samename = same.name
     str_a = name.delete(charset)
     str_b = samename.delete(charset)
@@ -192,32 +184,24 @@ class Api::GuildsController < ApplicationController
           else
             anagram[anagram.size - 1] = name[len]
           end
-          if check_anagram(anagram)
-            return anagram
-          end
+          return anagram if check_anagram(anagram)
         end
       end
       tmp = cut_entry(anagram.clone)
-      if !tmp.empty?
-        return tmp
-      end
+      return tmp unless tmp.empty?
       else
         last = anagram.size - 1
         if i < last
-        anagram = anagram[0, i] + str_a[i] + anagram[i + 1, 4]
+          anagram = anagram[0, i] + str_a[i] + anagram[i + 1, 4]
         else
-          if last < 4
-            last += 1
-          end
-        anagram[last] = str_a[i]
+          last += 1 if last < 4
+          anagram[last] = str_a[i]
         end
     end
     while !check_anagram(anagram)
       charset = name.split('') + Array('0'..'9') + %w[_@#$*^%><~+/.!)]
       add = anagram.size
-      if add > 4
-        add -= 1
-      end
+      add -= 1 if add > 4
       anagram[add] = charset.sample
     end
     return anagram
@@ -227,18 +211,14 @@ class Api::GuildsController < ApplicationController
     cut = entry
     loop do
       cut.upcase!
-      if check_anagram(cut)
-        return cut
-      end
+      return cut if check_anagram(cut)
+
       cut.downcase!
-      if check_anagram(cut)
-        return cut
-      end
+      return cut if check_anagram(cut)
+
       cut[cut.size - 1] = ''
       break if cut.size < 2
-      if check_anagram(cut)
-        return cut
-      end
+      return cut if check_anagram(cut)
     end
     return ""
   end

@@ -410,7 +410,7 @@ $(function () {
             let view = this;
             view.cur_user.fetch({
                 success: function (model) {
-                    if (Utils.has_guild_invitation(view.model.get('id'), model.get('guild_id'), model.attributes.guild.name))
+                    if (Utils.has_guild_invitation(view.model.get('id'), model.get('guild_id')))
                         view.$el.html(view.template2(view.model.toJSON()));
                     else if (view.model.get('guild_id') == model.get('guild_id'))
                         view.$el.html(view.template3(view.model.toJSON()));

@@ -15,8 +15,8 @@ class Api::GuildInvitationsController < ApplicationController
         @guilds = Guild.all.where(id: @ids).joins(:master).
         select([
                  Guild.arel_table[Arel.star],
-                 User.arel_table[:displayname].as("master_name"),
-                 User.arel_table[:id].as("master_id")
+                 User.arel_table[:displayname].as('master_name'),
+                 User.arel_table[:id].as('master_id')
                ])
       render json: @guilds
     #end
@@ -25,8 +25,7 @@ class Api::GuildInvitationsController < ApplicationController
   def show
     @invitation = find_invitation(params[:user_id], params[:id])
     @guild = Guild.find(params[:id])
-    if @invitation
-      check_user_rights
+    if @invitation && check_user_rights
       render json: @guild
     end
   end
@@ -35,7 +34,7 @@ class Api::GuildInvitationsController < ApplicationController
     if find_invitation(params[:user_id], current_user.guild_id)
       render json: {error: 'Invitation already exists'}, status: :unprocessable_entity
     else
-      puts "Creating new guild invitation"
+      puts 'Creating new guild invitation'
       @invitation = GuildInvitation.new(user_id: params[:user_id], guild_id: current_user.guild_id)
       if @invitation.save
         render json: @invitation, status: :ok
@@ -48,9 +47,8 @@ class Api::GuildInvitationsController < ApplicationController
   def destroy
     @invitation = find_invitation(params[:user_id], params[:id])
     if !@invitation
-     render json: {error: "No invitation found"}, status: :not_found
-    else
-      check_user_rights
+      render json: {error: 'No invitation found'}, status: :not_found
+    elsif check_user_rights
       @invitation.destroy
     end
   end
@@ -59,32 +57,35 @@ class Api::GuildInvitationsController < ApplicationController
 
   def check_user_rights
     @user = find_user
-    if (@user.id != @invitation.user_id)
-      check_officer_rights
-      if params[:guild_id] != current_user.guild_id
-        render json: {error: "No permission"}, status: :forbidden
-      end
+    if (@user.id != @invitation.user_id) && (!check_officer_rights || params[:guild_id] != current_user.guild_id)
+        render json: {error: 'No permission'}, status: :forbidden
+        return false
     end
+    true
   end
 
   def check_officer_rights
     if !current_user.guild_officer &&  !current_user.guild_master
-      render json: {error: "No permission"}, status: :forbidden
+      render json: {error: 'No permission'}, status: :forbidden
+      false
     end
+    true
   end
 
   def check_if_invitee
     @user = find_user
     if current_user != @user
-      render json: {error: "No permission"}, status: :forbidden #unless current_user.admin?
+      render json: {error: 'No permission'}, status: :forbidden
+      false
     end
+    true
   end
 
   def find_invitation(user_id, guild_id)
     if user_id == 'current'
       user_id = current_user.id
     end
-    return GuildInvitation.find_by_user_id_and_guild_id(user_id, guild_id)
+    GuildInvitation.find_by_user_id_and_guild_id(user_id, guild_id)
   end
 
   def find_user
