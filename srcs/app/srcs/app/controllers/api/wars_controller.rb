@@ -2,6 +2,7 @@ class Api::WarsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :find_war, only: %i[show destroy accept]
   before_action :find_current_guild, only: %i[destroy accept create]
+  before_action :check_master_rights, only: %i[destroy accept create]
   before_action :find_guild, only: %i[index_war_requests index_war_invites]
   before_action :check_active_war, only: %i[create accept]
   before_action :check_guild_permissions, only: [:destroy]
@@ -16,10 +17,8 @@ class Api::WarsController < ApplicationController
     render json: wars
   end
 
-  def show
-    if @war.accepted || (find_current_guild && check_guild_permissions)
-      render json: @war
-    end
+  def show # show requests/invites profiles to all members, actions for master only
+    render json: @war if @war.accepted || (find_current_guild && check_guild_permissions)
   end
 
   def index_war_invites
@@ -34,7 +33,7 @@ class Api::WarsController < ApplicationController
 
   def create
     @opponent = Guild.find(params[:guild2_id])
-    return if check_opponent || not_enough_points
+    return if check_opponent_fail || not_enough_points
 
     war = @guild_cur.war_requests.create(war_params)
     if war.save
@@ -46,13 +45,13 @@ class Api::WarsController < ApplicationController
   end
 
   def accept
-    if @guild_cur.id != params[:guild_id].to_i || @guild_cur.id != @war.guild2_id
+    if @guild_cur.id != params[:guild_id].to_i
       render json: { error: 'No permission' }, status: :forbidden
     elsif @war.accepted
       render json: { error: 'Already accepted' }, status: :forbidden
     else
       @opponent = Guild.find(@war.guild1_id)
-      @war.update(accepted: true) if !check_opponent && !not_enough_points
+      @war.update(accepted: true) if !check_opponent_fail && !not_enough_points
     end
   end
 
@@ -78,7 +77,7 @@ class Api::WarsController < ApplicationController
     render json: { error: 'You have a war in progress' }, status: :forbidden if @guild_cur.has_active_war
   end
 
-  def check_opponent
+  def check_opponent_fail
     if !@opponent
       render json: { error: 'Opponent not found' }, status: :not_found
     elsif @opponent.id == current_user.guild_id
@@ -102,20 +101,14 @@ class Api::WarsController < ApplicationController
   end
 
   def find_current_guild
-    @guild_cur = current_user.guild
-    if !@guild_cur || !current_user.guild_master
-      render json: { error: 'You are not a guild master' }, status: :forbidden
-      return false
+    unless current_user.guild_id && current_user.guild_accepted
+      render json: { error: 'You are not a guild member' }, status: :forbidden
     end
-    true
+    @guild_cur = current_user.guild
   end
 
-  def check_guild_permissions
-    if (@guild_cur.id != @war.guild1_id) && (@guild_cur.id != @war.guild2_id)
-      render json: { error: 'No permission' }, status: :forbidden
-      return false
-    end
-    true
+  def check_master_rights
+    render json: { error: 'You are not a guild master' }, status: :forbidden unless current_user.guild_master
   end
 
   def find_guild
@@ -124,6 +117,14 @@ class Api::WarsController < ApplicationController
       return
     end
     @guild = Guild.find(params[:id])
+  end
+
+  def check_guild_permissions
+    if (@guild_cur.id != @war.guild1_id) && (@guild_cur.id != @war.guild2_id)
+      render json: { error: 'No permission' }, status: :forbidden
+      return false
+    end
+    true
   end
 
   def war_params

@@ -4,6 +4,7 @@ import Guilds from "../models/guilds";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
+import moment, { relativeTimeThreshold } from "moment";
 
 const GuildsView = {};
 
@@ -143,15 +144,26 @@ $(function () {
         declareWar:  function(e) {
             e.preventDefault();
             e.stopPropagation();
+            let tz = $('#timezone').val();
             let start = $('#war-start').val().trim();
             let end = $('#war-end').val().trim();
-            //let wartime_start = ;
-            //let wartime_end = ;
-            //TODO:get dates, error if ((start > end) || ((Date.now() - start) > 120000))) on backend (+accept)?
+            let wartime_start = $('#wartime-start').val().trim();
+            let wartime_end = $('#wartime-end').val().trim();
+            if (moment(end).diff(moment(start), 'hours') < 24) {
+                Utils.appAlert('danger', {msg: 'War duration must be not less then 24 hours'});
+                return
+            }
+            //TODO: ((Date.now() - Date(start)) > 120000))) (+check on accept)?
+            if (wartime_end.substring(0, 2) == wartime_start.substring(0, 2)) {
+                Utils.appAlert('danger', {msg: 'War time gap must be not less then 1 hour'});
+                return
+            }
             let data = 'guild2_id='+ this.model.get('id');
             data += '&stake=' + $('#stake').val().trim();
-            data += '&start=' + start;
-            data += '&end=' + end;
+            data += '&start=' + start + tz;
+            data += '&end=' + end + tz;
+            data += '&wartime_start=' + wartime_start + tz;
+            data += '&wartime_end=' + wartime_end + tz;
             let max_unanswered = $('#max-unanswered').val().trim();
             if (max_unanswered)
                 data += '&max_unanswered=' + max_unanswered;

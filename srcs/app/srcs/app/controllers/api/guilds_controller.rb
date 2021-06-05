@@ -3,16 +3,16 @@ class Api::GuildsController < ApplicationController
   before_action :define_user_filters, only: %i[show_members]
   before_action :check_in_other_guild, only: [:create]
   before_action :find_guild, only: %i[show update destroy show_master show_officers show_members show_requests]
-  before_action :check_master_rights, only: [:destroy, :update]
+  before_action :check_master_rights, only: %i[destroy update]
   before_action :check_officer_rights, only: [:show_requests]
-  rescue_from ActiveRecord::RecordNotFound, :with => :guild_not_found
+  rescue_from ActiveRecord::RecordNotFound, with: :guild_not_found
 
   def index
     @guilds = Guild.all.joins(:master).
       select([
                Guild.arel_table[Arel.star],
-               User.arel_table[:displayname].as("master_name"),
-               User.arel_table[:id].as("master_id")
+               User.arel_table[:displayname].as('master_name'),
+               User.arel_table[:id].as('master_id')
              ])
     render json: @guilds
   end
@@ -44,21 +44,21 @@ class Api::GuildsController < ApplicationController
 
   def destroy
     if @guild.has_active_war
-      render json: { error: "You have a war in progress" }, status: :forbidden
+      render json: { error: 'You have a war in progress' }, status: :forbidden
       return
     end
     @guild.wars_started.each do |war|
       if !war.guild2_id
         war.delete
       else
-        war.update(g1_name: war.g1_name + " [deleted]")
+        war.update(g1_name: "#{war.g1_name} [deleted]")
       end
     end
     @guild.wars_accepted.each do |war|
       if !war.guild1_id
         war.delete
       else
-        war.update(g2_name: war.g2_name + " [deleted]")
+        war.update(g2_name: "#{war.g2_name} [deleted]")
       end
     end
     @guild.members.each { |member|
@@ -71,8 +71,8 @@ class Api::GuildsController < ApplicationController
   end
 
   def users_available
-    @users = User.all.where(:guild_accepted => false)
-    @users = @users.all.where.not(:banned => true)
+    @users = User.all.where(guild_accepted: false)
+    @users = @users.all.where.not(banned: true)
     render json: @users, only: @filters, status: :ok
   end
 
@@ -114,7 +114,7 @@ class Api::GuildsController < ApplicationController
 
   def check_in_other_guild
     @user = current_user
-    if (@user.guild_id && @user.guild_accepted)
+    if @user.guild_id && @user.guild_accepted
       @user.errors.add :base, 'You are in the guild already. Leave your guild to continue.'
       render json: @user.errors, status: :bad_request
     end
@@ -153,8 +153,8 @@ class Api::GuildsController < ApplicationController
   end
 
   def generate_anagram(name)
-    charset = "aeiouAEIOU "
-    name = name.delete(" ")
+    charset = 'aeiouAEIOU '
+    name = name.delete(' ')
     return name if name.length < 6 && !Guild.find_by(anagram: name)
 
     if name.length < 6
@@ -220,7 +220,7 @@ class Api::GuildsController < ApplicationController
       break if cut.size < 2
       return cut if check_anagram(cut)
     end
-    return ""
+    return ''
   end
 
   def check_anagram(a)

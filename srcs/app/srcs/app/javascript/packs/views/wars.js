@@ -3,6 +3,7 @@ import _ from "underscore";
 import Wars from "../models/wars";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
+import moment, { relativeTimeThreshold } from "moment";
 
 const WarsView = {};
 
@@ -104,11 +105,10 @@ $(function () {
             "click #more-button" :   "warProfile"
         },
         tagName: "div",
-        initialize: function (guild) {
+        initialize: function () {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
-            this.g_id = guild.id;
         },
         render: function() {
             this.model.attributes.start = Utils.getShortDate(this.model.attributes.start);
@@ -121,7 +121,7 @@ $(function () {
         },
         accept:  function() {
             $.ajax({
-                url: 'api/guilds/' + this.g_id + '/war_invites/' + this.model.get('id'),
+                url: 'api/guilds/' + this.model.get('guild2_id') + '/war_invites/' + this.model.get('id'),
                 type: 'PUT',
                 success: () => {
                     Utils.appAlert('success', {msg: 'Request accepted'});
@@ -134,7 +134,7 @@ $(function () {
         },
         decline:  function() {
             this.model.destroy();
-            //TODO:feedback on error
+            //TODO:feedback on error?
         },
         remove: function() {
             this.$el.empty().off();
@@ -157,10 +157,9 @@ $(function () {
             this.listenTo(this.collection, 'add', this.addOne);
             this.listenTo(this.collection, 'reset', this.addAll);
             this.collection.fetch({reset: true, error: this.onerror});
-            this.g_id = id;
         },
         addOne: function (war) {
-            war.view = new WarsView.WarInvitationView({model: war, id: this.g_id});
+            war.view = new WarsView.WarInvitationView({model: war});
             this.el.append(war.view.render().el);
         },
         addAll: function () {
@@ -189,11 +188,10 @@ $(function () {
             "click #more-button" :   "warProfile"
         },
         tagName: "div",
-        initialize: function (/*user*/) {
+        initialize: function () {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
-            // this.u_id = user.id;
         },
         render: function() {
             this.model.attributes.start = Utils.getShortDate(this.model.attributes.start);
@@ -206,7 +204,7 @@ $(function () {
         },
         cancelRequest:  function() {
             this.model.destroy();
-           // TODO:feedback on error
+           // TODO:feedback on error?
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
@@ -224,7 +222,6 @@ $(function () {
             this.listenTo(this.collection, 'add', this.addOne);
             this.listenTo(this.collection, 'reset', this.addAll);
             this.collection.fetch({reset: true, error: this.onerror});
-            //this.u_id = id;
         },
         addOne: function (war) {
             war.view = new WarsView.WarRequestView({model: war});
@@ -272,9 +269,8 @@ $(function () {
         render: function () {
             this.model.attributes.wartime_start = Utils.getTime(this.model.attributes.wartime_start);
             this.model.attributes.wartime_end = Utils.getTime(this.model.attributes.wartime_end);
-            //TODO:js sets+3 to time
-            //this.model.attributes.start = new Date(this.model.attributes.start);
-            //this.model.attributes.end = new Date(this.model.attributes.end);
+            this.model.attributes.start = moment(this.model.attributes.start).format("ddd, MMM Do YYYY, h:mm Z");
+            this.model.attributes.end = moment(this.model.attributes.end).format("ddd, MMM Do YYYY, h:mm Z");
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         }

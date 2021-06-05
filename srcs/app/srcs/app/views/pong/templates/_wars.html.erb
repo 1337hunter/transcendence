@@ -31,12 +31,11 @@
         <%%=`<a class="link-light" href="#/guilds/${guild1_id}">`%><%%= g1_name %></a>
       </div>
       <div class="col-1"><%%= stake %></div>
-      <div class="col-1"><% %></div>
+      <div class="col-1"><%%= start %></div>
       <div class="col-1"><%%= end %></div>
-      <div class="col-3"><%%= wartime_start %> &nbsp;-&nbsp; <%%= wartime_end %></div>
-      <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
       <div class="col-1"> <button type="button" class="btn btn-success options-button" id="accept-button">accept</button></div>
       <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></div>
+      <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
     </div>
   </script>
 
@@ -48,9 +47,8 @@
     <div class="col-1"><%%= stake %></div>
     <div class="col-1"><%%= start %></div>
     <div class="col-1"><%%= end %></div>
-    <div class="col-3"><%%= wartime_start %> &nbsp;-&nbsp; <%%= wartime_end %></div>
-    <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
     <div class="col-2"> <button type="button" class="btn btn-danger options-button" id="cancel-button">cancel request</button></div>
+    <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="more-button">more info</button></div>
   </div>
 </script>
 
@@ -62,7 +60,6 @@
       <div class="col-1">Stake</div>
       <div class="col-1">Start</div>
       <div class="col-1">End</div>
-      <div class="col-3">Wartime</div>
     </div>
 </script>
 
@@ -114,5 +111,13 @@
     <%%=duel ?  '<li class="w"><i class="material-icons">done</i>duels</li>' : ''%>
     <%%=ladder ?  '<li class="w"><i class="material-icons">done</i>ladder</li>' : ''%>
     <%%=tournament ?  '<li class="w"><i class="material-icons">done</i>tournaments</li>' : ''%>
+    <%%=!duel && !ladder && !tournament ? '' : 'style="display:none"'%><li class="w"><i class="material-icons">close</i>none</li>
   </ul>
+  <!--
+%if current_user.guild_id ==%> <%%=guild2_id%>
+<div class="col-1" <%%=accepted ? 'style="display:none"' : '' %>> <button type="button" class="btn btn-success options-button" id="accept-button">accept</button></div>
+<div class="col-1" <%%=accepted ? 'style="display:none"' : '' %>> <button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></div>
+else
+<div class="col-2" <%%=accepted ? 'style="display:none"' : '' %>> <button type="button" class="btn btn-danger options-button" id="cancel-button">cancel request</button></div>
+  %end%-->
 </script>
