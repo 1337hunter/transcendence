@@ -1,8 +1,6 @@
 class Api::RoomMembersController < ApplicationController
     skip_before_action :verify_authenticity_token
-
-    def index
-    end
+    before_action :authenticate_user!
 
     def update
     end
@@ -14,6 +12,7 @@ class Api::RoomMembersController < ApplicationController
             @block.time = params[:time]
             @block.room_id = params[:room_id]
             @block.save
+            render json: [], status: :ok
         end
     end
 

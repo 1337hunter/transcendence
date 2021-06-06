@@ -30,7 +30,7 @@ $(function () {
 		block_user: function () {
 			let dname = this.model.get("displayname");
 			var BlockTime = prompt("Are you sure you want to block " + dname + "?\nEnter time in minutes:", "");
-			if (isNaN(BlockTime) || BlockTime.length == 0)
+			if (isNaN(BlockTime) || BlockTime == null || BlockTime.length == 0)
 			{
 				Utils.appAlert('danger', {msg: 'Time must be integer'});
 				return this;
@@ -40,14 +40,26 @@ $(function () {
 				room_id: this.model.get("room_id"),
 				time: BlockTime
 			})
-			BlockToRoom.save();
-
+			BlockToRoom.save(null, {
+				success: function () {
+					Utils.appAlert('success', {msg: 'User ' + dname + ' is banned for ' + BlockTime});
+				}
+			});
 		},
 		make_adm: function () {
 			let dname = this.model.get("displayname");
-			if (!confirm('Are you sure you want make ' + dname + "chat administrator?")) {
+			if (!confirm('Are you sure you want make ' + dname + " chat administrator?")) {
 				return this;
 			}
+			var admin = new RoomMembers.Admin({
+				id: this.model.get("room_id"),
+				user_id: this.model.get("user_id")
+			})
+			admin.save(null, {
+				success: function () {
+					Utils.appAlert('success', {msg: 'User ' + dname + ' is administrator of this chat now'});
+				}
+			});
 		},
 		render: function() {
             this.$el.html(this.template(this.model.toJSON()));
@@ -63,11 +75,23 @@ $(function () {
 			this.cable = SubToChannel.join(id);
 			this.listenTo(this.collection, 'add', this.addOne);
 			this.collection = new Messages.MessageCollection(null, {id: this.room_id});
+			this.admin_model = new RoomMembers.Admin({id: this.room_id})
 			this.room_model = new Rooms.RoomId({id: this.room_id});
+			this.admin = false;
+			var $this = this;
+			this.admin_model.fetch({
+				success: function () {
+					$this.admin = $this.admin_model.attributes.admin
+				}
+			});
 			this.current_user_id = MainSPA.SPA.router.currentuser.get('id');
         },
 		events: {
 			"keypress #chat-input" : "send_msg",
+			"click #change_password" : "click_password",
+			'blur #new_password_input' : 'hide_password_input',
+			"keypress #new_password_input" : "grab_password",
+
 		},
         render: function () {
 			var $this = this;
@@ -76,28 +100,31 @@ $(function () {
 					_.defer(function() {
 						$this.$('#chat-input').focus();
 				  	});
-					$this.$el.html($this.template($this.room_model.toJSON()[0]));
+					$this.$el.html($this.template($this.room_model.toJSON()));
 					$this.collection.fetch({
 						success: function() {
 							$this.addAll();
 						}
 					})
-					$this.$("#room-name").html("#" + $this.room_model.attributes[0].name)
+					$this.$("#room-name").html("#" + $this.room_model.attributes.name)
 				}
 			});
 			return this;
 		},
 		addOne: function (msg) {
-			if (this.current_user_id == this.room_model.attributes[0].owner_id && this.current_user_id != msg.attributes.user_id)
-				msg.set("display_block", true)
-			else
-				msg.set("display_block", false)
+			if (this.current_user_id == this.room_model.attributes.owner_id && this.current_user_id != msg.attributes.user_id)
+				this.admin = true
+			msg.set("admin", this.admin)
 			msg.view = new MessagesView.MessageView({model: msg});
 			this.$("#messages").append(msg.view.render().el);
 			$("#messages").scrollTop($("#messages")[0].scrollHeight);
 		},
 		addAll: function () {
 			this.collection.each(this.addOne, this);
+		},
+		hide_password_input: function (e) {
+			$("#new_password_input").val('')
+			$("#new_password_input").css("display", "none")
 		},
 		send_msg: function (e) {
 			if (e.keyCode !== 13) return;
@@ -112,13 +139,13 @@ $(function () {
 						content: $('#chat-input').val().trim(), 
 						room_id: $this.room_id,
 						user_id: current_user.get("id"),
-						owner_id: $this.room_model.attributes[0].owner_id
+						owner_id: $this.room_model.attributes.owner_id
 					}, {patch: true}
 					);
-					if ($this.room_model.attributes[0].private === true)
+					if ($this.room_model.attributes.private === true)
 						mes.set({displayname: "anonimous"});
 					else
-						mes.set({displayname: current_user.get("displayname")});
+						mes.set({disgrab_passwordplayname: current_user.get("displayname")});
 					mes.set({avatar: current_user.get("avatar_url")});
 					var	mes_view = new MessagesView.MessageView({model: mes});
 					$("#messages").scrollTop($("#messages")[0].scrollHeight);
@@ -126,6 +153,29 @@ $(function () {
 				}
 			}
 			);
+		},
+		click_password: function () {
+			$("#new_password_input").val('')
+			if ($("#new_password_input").css("display") == 'none')
+			{
+				$("#new_password_input").css("display", "block");
+				this.$('#new_password_input').focus();
+			}
+		},
+		grab_password: function (e) {
+			if (e.keyCode !== 13) return;
+			$("#new_password_input").css("display", "none");
+			var password = $('#new_password_input').val().trim()
+			var PassModel = new Rooms.RoomPassword({
+				id: this.room_id,
+				password: password
+			})
+			PassModel.save(null, {
+				type: 'POST',
+				success: function () {
+					Utils.appAlert('success', {msg: 'Password has been changed'});
+				}
+			});
 		}
 	});
 

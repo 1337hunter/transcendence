@@ -6,9 +6,7 @@
     <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
          width="30px" height="30px" src="<%%= avatar_url %>">
   </td>
-<!--  <td><label><%%= id %></label></td>-->
   <td class="users-displayname"><label><%%= displayname %></label></td>
-<!--  <td><label><%%= email %></label></td>-->
   <td><label><%%= wins %></label></td>
   <td><label><%%= loses %></label></td>
   <td><label><%%= elo %></label></td>
@@ -29,11 +27,11 @@
     <div class="cancel-invite-button">
       Cancel
     </div>
-  <td width="10%"><button class="btn btn-outline-success btn-profile-actions" <%%= (status == 1) && first_player_id != main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
-    <div class="accept-match-button">
-      Accept
-    </div>
-  </button></td>
+  <td width="10%">
+    <button class="btn btn-outline-success btn-profile-actions" <%%= (status == 1) && first_player_id != main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+      <div class="accept-match-button">Accepts</div>
+    </button>
+  </td>
   <td width="8%">
   <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == 1) && first_player_id != main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
     <div class="decline-match-button">
@@ -59,25 +57,28 @@
       </div>
     </button>
   </td>
-  <td><button class="btn btn-outline-success btn-profile-actions" <%%= (status == "no" && current_user_id == main_id) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
-  <div class="accept-friend-button">
-    Accept Friend
-  </div>
-</button></td>
+  <td>
+    <button class="btn btn-outline-success btn-profile-actions" <%%= (status == "no" && current_user_id == main_id) ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
+      <div class="accept-friend-button">
+        Accept Friend
+      </div>
+    </button>
+  </td>
 </script>
 
-
 <script type="text/template" id="users-template">
-  <h1>Users <button type="button" class="button-sm button-refresh" id="refresh-button">
-    <%= show_svg('refresh.svg') %></button></h1>
+  <h1>Ladder <button type="button" class="button-sm button-refresh" id="refresh-button">
+    <%= show_svg('refresh.svg') %></button>
+    <button class="btn btn-outline-primary">
+      Start matchmaking
+    </button>
+  </h1>
   <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
     <tr><th></th><th></th>
-<!--  <th>Id</th>-->
       <th class="users-displayname">Display name</th>
-<!--  <th>Email</th>-->
       <th>Wins</th>
       <th>Loses</th>
-      <th>Elo</th>
+      <th>Rating</th>
       <th>Intra nickname</th></tr>
   </table>
 </script>
