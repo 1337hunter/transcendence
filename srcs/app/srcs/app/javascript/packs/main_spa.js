@@ -40,8 +40,7 @@ let AppRouter = Backbone.Router.extend({
     },
     pong: function (id) {
         this.main.view = new PongView.View(id);
-        this.main.el.html(this.main.view.render().el);
-        pong_game(this.main.view);
+        this.main.el.html(this.main.view.el);
     },
     settings: function () {
         this.main.view = new SettingsView.View();

@@ -1,4 +1,5 @@
 import PongView from "./views/pong"
+import MainSPA from "./main_spa";
 export default function pong_game(view) {
     var canvas = document.getElementById("pongCanvas");
     var ctx = canvas.getContext("2d");
@@ -31,7 +32,18 @@ export default function pong_game(view) {
     var gameID
     var startTime = 3000
     var loopID
-
+    var is_player_left = 0;
+    var is_player_right = 0;
+    var is_spectator = 0;
+    if (MainSPA.SPA.router.currentuser.get('id') == view.first_player_id) {
+        is_player_left = 1;
+    }
+    else if (MainSPA.SPA.router.currentuser.get('id') == view.second_player_id) {
+        is_player_right = 1;
+    }
+    else {
+        is_spectator = 1;
+    }
     const  delay = (callback, wait = 1000) => {
         setTimeout(callback, wait)
     }
@@ -77,12 +89,14 @@ export default function pong_game(view) {
         }
     }
 
-
-    document.addEventListener("keydown", rightDownHandler, false);
-    document.addEventListener("keyup", rightUpHandler, false);
-    document.addEventListener("keydown", leftDownHandler, false);
-    document.addEventListener("keyup", leftUpHandler, false);
-
+    if (is_player_right == 1) {
+        document.addEventListener("keydown", rightDownHandler, false);
+        document.addEventListener("keyup", rightUpHandler, false);
+    }
+    if (is_player_left == 1) {
+        document.addEventListener("keydown", leftDownHandler, false);
+        document.addEventListener("keyup", leftUpHandler, false);
+    }
     function drawPixel() {
         ctx.beginPath();
         ctx.rect(leftPadX, leftPadY, 5, 5);
@@ -109,7 +123,7 @@ export default function pong_game(view) {
 
     function drawBall() {
         ctx.beginPath();
-        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+        ctx.arc(view.getBallX(), view.getBallY(), ballRadius, 0, Math.PI*2);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -447,6 +461,8 @@ export default function pong_game(view) {
         drawRightPad()
         x += dx;
         y += dy;
+        if (is_player_left) 
+            view.broadcastBall({x: x, y: y});
     }
 
     function start()

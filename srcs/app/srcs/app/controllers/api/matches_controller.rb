@@ -9,6 +9,9 @@ class Api::MatchesController < ApplicationController
 
     def show
         puts "show action"
+        puts "%%%%%%%%%%%"
+        @match = Match.find(params[:id])
+        render json: @match, status: :ok
     end
 
     def update

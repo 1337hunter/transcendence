@@ -3,10 +3,10 @@ import MainSPA from "../packs/main_spa";
 
 var obtainedValues = 
 {
-	rigthPadX: 1,
 	rightPadY: 1,
-	leftPadX: 1,
-	leftPadY: 1
+	leftPadY: 1,
+    ballx: 1,
+    bally: 1,
 }
 
 var GameRoomInit = 
@@ -35,6 +35,12 @@ var GameRoomInit =
                     obtainedValues.rightPadY = data.right;
                 if (data.left)
                     obtainedValues.leftPadY = data.left;
+                if (data.ball)
+                {
+                    obtainedValues.ballx = data.ball.x;
+                    obtainedValues.bally = data.ball.y;
+                }
+
             //    console.log(data);
             //    obtainedValues.rightPadX = data.x1;
             //    obtainedValues.rightPadY = data.y1;
