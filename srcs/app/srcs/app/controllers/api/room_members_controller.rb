@@ -1,8 +1,6 @@
 class Api::RoomMembersController < ApplicationController
     skip_before_action :verify_authenticity_token
-
-    def index
-    end
+    before_action :authenticate_user!
 
     def update
     end

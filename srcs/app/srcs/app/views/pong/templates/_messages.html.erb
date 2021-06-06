@@ -4,10 +4,10 @@
         <tr style="vertical-align:top;"><th><img class="user_icon" width="35px" height="35px" src="<%%= avatar %>" style="margin-bottom: 10px"></th>
           <th id="user-name"><%%= displayname %>:</th>
           <th id="message-content"> <%%= content %> </th>
-          <th <%%= display_block ? '' : 'style="display:none"' %>>
+          <th <%%= admin ? '' : 'style="display:none"' %>>
             <div id="make_adm">⠀ADM</div>
           </th>
-          <th <%%= display_block ? '' : 'style="display:none"' %>>
+          <th <%%= admin ? '' : 'style="display:none"' %>>
             <div style="width: 7%; float:left;" id="block_user_room"><%= show_svg('block.svg') %></div></div>
           </th>
         </tr>
@@ -16,10 +16,17 @@
 </script>
 
 <script type="text/template" id="messages-template">
-    <h1 id="room-name"></h1><br>
+    <table>
+      <t><h1 id="room-name"></h1></t>
+      <td> <div id="change_password" <%%= admin ? '' : 'style="display:none"' %>> Change password⠀⠀</td>
+      <td>
+        <input id="new_password_input" type="password" class="form-control" style="display:none" autocomplete="off"\>
+      </td>
+    </table>
+    <br>
     <div id="messages">
     </div>
     <div id="div-chat-input">
-        <input type="text" class="form-control" id="chat-input" autocomplete="off"\>
+        <input id="chat-input" type="text" class="form-control" autocomplete="off"\>
     </div>
 </script>

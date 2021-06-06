@@ -28,6 +28,7 @@ class Api::MessagesController < ApplicationController
     end
 
     def show
+        @admin = RoomAdmin.where(room_id: params[:id], user_id: current_user.id)
         @messages = Message.where(room_id: params[:id]).
           includes(:user).
           joins(:user).
@@ -36,7 +37,7 @@ class Api::MessagesController < ApplicationController
                    User.arel_table[:displayname],
                    User.arel_table[:avatar_url].as("avatar"),
                    User.arel_table[:avatar_default_url]
-                 ])
+                 ]).as_json
         render json: @messages
     end
 

@@ -57,7 +57,8 @@ $(function () {
 			'click .direct_room_click'	: 'direct_room_click',
 			"keypress" 					: "check_keypress_event",
 			'click #new_chat'			: "click_new_chat_btn",
-			'click #new_message'		: "click_new_message_btn"
+			'click #new_message'		: "click_new_message_btn",
+			"blur .form-control"		: 'HideAll'
 		},
 		render: function () {
 			this.$el.html(this.template());
@@ -87,6 +88,15 @@ $(function () {
 			if (this.rooms.length > 0)
 				this.rooms.each(this.addOne, this);
         },
+		HideOne: function (room) {
+			$("#input-room-password_" + room.attributes.id).css("display", "none");
+			$("#input-room-password_" + room.attributes.id).val('');
+		},
+		HideAll: function () {
+			this.rooms.each(this.HideOne)
+			$(".new-chat-input").css("display", "none")
+			$("#new_message_input").css("display", "none")
+		},
 		room_click: function (e) {
 			let regex =  /\d+/;
 			let room_id = String(e.currentTarget)

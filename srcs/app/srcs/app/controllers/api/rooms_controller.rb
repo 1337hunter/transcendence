@@ -15,24 +15,35 @@ class Api::RoomsController < ApplicationController
         @rooms = Room.where.not(id: @block_array)
         render json: @rooms
     end
-
+    #change password
     def create
+        @room = Room.find(params[:id])
+        @room.update(password: params[:password], password_present: params[:password] == "" ? false : true)
+        render json: @room, status: :ok
     end
 
     def show
-        @room = Room.where(id: params[:id])
+        @room = Room.where(id: params[:id]).first.as_json
+        if RoomAdmin.where(room_id: params[:id], user_id: current_user.id).blank?
+            @room[:admin] = false
+        else
+            @room[:admin] = true
+        end
+        if @room["owner_id"] == current_user.id
+            @room[:admin] = true
+        end
         render json: @room, status: :ok
     end
 
     def update
-        if (params.has_key?(:verify_password))
+        if (params.has_key?(:verify_password)) #check password
             @room = Room.find(params[:id])
             if @room.present? && @room.authenticate(params[:password])
                 render json: @room, status: :ok
             else
                 render json: {error: "Wrong password", status: 400},  status: 400
             end
-        else
+        else #save new room
             @room = Room.new
             if (params.has_key?(:name))
                 @room.name = params[:name]

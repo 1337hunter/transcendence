@@ -17,6 +17,23 @@ Rooms.RoomId = Backbone.Model.extend({
     }
 });
 
+Rooms.Admin = Backbone.Model.extend({
+    initialize: function(options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/rooms/' + this.id;
+    }
+});
+
+Rooms.RoomPassword = Backbone.Model.extend({
+    initialize: function(options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/rooms/' + this.id;
+    }
+});
 
 Rooms.RoomCollection = Backbone.Collection.extend({
     model:      Rooms.RoomModel,
