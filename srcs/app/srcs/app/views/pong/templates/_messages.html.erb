@@ -24,7 +24,7 @@
       </td>
     </table>
     <br>
-    <div id="messages">
+    <div id="messages" <%%= admin ? 'class="messages_admin"' : 'class="messages_user"'%> >
     </div>
     <div id="div-chat-input">
         <input id="chat-input" type="text" class="form-control" autocomplete="off"\>

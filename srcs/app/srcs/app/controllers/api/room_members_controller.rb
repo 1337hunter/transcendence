@@ -12,6 +12,7 @@ class Api::RoomMembersController < ApplicationController
             @block.time = params[:time]
             @block.room_id = params[:room_id]
             @block.save
+            render json: [], status: :ok
         end
     end
 

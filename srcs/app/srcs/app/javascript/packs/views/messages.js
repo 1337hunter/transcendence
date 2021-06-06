@@ -40,7 +40,11 @@ $(function () {
 				room_id: this.model.get("room_id"),
 				time: BlockTime
 			})
-			BlockToRoom.save();
+			BlockToRoom.save(null, {
+				success: function () {
+					Utils.appAlert('success', {msg: 'User ' + dname + ' is banned for ' + BlockTime});
+				}
+			});
 		},
 		make_adm: function () {
 			let dname = this.model.get("displayname");
@@ -51,7 +55,11 @@ $(function () {
 				id: this.model.get("room_id"),
 				user_id: this.model.get("user_id")
 			})
-			admin.save();
+			admin.save(null, {
+				success: function () {
+					Utils.appAlert('success', {msg: 'User ' + dname + ' is administrator of this chat now'});
+				}
+			});
 		},
 		render: function() {
             this.$el.html(this.template(this.model.toJSON()));
@@ -92,7 +100,6 @@ $(function () {
 					_.defer(function() {
 						$this.$('#chat-input').focus();
 				  	});
-					console.log($this.room_model)
 					$this.$el.html($this.template($this.room_model.toJSON()));
 					$this.collection.fetch({
 						success: function() {
@@ -115,7 +122,7 @@ $(function () {
 		addAll: function () {
 			this.collection.each(this.addOne, this);
 		},
-		hide_password_input: function () {
+		hide_password_input: function (e) {
 			$("#new_password_input").val('')
 			$("#new_password_input").css("display", "none")
 		},
@@ -154,8 +161,6 @@ $(function () {
 				$("#new_password_input").css("display", "block");
 				this.$('#new_password_input').focus();
 			}
-			else
-				$("#new_password_input").css("display", "none");
 		},
 		grab_password: function (e) {
 			if (e.keyCode !== 13) return;

@@ -17,7 +17,9 @@ class Api::RoomAdminsController < ApplicationController
     end
 
     def update
-        RoomAdmin.create(room_id: params[:id], user_id: params[:user_id])
+        if RoomAdmin.where(room_id: params[:id], user_id: params[:user_id]).blank?
+            RoomAdmin.create(room_id: params[:id], user_id: params[:user_id])
+        end
         render json: [], status: :ok
     end
 
