@@ -31,10 +31,19 @@ button#admin-bans-tab.nav-link.active {
   color: black;
 }
 
+table#chats-table {
+  border: 5px transparent;
+}
+
 table#chats-table th, table#chats-table tr {
   text-align: center;
   vertical-align: middle;
   padding: 10px;
+}
+
+#admin-table td {
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
 }
 
 table #chats-table .chat-access-icon svg {
