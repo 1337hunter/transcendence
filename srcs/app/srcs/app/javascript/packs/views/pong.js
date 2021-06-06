@@ -24,37 +24,15 @@ $(function () {
 				success: function () {
 					$this.first_player_id = $this.model.attributes.first_player_id;
 					$this.second_player_id = $this.model.attributes.second_player_id;
-					console.log($this.model);
-					console.log($this.first_player_id);
-					console.log("!!!!!!");
 					$this.render();
 				}
 			});
-			console.log(this.cable);
-		//	this.cable.send({hi: "YE BOI"});
-		//	this.room = GameRoomInit;
-		//	this.cable = this.room.createGameRoom();
-		//	this.cable.send({str: "test"});
 		},
-	/*	get_first_player_id: function () {
-			return this.model.attributes.first_player_id;
-		},
-		get_second_player_id: function () {
-			return this.model.attributes._player_id;
-		},
-	*/
+
 		render: function () {
 			this.$el.html(this.template());
 			pong_game(this);
 			return this;
-		},
-		broadcastData: function (x1, y1, x2, y2)
-		{
-			this.cable.send({x1, y1, x2, y2});
-		},
-		broadcastAll: function (right, left)
-		{
-			this.cable.send({right: right, left: left});
 		},
 		broadcastRight: function (right)
 		{
@@ -68,17 +46,13 @@ $(function () {
 		{
 			this.cable.send({ball: pos})
 		},
-		getRightPadX: function ()
+		getLeftPadY: function ()
 		{
-			return (obtainedValues.rightPadX);
+			return (obtainedValues.leftPadY);
 		},
 		getRightPadY: function ()
 		{
 			return (obtainedValues.rightPadY);
-		},
-		getLeftPadX: function ()
-		{
-			return (obtainedValues.leftPadX);
 		},
 		getBallX: function ()
 		{
@@ -88,9 +62,18 @@ $(function () {
 		{
 			return (obtainedValues.bally);
 		},
-		getLeftPadY: function ()
+		finishGame: function (winner_id)
 		{
-			return (obtainedValues.leftPadY);
+			let $this = this;
+			this.model.save({status: 3, winner: winner_id});
+			consumer.subscriptions.subscriptions.forEach((subscription) => {
+				let found = subscription.identifier.search("{\"channel\":\"GameRoomChannel\",\"match_id\":" + $this.model.attributes.id + "}")
+				if (found != -1)
+				{
+					console.log("match_id: ", $this.model.attributes.id);
+				  consumer.subscriptions.remove(subscription)
+				}
+			})
 		},
 	});
 });

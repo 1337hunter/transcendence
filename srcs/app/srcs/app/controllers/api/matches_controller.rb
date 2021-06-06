@@ -8,8 +8,6 @@ class Api::MatchesController < ApplicationController
     end
 
     def show
-        puts "show action"
-        puts "%%%%%%%%%%%"
         @match = Match.find(params[:id])
         render json: @match, status: :ok
     end
@@ -18,6 +16,9 @@ class Api::MatchesController < ApplicationController
         @match = Match.find(params[:id])
         if (params.has_key?(:status))
             @match.update(status: params[:status])
+        end
+        if (params.has_key?(:winner))
+            @match.update(winner: params[:winner])
         end
         render json: [], status: :ok
     end

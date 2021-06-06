@@ -22,6 +22,8 @@
       width="30px" height="30px" src="<%%= avatar_url %>">
   </td>
   <td width="60%" class="users-displayname"><label><%%= displayname %></label></td>
+  <td <%%= (status == 3 && winner != main_id) ? '' : 'style="display:none"' %> ><p style="color:green"> won </p></td>
+  <td <%%= (status == 3 && winner == main_id) ? '' : 'style="display:none"' %> ><p style="color:red"> lost </p></td>
   <td width="8%">
   <button class="btn btn-outline-danger btn-profile-actions" <%%= (status == 1) && first_player_id == main_id ? '' : 'style="display:none"' %> <%%= banned ? 'disabled' : '' %>>
     <div class="cancel-invite-button">

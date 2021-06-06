@@ -148,6 +148,10 @@ export default function pong_game(view) {
         if (leftScore >= MAX_SCORE || rightScore >= MAX_SCORE)
         {
             clearInterval(loopID) // the main loop breaks here
+            if (leftScore >= MAX_SCORE)
+                view.finishGame(view.first_player_id);
+            if (rightScore >= MAX_SCORE)
+                view.finishGame(view.second_player_id);
             gameID = setInterval(drawGame, 10)
         }
         if (ball_throw === 2)
@@ -491,4 +495,5 @@ export default function pong_game(view) {
     }
     //here the 'start' loop starts. the  main loop starts inside
     var startID = setInterval(start, 10);
+
 }
