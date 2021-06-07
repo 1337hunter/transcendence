@@ -59,7 +59,7 @@ $(function () {
         },
         addOne: function (tournament) {
             tournament.view = new TournamentsView.SingleTournamentView({model: tournament});
-            this.$("#users-table").append(tournament.view.render().el);
+            this.$("#tournaments-table").append(tournament.view.render().el);
         },
         addAll: function () {
             this.collection.each(this.addOne, this);

@@ -1,8 +1,10 @@
 <script type="text/template" id="singletournament-template">
-  <td><label>Tournament #<%%= id %></label></td>
-  <td><label><%%= users.length %></label></td>
+  <td style="text-align: left">
+    <label>Tournament #<%%= id %></label>
+  </td>
   <td><label><%%= status %></label></td>
-  <td><label>Actions</label></td>
+  <td><label><%%= new Date(start_date).toLocaleString() %></label></td>
+  <td><label><%%= users.length %></label></td>
 </script>
 
 <script type="text/template" id="tournaments-template">
@@ -11,12 +13,12 @@
       <%= show_svg('refresh.svg') %>
     </button>
   </h1>
-  <table id="users-table" border-spacing="20px" padding="0 2em 1em 0">
+  <table id="tournaments-table" border-spacing="20px" padding="0 2em 1em 0">
     <tr>
-      <th>Tournament</th>
-      <th>Users registred</th>
+      <th style="text-align: left">Tournament</th>
       <th>Status</th>
-      <th>Actions</th>
+      <th>Starts</th>
+      <th>Registred</th>
     </tr>
   </table>
 </script>
