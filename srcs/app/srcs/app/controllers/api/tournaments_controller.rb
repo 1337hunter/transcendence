@@ -13,7 +13,7 @@ class Api::TournamentsController < ApplicationController
   end
 
   def show
-    render json: @tournament
+    render json: @tournament.as_json(include: {users: {only: @filters}})
   end
 
   def update

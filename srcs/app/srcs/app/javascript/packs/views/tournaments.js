@@ -9,10 +9,18 @@ const TournamentsView = {};
 $(function () {
     TournamentsView.PageView = Backbone.View.extend({
         template: _.template($('#tournamentpage-template').html()),
+        events: {
+            "click #refresh-button" :   "refresh"
+        },
         initialize: function (id) {
             this.model = new Tournaments.ModelById({id: id})
             this.listenTo(this.model, 'change', this.render);
             this.model.fetch({error: this.onerror});
+        },
+        refresh: function () {
+            this.model.fetch({
+                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
+                error: this.onerror});
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);

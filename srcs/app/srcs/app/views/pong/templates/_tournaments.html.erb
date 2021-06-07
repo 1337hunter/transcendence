@@ -24,9 +24,16 @@
 </script>
 
 <script type="text/template" id="tournamentpage-template">
-  <h1>Tounament #<%%= id %>
+  <h1>
+    <button type="button" class="button-sm button-back" id="back-button" onclick="window.history.back();">
+      <%= show_svg('arrow-left.svg') %>
+    </button>
+    Tounament #<%%= id %>
     <button type="button" class="button-sm button-refresh" id="refresh-button">
       <%= show_svg('refresh.svg') %>
     </button>
   </h1>
+  <p>Starts: <%%= new Date(start_date).toLocaleString() %></p>
+  <p>Status: <%%= status %></p>
+  <p>Registred: <%%= users.length %></p>
 </script>

@@ -72,9 +72,8 @@ let AppRouter = Backbone.Router.extend({
         this.main.el.html(this.main.view.render().el);
     },
     tournamentpage: function (id) {
-        this.tournaments();
-        // this.main.view = new TournamentsView.View(id);
-        // this.main.el.html(this.main.view.el);
+        this.main.view = new TournamentsView.PageView(id);
+        this.main.el.html(this.main.view.el);
     }
 });
 
