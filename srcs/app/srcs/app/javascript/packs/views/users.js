@@ -9,6 +9,7 @@ import Rooms from "../models/rooms"
 // game stuff
 import GameRoomInit from "../../channels/game_room_channel";
 import {obtainedValues} from "../../channels/game_room_channel";
+import AdminView from "./admin";
 
 const UsersView = {};
 
@@ -541,6 +542,42 @@ $(function () {
         }
     });
 
+    UsersView.ToMasterConfirmView = Backbone.View.extend({
+        template: _.template($('#to-master-modal-confirm-template').html()),
+        events: {
+            "click .btn-confirm"    : "confirm",
+            "click .btn-cancel"     : "close",
+            "click .modal"          : "clickOutside"
+        },
+        confirm: function () {
+            Utils.change_user_guildrole(this,`guild_master=${true}`);
+            this.close();
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            $('body.modal-open').off('keydown', this.keylisten);
+            $('body').removeClass("modal-open");
+            let view = this;
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        keylisten: function (e) {
+            if (e.key === "Enter")
+                e.data.view.confirm();
+            if (e.key === "Escape")
+                e.data.view.close();
+        },
+        render: function(model) {
+            this.model = model;
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
+            return this;
+        }
+    });
+
     UsersView.GuildMemberView = Backbone.View.extend({
         template1: _.template($('#guildmember-template').html()),
         template2: _.template($('#guildmember-kick-template').html()),
@@ -549,7 +586,7 @@ $(function () {
         events: {
             "click #displayname" : "openprofile",
             "click #to-officer-button" : "toOfficer",
-            "click #to-master-button" : "toMaster",
+            "click #to-master-button" : "openConfirm",
             "click #demote-button" : "demote",
             "click #kick-button" : "kick"
         },
@@ -584,34 +621,15 @@ $(function () {
             });
             return this;
         },
-        update: function (data) {
-            $.ajax({
-                url: 'api/users/' + this.model.get('id') + '/join_guild',
-                type: 'PUT',
-                data: data,
-                success: () => {
-                    Utils.appAlert('success', {msg: this.model.get('displayname') + '\'s role changed'});
-                    let view = this;
-                    this.model.fetch({
-                        success: function () {
-                            view.render();
-                        }
-                    });
-                    },
-                error: (response) => {
-                    Utils.alertOnAjaxError(response);
-                }
-            });
+        openConfirm: function () {
+            this.confirmview = new UsersView.ToMasterConfirmView();
+            document.body.appendChild(this.confirmview.render(this.model).el);
         },
         demote: function () {
-            this.update(`guild_officer=${false}`);
+            Utils.change_user_guildrole(this,`guild_officer=${false}`);
         },
         toOfficer: function () {
-            this.update(`guild_officer=${true}`);
-        },
-        toMaster: function () {
-            this.update(`guild_master=${true}`);
-            //render previous master view
+            Utils.change_user_guildrole(this,`guild_officer=${true}`);
         },
         kick:  function() {
             $.ajax({

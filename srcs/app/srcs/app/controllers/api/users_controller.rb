@@ -43,24 +43,21 @@ class Api::UsersController < ApplicationController
   def add_to_guild
     if (guild_head_action && @user != current_user)
       if !@user.guild_id
-        @user.errors.add :base, 'No request found'
-        render json: @user.errors, status: :forbidden
+        render json: { error: 'No request found' }, status: :not_found
       else
-      @user.update(guild_user_params)
-        if (@user.guild_master == true)
-            @user.guild_officer = false
-            @user.save
-            current_user.guild_master = false
-            current_user.save
+        @user.update(guild_user_params)
+        if @user.guild_master == true
+          @user.guild_officer = false
+          @user.save
+          current_user.guild_master = false
+          current_user.save
         end
       end
-    elsif (@user == current_user && params[:guild_id] != nil)
-      if (!(@invitation = GuildInvitation.find_by_user_id_and_guild_id(@user.id, params[:guild_id])))
-        @user.errors.add :base, 'No invitation found'
-        render json: @user.errors, status: :forbidden
+    elsif @user == current_user && params[:guild_id] != nil
+      if !(@invitation = GuildInvitation.find_by_user_id_and_guild_id(@user.id, params[:guild_id]))
+        render json: { error: 'No invitation found' }, status: :not_found
       elsif @user.guild_accepted
-        @user.errors.add :base, 'You are in the guild already'
-        render json: @user.errors, status: :forbidden
+        render json: { error: 'You are in the guild already' }, status: :forbidden
       else
         @user.update(guild_id: params[:guild_id])
         @user.guild_accepted = true
@@ -68,24 +65,22 @@ class Api::UsersController < ApplicationController
         @invitation.destroy
       end
     else
-        @user.errors.add :base, 'No permission'
-        render json: @user.errors, status: :forbidden
+      render json: { error: 'No permission' }, status: :forbidden
     end
   end
 
   def remove_from_guild
     if (!@user.guild_id)
-      @user.errors.add :base, 'User has no guild or guild request'
-      render json: @user.errors, status: :forbidden
+      render json: { error: 'User has no guild or guild request' }, status: :forbidden
     elsif (current_user == @user || guild_head_action)
       if @user.guild_master == true
         @guild = Guild.find(@user.guild_id)
         if @guild.members.size = 1
           @user.errors.add :base, 'Not possible, delete the guild instead'
-          #redirect to guild profile
+          #TODO:redirect to guild profile
         else
           @user.errors.add :base, 'Promote other user to master before leaving the guild.'
-          #redirect to members list
+          #TODO:redirect to members list
         end
         render json: @user.errors, status: :forbidden
       else
@@ -99,8 +94,7 @@ class Api::UsersController < ApplicationController
         render json: @user, only: @filters, status: :ok
       end
     else
-      @user.errors.add :base, 'You have no permission'
-      render json: @user.errors, status: :forbidden
+      render json: { error: 'No permission' }, status: :forbidden
     end
   end
 
@@ -162,7 +156,7 @@ class Api::UsersController < ApplicationController
   end
 
   def user_not_found
-    render json: {error: 'User not found'}, status: :not_found
+    render json: { error: 'User not found' }, status: :not_found
   end
 
   def set_current_user

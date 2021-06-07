@@ -4,7 +4,7 @@ import Guilds from "../models/guilds";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
-import moment, { relativeTimeThreshold } from "moment";
+import WarsView from "./wars";
 
 const GuildsView = {};
 
@@ -23,7 +23,7 @@ $(function () {
             "click #accept-button": "accept",
             "click #decline-button": "decline",
             "click #leave-button": "leave",
-            "submit #war": "declareWar"
+            "click #war-button": "openDeclaration"
         },
         tagName: "div",
         initialize: function () {
@@ -141,52 +141,10 @@ $(function () {
             Utils.decline_guild_invite('current', this.model.get('id'), this.model.get('name') + '\'s request declined');
             this.render();
         },
-        declareWar:  function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            let tz = $('#timezone').val();
-            let start = $('#war-start').val().trim();
-            let end = $('#war-end').val().trim();
-            let wartime_start = $('#wartime-start').val().trim();
-            let wartime_end = $('#wartime-end').val().trim();
-            if (moment(end).diff(moment(start), 'hours') < 24) {
-                Utils.appAlert('danger', {msg: 'War duration must be not less then 24 hours'});
-                return
-            }
-            //TODO: ((Date.now() - Date(start)) > 120000))) (+check on accept)?
-            if (wartime_end.substring(0, 2) == wartime_start.substring(0, 2)) {
-                Utils.appAlert('danger', {msg: 'War time gap must be not less then 1 hour'});
-                return
-            }
-            let data = 'guild2_id='+ this.model.get('id');
-            data += '&stake=' + $('#stake').val().trim();
-            data += '&start=' + start + tz;
-            data += '&end=' + end + tz;
-            data += '&wartime_start=' + wartime_start + tz;
-            data += '&wartime_end=' + wartime_end + tz;
-            let max_unanswered = $('#max-unanswered').val().trim();
-            if (max_unanswered)
-                data += '&max_unanswered=' + max_unanswered;
-            let wait_time = $('#wait-time').val().trim();
-            if (wait_time)
-                data += '&wait_minutes=' + wait_time;
-            if($('#include-tournament').is(":checked"))
-                data += '&tournament=true';
-            if($('#include-ladder').is(":checked"))
-                data += '&ladder=true';
-            if($('#include-duel').is(":checked"))
-                data += '&duel=true';
-            $.ajax({
-                url: 'api/wars/',
-                type: 'POST',
-                data: data,
-                success: () => {
-                    Utils.appAlert('success', {msg: 'You declared war to the ' + this.model.get('name')});
-                },
-                error: (response) => {
-                    Utils.alertOnAjaxError(response);
-                }
-            });
+        openDeclaration: function () {
+            this.confirmview = new WarsView.DeclareWarView();
+            document.body.appendChild(this.confirmview.render(this.model).el);
+            this.confirmview.input.focus();
         }
     });
 

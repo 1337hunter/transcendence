@@ -1,9 +1,10 @@
 import Backbone from "backbone";
 import _ from "underscore";
-import Wars from "../models/wars";
-import Utils from "../helpers/utils";
-import MainSPA from "../main_spa";
 import moment, { relativeTimeThreshold } from "moment";
+import MainSPA from "../main_spa";
+import Wars from "../models/wars";
+import Users from "../models/users";
+import Utils from "../helpers/utils";
 
 const WarsView = {};
 
@@ -97,7 +98,6 @@ $(function () {
     });
 
     WarsView.WarInvitationView = Backbone.View.extend({
-        //cur_user: new Users.CurrentUserModel,
         template: _.template($('#war-invite-template').html()),
         events: {
             "click #accept-button": "accept",
@@ -159,6 +159,7 @@ $(function () {
             this.collection.fetch({reset: true, error: this.onerror});
         },
         addOne: function (war) {
+            war.attributes.winner = 'invite';
             war.view = new WarsView.WarInvitationView({model: war});
             this.el.append(war.view.render().el);
         },
@@ -180,37 +181,6 @@ $(function () {
         }
     });
 
-    WarsView.WarRequestView = Backbone.View.extend({
-        //cur_user: new Users.CurrentUserModel,
-        template: _.template($('#war-request-template').html()),
-        events: {
-            "click #cancel-button": "cancelRequest",
-            "click #more-button" :   "warProfile"
-        },
-        tagName: "div",
-        initialize: function () {
-            this.listenTo(this.model, 'change', this.render);
-            this.listenTo(this.model, 'destroy', this.remove);
-            this.listenTo(this.model, 'error', this.onerror);
-        },
-        render: function() {
-            this.model.attributes.start = Utils.getShortDate(this.model.attributes.start);
-            this.model.attributes.end = Utils.getShortDate(this.model.attributes.end)
-            this.$el.html(this.template(this.model.toJSON()));
-            return this;
-        },
-        warProfile: function () {
-            MainSPA.SPA.router.navigate("#/wars/" + this.model.get('id'));
-        },
-        cancelRequest:  function() {
-            this.model.destroy();
-           // TODO:feedback on error?
-        },
-        onerror: function (model, response) {
-            Utils.alertOnAjaxError(response);
-        }
-    });
-
     WarsView.WarRequestsView = Backbone.View.extend({
         template: _.template($('#war-invites-template').html()),
         events: {
@@ -224,7 +194,8 @@ $(function () {
             this.collection.fetch({reset: true, error: this.onerror});
         },
         addOne: function (war) {
-            war.view = new WarsView.WarRequestView({model: war});
+            war.attributes.winner = 'request';
+            war.view = new WarsView.WarInvitationView({model: war});
             this.el.append(war.view.render().el);
         },
         addAll: function () {
@@ -246,7 +217,7 @@ $(function () {
     });
 
     WarsView.ProfileView = Backbone.View.extend({
-        //cur_user : new Users.CurrentUserModel,
+        cur_user : new Users.CurrentUserModel,
         template: _.template($('#war-profile-template').html()),
         events: {
             "click #refresh-button" :   "refresh"
@@ -271,7 +242,103 @@ $(function () {
             this.model.attributes.wartime_end = Utils.getTime(this.model.attributes.wartime_end);
             this.model.attributes.start = moment(this.model.attributes.start).format("ddd, MMM Do YYYY, h:mm Z");
             this.model.attributes.end = moment(this.model.attributes.end).format("ddd, MMM Do YYYY, h:mm Z");
-            this.$el.html(this.template(this.model.toJSON()));
+            if  (!this.model.get('accepted')) {
+                let view = this;
+                 this.cur_user.fetch({
+                     success: function (model) {
+                         if (model.get('guild_master')) {
+                             let id = model.get('guild_id');
+                             if (id == view.model.get('guild1_id'))
+                                 view.model.attributes.winner = 'request';
+                             if (id == view.model.get('guild2_id'))
+                                 view.model.attributes.winner = 'invite';
+                             view.$el.html(view.template(view.model.toJSON()));
+                         }
+                     },
+                     error: this.onerror
+                 });
+            } else
+                this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        }
+    });
+
+    WarsView.DeclareWarView = Backbone.View.extend({
+        template: _.template($('#war-modal-template').html()),
+        events: {
+            "click .btn-close"     : "close",
+            //"click .modal"          : "clickOutside",
+            "submit #war-form"      : "declareWar"
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            $('body.modal-open').off('keydown', this.keylisten);
+            $('body').removeClass("modal-open");
+            let view = this;
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        keylisten: function (e) {
+            if (e.key === "Enter")
+                e.data.view.confirm();
+            if (e.key === "Escape")
+                e.data.view.close();
+        },
+        declareWar:  function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            let start = $('#war-start').val().trim();
+            let end = $('#war-end').val().trim();
+            if (moment(end).diff(moment(start), 'hours') < 24) {
+                Utils.appAlert('danger', {msg: 'War duration must be not less then 24 hours'});
+                return
+            }
+            //TODO: date and time format check; ((Date.now() - Date(start)) > 120000))) (+check on accept)?
+            let wartime_start = $('#wartime-start').val().trim();
+            let wartime_end = $('#wartime-end').val().trim();
+            if (wartime_end.substring(0, 2) == wartime_start.substring(0, 2)) {
+                Utils.appAlert('danger', {msg: 'War time gap must be not less then 1 hour'});
+                return
+            }
+            let tz = $('#timezone').val();
+            let data = 'guild2_id='+ this.model.get('id') +
+                '&stake=' + $('#stake').val().trim() +
+                '&start=' + start + tz +
+                '&end=' + end + tz +
+                '&wartime_start=' + wartime_start + tz +
+                '&wartime_end=' + wartime_end + tz;
+            let max_unanswered = $('#max-unanswered').val().trim();
+            if (max_unanswered)
+                data += '&max_unanswered=' + max_unanswered;
+            let wait_time = $('#wait-time').val().trim();
+            if (wait_time)
+                data += '&wait_minutes=' + wait_time;
+            if($('#include-tournament').is(":checked"))
+                data += '&tournament=true';
+            if($('#include-ladder').is(":checked"))
+                data += '&ladder=true';
+            if($('#include-duel').is(":checked"))
+                data += '&duel=true';
+            $.ajax({
+                url: 'api/wars/',
+                type: 'POST',
+                data: data,
+                success: () => {
+                    Utils.appAlert('success', {msg: 'You declared war to the ' + this.model.get('name')});
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
+        },
+        render: function(model) {
+            this.model = model;
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            this.input = this.$("input#stake");
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
             return this;
         }
     });

@@ -121,6 +121,28 @@ export default class Utils {
         return response ? true : false;
     }
 
+    static change_user_guildrole(view, data) {
+        $.ajax({
+            url: 'api/users/' + view.model.get('id')+ '/join_guild',
+            type: 'PUT',
+            data: data,
+            success: () => {
+                Utils.appAlert('success', {msg: view.model.get('displayname') + '\'s role changed'});
+                if (data != `guild_master=${true}`) {
+                    view.model.fetch({
+                        success: function () {
+                            view.render();
+                        }
+                    });
+                } else
+                    MainSPA.SPA.router.navigate("#/guilds/" + view.model.get('guild_id'));
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+
     /*static decline_war_invite(id, msg) {
         $.ajax({
             url: '/api/wars/' + id,

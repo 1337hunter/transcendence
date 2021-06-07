@@ -6,6 +6,7 @@ class Api::WarsController < ApplicationController
   before_action :find_guild, only: %i[index_war_requests index_war_invites]
   before_action :check_active_war, only: %i[create accept]
   before_action :check_guild_permissions, only: [:destroy]
+  before_action :define_filters, only: %i[index index_war_requests index_war_invites]
   rescue_from ActiveRecord::RecordNotFound, :with => :war_not_found
 
   def index
@@ -14,7 +15,7 @@ class Api::WarsController < ApplicationController
       @guild = Guild.find(params[:guild_id])
       wars = @guild.wars
     end
-    render json: wars
+    render json: wars, only: @filters, status: :ok
   end
 
   def show # show requests/invites profiles to all members, actions for master only
@@ -23,12 +24,12 @@ class Api::WarsController < ApplicationController
 
   def index_war_invites
     wars = @guild.war_invites
-    render json: wars
+    render json: wars, only: @filters, status: :ok
   end
 
   def index_war_requests
     wars = @guild.war_requests
-    render json: wars
+    render json: wars, only: @filters, status: :ok
   end
 
   def create
@@ -57,7 +58,7 @@ class Api::WarsController < ApplicationController
 
   def destroy
     if @war.accepted
-      render json: { error: "Accepted war request can't be cancelled" }, status: :forbidden
+      render json: { error: "Accepted war request can't be canceled" }, status: :forbidden
     else
       @war.destroy
     end
@@ -103,6 +104,7 @@ class Api::WarsController < ApplicationController
   def find_current_guild
     unless current_user.guild_id && current_user.guild_accepted
       render json: { error: 'You are not a guild member' }, status: :forbidden
+      return false
     end
     @guild_cur = current_user.guild
   end
@@ -128,17 +130,15 @@ class Api::WarsController < ApplicationController
   end
 
   def war_params
-    params.permit(:guild1_id, :guild2_id,
-                                :start,
-                                :end,
-                                :stake,
-                                :wartime_start,
-                                :wartime_end,
-                                :wait_minutes,
-                                :max_unanswered,
-                                :ladder,
-                                :tournament,
-                                :duel)
+    params.permit(:guild1_id, :guild2_id, :stake,
+                  :start, :end, :wartime_start, :wartime_end,
+                  :wait_minutes, :max_unanswered,
+                  :ladder, :tournament, :duel)
+  end
+  
+  def define_filters
+    @filters = %i[id guild1_id guild2_id g1_name g2_name stake
+                  start end finished accepted winner]
   end
 
 end
