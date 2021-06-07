@@ -266,9 +266,11 @@ $(function () {
     WarsView.DeclareWarView = Backbone.View.extend({
         template: _.template($('#war-modal-template').html()),
         events: {
+            "click .btn-confirm"    : "confirm",
+            "click .btn-cancel"     : "close",
             "click .btn-close"     : "close",
-            //"click .modal"          : "clickOutside",
-            "submit #war-form"      : "declareWar"
+            "click .modal"          : "clickOutside"
+            // "submit #war-form"      : "declareWar"
         },
         clickOutside: function (e) {
             if (e.target === e.currentTarget)
@@ -282,11 +284,11 @@ $(function () {
         },
         keylisten: function (e) {
             if (e.key === "Enter")
-                e.data.view.confirm();
+                e.data.view.declareWar();
             if (e.key === "Escape")
                 e.data.view.close();
         },
-        declareWar:  function(e) {
+        declareWar: function(e) {
             e.preventDefault();
             e.stopPropagation();
             let start = $('#war-start').val().trim();
@@ -342,7 +344,6 @@ $(function () {
             return this;
         }
     });
-
 });
 
 export default WarsView;
