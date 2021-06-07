@@ -116,8 +116,13 @@
     <div class="modal-dialog" style="border-radius: 8px; background: #282828">
       <div class="modal-content" style="background: #282828">
         <div class="modal-header" style="border: none; background: #282828">
-          <h5 class="modal-title">War declaration to the <%%= name %></h5>
-          <button type="button" class="btn-close btn-close-white" ></button>
+          <div style="  display: inline-block; width: 100%; box-sizing: border-box;">
+            <div style=" float: left; clear: right">
+              <h4 class="modal-title">War declaration </h4>
+              <h6>to the <%%= name %></h6>
+            </div>
+            <button style="float:right" type="button" class="btn-close btn-close-white" ></button>
+          </div>
         </div>
         <div class="modal-body">
           <div class="input-group input-group-sm mb-3" style="margin-bottom: 0!important;">
@@ -131,7 +136,7 @@
 
           <div class="input-group input-group-sm mb-3" style="margin-bottom: 0!important;">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="inputUnans">Max number of unanswered Calls per day:</span>
+              <span class="input-group-text" id="inputUnans">Max number of unanswered calls per day:</span>
             </div>
             <input id="max-unanswered"  type="number" class="form-control">
           </div>
@@ -206,13 +211,13 @@
             <option value=" %2B1400">(GMT +14:00) Line Islands, Tokelau</option>
           </select>
 
-          <ul class="options" style="margin-top: 50px">Include matches of types:
+          <ul class="options" style="margin-top: 20px">Include matches of types:
             <li class="w"> <input type="checkbox" id="include-tournament">&nbsp;Tournament</li>
             <li class="w"><input type="checkbox" id="include-duel">&nbsp;Duel</li>
             <li class="w"><input type="checkbox" id="include-ladder">&nbsp;Ladder</li>
           </ul>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer modal-confirm">
           <button class="btn btn-secondary btn-cancel">Cancel</button>
           <button class="btn btn-primary btn-confirm">Declare war</button>
         </div>
