@@ -57,7 +57,7 @@ class Api::AdminController < ApplicationController
     end
   end
 
-  # DELETE /api/admin/users/id.json
+  # DELETE /api/admin/chats/id.json
   def chat_destroy
     Message.where(:room_id => @room.id).destroy_all
     @room.destroy
