@@ -4,7 +4,6 @@ import moment, { relativeTimeThreshold } from "moment";
 import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
-import Messages from "../models/messages";
 import MessagesView from "./messages";
 import Rooms from "../models/rooms"
 // game stuff
@@ -30,15 +29,9 @@ $(function () {
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
-            this.model.attributes = this.model.previousAttributes();
-            this.render();
-        },
-        onsuccess: function () {
-            Utils.appAlert('success', {msg: 'Displayname has been changed'});
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
-            this.input = this.$('.displayname');
             let model = this.model;
             this.$('.user_icon').on("error",
                 function () { Utils.replaceAvatar(this, model); });
@@ -85,11 +78,6 @@ $(function () {
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
-            this.model.attributes = this.model.previousAttributes();
-            this.render();
-        },
-        onsuccess: function () {
-            Utils.appAlert('success', {msg: 'Changed'});
         },
         render: function() {
             if (this.model.attributes.status == "no" && this.model.attributes.main_id != this.model.attributes.current_user_id)
@@ -142,11 +130,6 @@ $(function () {
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
-            this.model.attributes = this.model.previousAttributes();
-            this.render();
-        },
-        onsuccess: function () {
-            Utils.appAlert('success', {msg: 'Changed'});
         },
         render: function() {
             // uncoment this to disable oportunity to accept or decline matches of other players

@@ -28,6 +28,8 @@ Rails.application.routes.draw do
     patch 'admin/users/:id', to: 'admin#user_update'
     get 'admin/chats', to: 'admin#chatlist'
     delete 'admin/chats/:id', to: 'admin#chat_destroy'
+
+    resources :tournaments
   end
 
   get '/pong', to: 'pong#index'

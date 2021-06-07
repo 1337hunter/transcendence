@@ -7,7 +7,7 @@ import RoomsView from "./views/rooms";
 import UsersView from "./views/users"
 import AlertsView from "./views/alerts";
 import AdminView from "./views/admin";
-import pong_game from "./pong_game";
+import TournamentsView from "./views/tournaments";
 import "channels"
 
 const MainSPA = {};
@@ -32,7 +32,9 @@ let AppRouter = Backbone.Router.extend({
         "users"                 : "users",
         "users/:id"             : "profile",
         "admin(/)(/:section)"   : "admin",
-        ".*"                    : "pong" // 404?
+        "tournaments"           : "tournaments",
+        "tournaments/:id"       : "tournamentpage",
+        ".*"                    : "home" // 404?
     },
     home: function () {
         this.main.view = new HomeView.View();
@@ -64,6 +66,15 @@ let AppRouter = Backbone.Router.extend({
             this.main.el.html(this.main.view.render().el);
         }
         this.main.view.rendercontent(section);
+    },
+    tournaments: function () {
+        this.main.view = new TournamentsView.View();
+        this.main.el.html(this.main.view.render().el);
+    },
+    tournamentpage: function (id) {
+        this.tournaments();
+        // this.main.view = new TournamentsView.View(id);
+        // this.main.el.html(this.main.view.el);
     }
 });
 
