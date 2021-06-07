@@ -60,6 +60,7 @@ class Api::AdminController < ApplicationController
   # DELETE /api/admin/chats/id.json
   def chat_destroy
     Message.where(:room_id => @room.id).destroy_all
+    BlockUserRoom.where(:room_id => @room.id).destroy_all
     @room.destroy
     render json: {msg: "Chat destroyed"}, status: :ok
   end
