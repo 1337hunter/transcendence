@@ -266,9 +266,9 @@ $(function () {
     WarsView.DeclareWarView = Backbone.View.extend({
         template: _.template($('#war-modal-template').html()),
         events: {
-            "click .btn-confirm"    : "confirm",
+            "click .btn-confirm"    : "declareWar",
             "click .btn-cancel"     : "close",
-            "click .btn-close"     : "close",
+            "click .btn-close"      : "close",
             "click .modal"          : "clickOutside"
             // "submit #war-form"      : "declareWar"
         },
@@ -289,8 +289,8 @@ $(function () {
                 e.data.view.close();
         },
         declareWar: function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+            // e.preventDefault();
+            // e.stopPropagation();
             let start = $('#war-start').val().trim();
             let end = $('#war-end').val().trim();
             if (moment(end).diff(moment(start), 'hours') < 24) {
