@@ -266,11 +266,11 @@ $(function () {
     WarsView.DeclareWarView = Backbone.View.extend({
         template: _.template($('#war-modal-template').html()),
         events: {
-            "click .btn-confirm"    : "declareWar",
             "click .btn-cancel"     : "close",
             "click .btn-close"      : "close",
-            "click .modal"          : "clickOutside"
-            // "submit #war-form"      : "declareWar"
+            "click .modal"          : "clickOutside",
+            "submit #war-form"      : "declareWar",
+            'keypress'              : 'keylisten'
         },
         clickOutside: function (e) {
             if (e.target === e.currentTarget)
@@ -283,24 +283,27 @@ $(function () {
             this.$el.fadeOut(200, function () { view.remove(); });
         },
         keylisten: function (e) {
-            if (e.key === "Enter")
-                e.data.view.declareWar();
+            if (e.key === "Enter") {
+                e.preventDefault();
+                $(':input:visible:eq(' + ($(':input:visible').index(e.target) + 1) + ')').focus().not('textarea').select();
+            }
             if (e.key === "Escape")
                 e.data.view.close();
         },
-        declareWar: function(e) {
-            // e.preventDefault();
-            // e.stopPropagation();
+        declareWar: function() {
             let start = $('#war-start').val().trim();
             let end = $('#war-end').val().trim();
             if (moment(end).diff(moment(start), 'hours') < 24) {
                 Utils.appAlert('danger', {msg: 'War duration must be not less then 24 hours'});
                 return
             }
-            //TODO: date and time format check; ((Date.now() - Date(start)) > 120000))) (+check on accept)?
+            if (moment(start).diff(moment(), 'minutes') < 30) {
+                Utils.appAlert('danger', {msg: 'War must start in the future, at least 30 min from now'});
+                return
+            }
             let wartime_start = $('#wartime-start').val().trim();
             let wartime_end = $('#wartime-end').val().trim();
-            if (wartime_end.substring(0, 2) == wartime_start.substring(0, 2)) {
+            if (moment('2021-01-01 ' + wartime_end).diff(moment('2021-01-01 ' + wartime_start), 'hours') < 1) {
                 Utils.appAlert('danger', {msg: 'War time gap must be not less then 1 hour'});
                 return
             }

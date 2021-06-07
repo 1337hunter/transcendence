@@ -5,6 +5,7 @@ import Users from "../models/users";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
 import WarsView from "./wars";
+import UsersView from "./users";
 
 const GuildsView = {};
 
@@ -226,7 +227,7 @@ $(function () {
         events: {
             "click #refresh-button" :   "refresh",
             "keypress #anagram" : "updateOnEnter",
-            "click #delete-button" : "delete_guild"
+            "click #delete-button" : "openConfirm"
         },
         initialize: function (id) {
             this.model = new Guilds.GuildId({id: id});
@@ -265,18 +266,9 @@ $(function () {
             });
             return this;
         },
-        delete_guild : function () {
-            $.ajax({
-                url: 'api/guilds/' + this.model.id,
-                type: 'DELETE',
-                success: () => {
-                    Utils.appAlert('success', {msg: 'Guild ' + name + ' has been deleted'});
-                    MainSPA.SPA.router.navigate("#/guilds");
-                },
-                error: (response) => {
-                    Utils.alertOnAjaxError(response);
-                }
-            });
+        openConfirm: function () {
+            this.confirmview = new GuildsView.GuildDeleteView();
+            document.body.appendChild(this.confirmview.render(this.model).el);
         },
         updateOnEnter: function (e) {
             if (e.keyCode !== 13) return;
@@ -298,6 +290,52 @@ $(function () {
             }
         }
     });
+
+    GuildsView.GuildDeleteView = Backbone.View.extend({
+        template: _.template($('#delete-guild-modal-template').html()),
+        events: {
+            "click .btn-confirm"    : "delete_guild",
+            "click .btn-cancel"     : "close",
+            "click .modal"          : "clickOutside"
+        },
+        delete_guild : function () {
+            $.ajax({
+                url: 'api/guilds/' + this.model.id,
+                type: 'DELETE',
+                success: () => {
+                    Utils.appAlert('success', {msg: 'Guild ' + name + ' has been deleted'});
+                    MainSPA.SPA.router.navigate("#/guilds");
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            $('body.modal-open').off('keydown', this.keylisten);
+            $('body').removeClass("modal-open");
+            let view = this;
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        keylisten: function (e) {
+            if (e.key === "Enter")
+                e.data.view.confirm();
+            if (e.key === "Escape")
+                e.data.view.close();
+        },
+        render: function(model) {
+            this.model = model;
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
+            return this;
+        }
+    });
+
 
     GuildsView.GuildInvitationView = Backbone.View.extend({
         //cur_user: new Users.CurrentUserModel,

@@ -46,6 +46,7 @@ class Api::WarsController < ApplicationController
   end
 
   def accept
+    # TODO: check end time from now?
     if @guild_cur.id != params[:guild_id].to_i
       render json: { error: 'No permission' }, status: :forbidden
     elsif @war.accepted

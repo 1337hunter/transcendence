@@ -155,15 +155,16 @@
     </button>
   </h1>
   <div class="row" style="margin-bottom: 20px">
-    <div class="col-2"><button type="button" class="btn btn-danger options-button"
-                               data-target="#deleteGuildModal" data-toggle="modal">Delete guild
-    </button></div>
+    <div class="col-2">
+      <button  id="delete-button" type="button" class="btn btn-danger options-button">
+        Delete guild</button>
+    </div>
   </div>
   <div class="row" style="margin-left: 0px">Anagram:&nbsp;
       <input type="text" class="form-control" id="anagram"
              value="<%%= anagram %>"
              style="width: 6ch; background-color: #00000e; color:white; padding: 1px;">
-      <!--<pattern="[A-Za-z0-9]{2,5}" required="required" title="Anagram can only have 2-5 letters, no whitespaces or special symbols allowed"></pattern>-->
+      <!--<pattern="[A-Za-z0-9]{2,5}" required="required" title="Anagram can only have 2-5 letters, no whitespaces allowed"></pattern>-->
   </div>
   <div class="row" style="margin-left: 0px">Current score:&nbsp;<%%= score %></div>
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/members">members</a>`%></div>
@@ -172,25 +173,28 @@
   <div class="row"><%%=`<a class="link-light" href="#/users_not_in_guild">invite users</a>`%></div>
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/war_invites">war invites from other guilds</a>`%></div>
   <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/war_requests">war requests sent by you</a>`%></div>
+</script>
 
-  <!-- Modal HTML -->
-  <div id="deleteGuildModal" class="modal">
-    <div class="modal-dialog modal-confirm">
-      <div class="modal-content">
-        <div class="modal-header flex-column">
-          <div class="icon-box">
-            <i class="material-icons">&#xE5CD;</i>
-          </div>
-          <h4 class="modal-title w-100">Are you sure?</h4>
-         </div>
-         <div class="modal-body">
-           <p style="color:gray">Guild will be deleted permanently</p>
-         </div>
-         <div class="modal-footer justify-content-center">
-           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-           <button type="button" class="btn btn-danger" data-dismiss="modal" id="delete-button">Delete</button>
-         </div>
-       </div>
-     </div>
-   </div>
+<script type="text/template" id="delete-guild-modal-template">
+  <div class="modal fade show" aria-modal="true" role="dialog" style="display: block;">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background: #090909">
+        <div class="modal-header" style="border-bottom-color: #111111;">
+          <h5 class="modal-title">
+            You are about to delete your guild <%%= name %>
+          </h5>
+        </div>
+        <div class="modal-body">
+          <p>
+            The action cannot be undone
+          </p>
+        </div>
+        <div class="modal-footer" style="border-top-color: #111111;">
+          <button type="button" class="btn btn-dark btn-cancel">Cancel</button>
+          <button type="button" class="btn btn-danger btn-confirm">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
 </script>
