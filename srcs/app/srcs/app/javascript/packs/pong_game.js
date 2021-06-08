@@ -141,7 +141,7 @@ export default function pong_game(view) {
         {
             console.log(rightScore)
             rightScore += 1
-            view.setLeftPlayerScore(leftScore);
+            view.setSecondPlayerScore(rightScore);
             x = CENTER_X;
             y = CENTER_Y;
             ball_throw++
@@ -151,7 +151,7 @@ export default function pong_game(view) {
         {
             console.log(leftScore)
             leftScore += 1
-            view.setLeftPlayerScore(leftScore);
+            view.setFirstPlayerScore(leftScore);
             x = CENTER_X;
             y = CENTER_Y;
             ball_throw++
