@@ -16,7 +16,7 @@ class Api::MatchesController < ApplicationController
         @match = Match.find(params[:id])
         if (params.has_key?(:winner) and params.has_key?(:first_player_score) and params.has_key?(:second_player_score))
             @player_winer = User.find(params[:winner])
-            @player_loser = params[:winner] == params[:second_player_score] ? User.find(params[:first_player_score]) : User.find(params[:second_player_score])
+            @player_loser = params[:winner] == params[:second_player_id] ? User.find(params[:first_player_id]) : User.find(params[:second_player_id])
             @player_loser.update(loses: @player_loser.loses + 1)
             @player_winer.update(wins: @player_winer.wins + 1)
         end
