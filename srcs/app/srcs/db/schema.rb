@@ -86,11 +86,11 @@ ActiveRecord::Schema.define(version: 2021_06_08_163347) do
 
   create_table "messages", force: :cascade do |t|
     t.string "content"
-    t.integer "room_id"
-    t.boolean "private"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "room_id", null: false
+    t.index ["room_id"], name: "index_messages_on_room_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
@@ -112,13 +112,14 @@ ActiveRecord::Schema.define(version: 2021_06_08_163347) do
 
   create_table "rooms", force: :cascade do |t|
     t.string "name"
-    t.boolean "password_present"
-    t.string "password_digest"
+    t.string "password"
     t.string "owner_name"
-    t.integer "owner_id"
+    t.string "owner_id"
     t.boolean "private"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "message_id"
+    t.index ["message_id"], name: "index_rooms_on_message_id"
   end
 
   create_table "tournaments", force: :cascade do |t|
@@ -163,9 +164,9 @@ ActiveRecord::Schema.define(version: 2021_06_08_163347) do
     t.string "ban_reason"
     t.boolean "online"
     t.datetime "last_seen_at"
-    t.bigint "tournament_id"
     t.boolean "guild_accepted", default: false
     t.bigint "guild_id"
+    t.bigint "tournament_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"

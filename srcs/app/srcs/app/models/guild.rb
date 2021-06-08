@@ -26,4 +26,9 @@ class Guild < ApplicationRecord
     wars.empty? == false
   end
 
+  def wars_counter
+    wars = War.where('guild1_id = :id OR guild2_id = :id', id: id).where(accepted: true)
+    wars.length
+  end
+
 end

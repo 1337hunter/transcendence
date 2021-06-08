@@ -407,7 +407,7 @@ $(function () {
     });
 
     UsersView.AvailableForGuildView = Backbone.View.extend({
-        template: _.template($('#users-template').html()),
+        template: _.template($('#userlist-template').html()),
         cur_user: new Users.CurrentUserModel,
         events: {
             "click #displayname" : "openprofile",
@@ -493,7 +493,7 @@ $(function () {
     });
 
     UsersView.GuildRequestsView = Backbone.View.extend({
-        template: _.template($('#users-template').html()),
+        template: _.template($('#userlist-template').html()),
         events: {
             "click #refresh-button" :   "refresh"
         },
