@@ -139,6 +139,7 @@ export default function pong_game(view) {
     function checkStats() {
         if (x < 0)
         {
+            console.log(rightScore)
             rightScore += 1
             view.setLeftPlayerScore(leftScore);
             x = CENTER_X;
@@ -148,6 +149,7 @@ export default function pong_game(view) {
         }
         else if (x > canvas.width)
         {
+            console.log(leftScore)
             leftScore += 1
             view.setLeftPlayerScore(leftScore);
             x = CENTER_X;
