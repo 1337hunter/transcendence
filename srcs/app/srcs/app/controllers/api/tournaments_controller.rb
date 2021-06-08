@@ -16,11 +16,10 @@ class Api::TournamentsController < ApplicationController
   end
 
   def show
-    render json:
-             @tournament
-               .as_json(include: {users: {only: @filters}, winner: {only: @filters}})
-               .merge({'is_current_admin' => current_user.admin?,
-                       'is_in_tournament' => current_user.tournament_id == @tournament.id})
+    render json: @tournament
+                   .as_json(include: {users: {only: @filters}, winner: {only: @filters}})
+                   .merge({:is_current_admin => current_user.admin?,
+                           :is_in_tournament => current_user.tournament_id == @tournament.id})
   end
 
   def update
