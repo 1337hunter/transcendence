@@ -14,7 +14,11 @@ class Api::TournamentsController < ApplicationController
   end
 
   def show
-    render json: @tournament.as_json(include: {users: {only: @filters}})
+    render json: @tournament
+                   .as_json(include: {users: {only: @filters}})
+                   .merge({'is_current_admin' => current_user.admin?,
+                           'is_in_tournament' =>
+                             current_user.tournament_id == @tournament.id})
   end
 
   def update
@@ -55,5 +59,18 @@ class Api::TournamentsController < ApplicationController
   def define_filters
     @filters = %i[id displayname admin banned online last_seen_at
                   nickname wins loses elo avatar_url avatar_default_url]
+  end
+
+  # this is for later
+  def json_params_for(objects)
+    collection = objects.map do |post|
+      {
+        id: post.id,
+        content: post.content,
+        created_at: post.created_at,
+        status: "reviewed"
+      }
+    end
+    collection.to_json
   end
 end
