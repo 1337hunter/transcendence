@@ -39,6 +39,18 @@ $(function () {
 		{
 			this.first_player_score = score;
 		},
+		broadcastScore: function (score)
+		{
+			this.cable.send(score);
+		},
+		getRightScore: function ()
+		{
+			return (obtainedValues.rightScore);
+		},
+		getLeftScore: function ()
+		{
+			return (obtainedValues.leftScore);
+		},
 		setSecondPlayerScore: function (score)
 		{
 			this.second_player_score = score;
