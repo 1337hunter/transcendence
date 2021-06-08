@@ -36,7 +36,7 @@ class Api::TournamentsController < ApplicationController
   end
 
   def define_filters
-    @filters = %i[displayname admin banned online last_seen_at
+    @filters = %i[displayname admin banned online last_seen_at nickname
                   wins loses elo avatar_url avatar_default_url]
   end
 end
