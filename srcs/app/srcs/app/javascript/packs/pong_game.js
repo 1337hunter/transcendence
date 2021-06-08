@@ -140,7 +140,7 @@ export default function pong_game(view) {
         if (x < 0)
         {
             rightScore += 1
-            view.setLeftPlayerScore(leftScore);
+            view.setSecondPlayerScore(rightScore);
             x = CENTER_X;
             y = CENTER_Y;
             ball_throw++
@@ -149,7 +149,7 @@ export default function pong_game(view) {
         else if (x > canvas.width)
         {
             leftScore += 1
-            view.setLeftPlayerScore(leftScore);
+            view.setFirstPlayerScore(leftScore);
             x = CENTER_X;
             y = CENTER_Y;
             ball_throw++
