@@ -6,7 +6,8 @@ environment.plugins.append('Provide',
         _: 'underscore',
         $: 'jquery/src/jquery',
         jQuery: 'jquery/src/jquery',
-        Backbone: 'backbone'
+        Backbone: 'backbone',
+        Moment: 'moment'
     })
     )
 module.exports = environment
