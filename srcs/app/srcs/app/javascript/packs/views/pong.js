@@ -86,8 +86,9 @@ $(function () {
 		finishGame: function (winner_id)
 		{
 			let $this = this;
+			this.cable.send("finish")
 			this.model.save({status: 3, winner: winner_id, first_player_score: this.first_player_score, second_player_score: this.second_player_score});
-			this.cable.unsubscribe();
+		//	this.cable.unsubscribe();
 		},
 	});
 });

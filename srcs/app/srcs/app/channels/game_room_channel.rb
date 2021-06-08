@@ -13,6 +13,11 @@ class GameRoomChannel < ApplicationCable::Channel
     puts data
     puts params
     ActionCable.server.broadcast("game_room_channel_#{params[:match_id]}", data)
+    if data == 'finish'
+      @match = Match.find(params[:match_id])
+      ActionCable.server.remote_connections.where(current_user: User.find(@match.first_player_id)).disconnect
+      ActionCable.server.remote_connections.where(current_user: User.find(@match.second_player_id)).disconnect
+    end
   end
 
   def unsubscribed
