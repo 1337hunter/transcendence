@@ -22,8 +22,8 @@
       width="30px" height="30px" src="<%%= avatar_url %>">
   </td>
   <td width="60%" class="users-displayname"><label><%%= displayname %></label></td>
-  <td <%%= (status == 3 && winner != main_id) ? '' : 'style="display:none"' %> ><p style="color:green"> won </p></td>
-  <td <%%= (status == 3 && winner == main_id) ? '' : 'style="display:none"' %> ><p style="color:red"> lost </p></td>
+  <td <%%= (status == 3 && winner == main_id) ? '' : 'style="display:none"' %> ><p style="color:green"> won </p></td>
+  <td <%%= (status == 3 && winner != main_id) ? '' : 'style="display:none"' %> ><p style="color:red"> lost </p></td>
   <td <%%= (status == 3) ? '' : 'style="display:none"' %> ><label><%% first_player_score %>:<%% second_player_score %></label></td>
   <td <%%= (status == 2) ? '' : 'style="display:none"' %> ><p style="color:yellow"> in match </p></td>
   <td width="8%">
