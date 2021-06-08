@@ -158,9 +158,7 @@ $(function () {
             "submit #create-guild": "createGuild"
         },
         initialize: function () {
-            this.cur_user.fetch({reset: true, error: this.onFetchError});
             this.collection = new Guilds.GuildCollection;
-            this.listenTo(this.cur_user.model, 'change', this.render);
             this.listenTo(this.collection, 'change', this.render);
             this.listenTo(this.collection, 'add', this.addOne);
             this.listenTo(this.collection, 'reset', this.addAll);

@@ -18,12 +18,12 @@ class Guild < ApplicationRecord
   validates_with GuildValidator
 
   def wars
-    War.where('guild1_id = :id OR guild2_id = :id', id: id).where(accepted:true)
+    War.where('guild1_id = :id OR guild2_id = :id', id: id).where(accepted: true)
   end
 
   def has_active_war
-    wars = War.where('guild1_id = :id OR guild2_id = :id', id: id).where(accepted:true).where(finished:false)
-    return wars.empty? == false
+    wars = War.where('guild1_id = :id OR guild2_id = :id', id: id).where(accepted: true).where(finished: false)
+    wars.empty? == false
   end
 
 end
