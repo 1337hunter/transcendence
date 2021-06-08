@@ -8,8 +8,9 @@ class Api::MessagesController < ApplicationController
     end
 
     def create
-        @block = BlockUserRoom.where(room_id: params["room_id"]).select("user_id").as_json
-        if !(@block.any? {|h| h["user_id"] == current_user.id})
+        @admins = RoomAdmin.where(room_id: params["room_id"]).select("user_id").as_json
+        @blocks = BlockUserRoom.where(room_id: params["room_id"]).select("user_id").as_json
+        if !(@blocks.any? {|h| h["user_id"] == current_user.id})
             @message = Message.create(room_id: params["room_id"],
                                     content: params["content"],
                                     user: current_user)
@@ -21,13 +22,16 @@ class Api::MessagesController < ApplicationController
                 avatar: current_user.avatar_url,
                 displayname: current_user.displayname,
                 content: params['content'],
-                block: @block
+                block_svg: File.join(Rails.root, 'app', 'assets', 'images', 'block.svg'),
+                blocks: @blocks,
+                admins: @admins
             })
             render json: @message
         end
     end
 
     def show
+        @admin = RoomAdmin.where(room_id: params[:id], user_id: current_user.id)
         @messages = Message.where(room_id: params[:id]).
           includes(:user).
           joins(:user).
@@ -36,7 +40,7 @@ class Api::MessagesController < ApplicationController
                    User.arel_table[:displayname],
                    User.arel_table[:avatar_url].as("avatar"),
                    User.arel_table[:avatar_default_url]
-                 ])
+                 ]).as_json
         render json: @messages
     end
 

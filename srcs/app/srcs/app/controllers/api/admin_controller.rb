@@ -7,7 +7,7 @@ class Api::AdminController < ApplicationController
   before_action :check_admin
   before_action :define_filters
   before_action :find_user, only: %i[user_update]
-  before_action :find_chat, only: %i[chat_update]
+  before_action :find_chat, only: %i[chat_destroy]
 
   # GET /api/admin/users.json
   def users
@@ -57,13 +57,12 @@ class Api::AdminController < ApplicationController
     end
   end
 
-  # PATCH /api/admin/users/id.json
-  def chat_update
-    if @room.update(room_params)
-      render json: @room, only: @roomfilters, status: :ok
-    else
-      render json: @room.errors, status: :unprocessable_entity
-    end
+  # DELETE /api/admin/chats/id.json
+  def chat_destroy
+    Message.where(:room_id => @room.id).destroy_all
+    BlockUserRoom.where(:room_id => @room.id).destroy_all
+    @room.destroy
+    render json: {msg: "Chat destroyed"}, status: :ok
   end
 
   private
@@ -75,7 +74,7 @@ class Api::AdminController < ApplicationController
   def define_filters
     @userfilters = %i[id nickname displayname email admin avatar_url avatar_default_url
                       banned ban_reason online last_seen_at]
-    @roomfilters = %i[id name owner_name private]
+    @roomfilters = %i[id name owner_name private password_present]
   end
 
   def find_user
@@ -83,7 +82,7 @@ class Api::AdminController < ApplicationController
   end
 
   def find_chat
-    @user = User.find(params[:id])
+    @room = Room.find(params[:id])
   end
 
   def user_params

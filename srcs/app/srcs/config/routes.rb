@@ -14,8 +14,10 @@ Rails.application.routes.draw do
     end
     resources :settings
     resources :rooms
+    post 'rooms/:id', to: 'rooms#create'
     resources :messages
     resources :room_members
+    resources :room_admins
     post 'users/:id/add_friend', to: 'users#add_friend'
     post 'users/:id/accept_friend', to: 'users#accept_friend'
     post 'users/:id/remove_friend', to: 'users#remove_friend'
@@ -26,7 +28,9 @@ Rails.application.routes.draw do
     get 'admin/users', to: 'admin#users'
     patch 'admin/users/:id', to: 'admin#user_update'
     get 'admin/chats', to: 'admin#chatlist'
-    patch 'admin/chats/:id', to: 'admin#chat_update'
+    delete 'admin/chats/:id', to: 'admin#chat_destroy'
+
+    resources :tournaments
 
     resources :guilds do
       resources :wars

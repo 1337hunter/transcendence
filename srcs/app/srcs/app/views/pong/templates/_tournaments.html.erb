@@ -1,0 +1,97 @@
+<script type="text/template" id="singletournament-template">
+  <td style="text-align: left">
+    <label>Tournament #<%%= id %></label>
+  </td>
+  <td><label><%%= status %></label></td>
+  <td><label><%%= new Date(start_date).toLocaleString() %></label></td>
+  <td><label><%%= users.length %></label></td>
+</script>
+
+<script type="text/template" id="tournaments-template">
+  <h1>Tournaments
+    <button type="button" class="button-sm button-refresh" id="refresh-button">
+      <%= show_svg('refresh.svg') %>
+    </button>
+  </h1>
+  <table id="tournaments-table" border-spacing="20px" padding="0 2em 1em 0">
+    <tr>
+      <th style="text-align: left">Tournament</th>
+      <th>Status</th>
+      <th>Starts</th>
+      <th>Registred</th>
+    </tr>
+  </table>
+</script>
+
+<script type="text/template" id="tournamentpage-template">
+  <h1>
+    <button type="button" class="button-sm button-back" id="back-button" onclick="window.history.back();">
+      <%= show_svg('arrow-left.svg') %>
+    </button>
+    Tournament #<%%= id %> (<%%= status %>)
+    <button type="button" class="button-sm button-refresh" id="refresh-button">
+      <%= show_svg('refresh.svg') %>
+    </button>
+  </h1>
+
+  <h4>Start</h4>
+  <p><%%= new Date(start_date) %></p>
+
+  <p>
+    <h4>Actions</h4>
+    <button class="btn btn-outline-success join-tournament-button" <%%= is_in_tournament ? 'style="display: none;"' : '' %> >
+      Join tournament
+    </button>
+    <button class="btn btn-outline-danger leave-tournament-button" <%%= is_in_tournament ? '' : 'style="display: none;"' %> >
+      Leave tournament
+    </button>
+  </p>
+
+  <div class="tournament-administration" <%%= is_current_admin ? '' : 'style="display: none;"' %>>
+    <h4>Administration</h4>
+    <p>
+      <button class="btn btn-outline-primary begin-tournament-button" >
+        Begin tournament
+      </button>
+      <button class="btn btn-outline-warning close-tournament-button" >
+        Close registration
+      </button>
+      <button class="btn btn-outline-danger destroy-tournament-button" >
+        Destroy tournament
+      </button>
+    </p>
+  </div>
+
+  <div id="registredusers"></div>
+</script>
+
+<script type="text/template" id="single-tournament-user-template">
+  <td>
+    <div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+      <%= show_svg('user-astronaut.svg') %>
+    </div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <td class="users-displayname"><label><%%= displayname %></label></td>
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
+  <td><label><%%= elo %></label></td>
+  <td><label><%%= nickname %></label></td>
+</script>
+
+<script type="text/template" id="tournament-users-template">
+  <h4>Registred users (<%%= usercount %>)</h4>
+  <table id="tournament-users-table" border-spacing="20px" padding="0 2em 1em 0">
+    <tr>
+      <th></th><th></th>
+      <th class="users-displayname">Display name</th>
+      <th>Wins</th>
+      <th>Loses</th>
+      <th>Rating</th>
+      <th>Intra nickname</th>
+    </tr>
+  </table>
+</script>

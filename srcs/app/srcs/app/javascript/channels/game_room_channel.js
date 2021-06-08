@@ -3,10 +3,12 @@ import MainSPA from "../packs/main_spa";
 
 var obtainedValues = 
 {
-	rigthPadX: 1,
 	rightPadY: 1,
-	leftPadX: 1,
-	leftPadY: 1
+	leftPadY: 1,
+    ballx: 1,
+    bally: 1,
+    leftScore: 0,
+    rightScore: 0,
 }
 
 var GameRoomInit = 
@@ -28,13 +30,24 @@ var GameRoomInit =
             },
 
             received(data) {
-            //    console.log(data)
+               console.log(data)
                 if (data == "start")
                     MainSPA.SPA.router.navigate("#/play/" + args.match_id);
                 if (data.right)
                     obtainedValues.rightPadY = data.right;
                 if (data.left)
                     obtainedValues.leftPadY = data.left;
+                if (data.ball)
+                {
+                    obtainedValues.ballx = data.ball.x;
+                    obtainedValues.bally = data.ball.y;
+                }
+                if (data.score)
+                {
+                    obtainedValues.leftScore = data.score.left;
+                    obtainedValues.rightScore = data.score.right;
+                }
+
             //    console.log(data);
             //    obtainedValues.rightPadX = data.x1;
             //    obtainedValues.rightPadY = data.y1;

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_03_172619) do
+ActiveRecord::Schema.define(version: 2021_06_08_163347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,19 +77,28 @@ ActiveRecord::Schema.define(version: 2021_06_03_172619) do
     t.integer "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "winner"
+    t.integer "winner"
+    t.integer "first_player_score"
+    t.integer "second_player_score"
     t.index ["first_player_id"], name: "index_matches_on_first_player_id"
     t.index ["second_player_id"], name: "index_matches_on_second_player_id"
   end
 
   create_table "messages", force: :cascade do |t|
     t.string "content"
+    t.integer "room_id"
+    t.boolean "private"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "room_id", null: false
-    t.index ["room_id"], name: "index_messages_on_room_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
+  create_table "room_admins", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "room_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "room_members", force: :cascade do |t|
@@ -103,14 +112,24 @@ ActiveRecord::Schema.define(version: 2021_06_03_172619) do
 
   create_table "rooms", force: :cascade do |t|
     t.string "name"
-    t.string "password"
+    t.boolean "password_present"
+    t.string "password_digest"
     t.string "owner_name"
-    t.string "owner_id"
+    t.integer "owner_id"
     t.boolean "private"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "message_id"
-    t.index ["message_id"], name: "index_rooms_on_message_id"
+  end
+
+  create_table "tournaments", force: :cascade do |t|
+    t.bigint "users"
+    t.datetime "start_date", null: false
+    t.boolean "is_rating", default: false, null: false
+    t.string "status", default: "open", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "winner_id"
+    t.index ["winner_id"], name: "index_tournaments_on_winner_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -144,12 +163,14 @@ ActiveRecord::Schema.define(version: 2021_06_03_172619) do
     t.string "ban_reason"
     t.boolean "online"
     t.datetime "last_seen_at"
+    t.bigint "tournament_id"
     t.boolean "guild_accepted", default: false
     t.bigint "guild_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["tournament_id"], name: "index_users_on_tournament_id"
     t.index ["uid"], name: "index_users_on_uid"
   end
 
@@ -190,6 +211,7 @@ ActiveRecord::Schema.define(version: 2021_06_03_172619) do
   add_foreign_key "guild_invitations", "users"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
+  add_foreign_key "tournaments", "users", column: "winner_id"
   add_foreign_key "users", "guilds"
   add_foreign_key "wars", "guilds", column: "guild1_id"
   add_foreign_key "wars", "guilds", column: "guild2_id"

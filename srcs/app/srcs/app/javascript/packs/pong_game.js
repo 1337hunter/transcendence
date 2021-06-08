@@ -1,4 +1,5 @@
 import PongView from "./views/pong"
+import MainSPA from "./main_spa";
 export default function pong_game(view) {
     var canvas = document.getElementById("pongCanvas");
     var ctx = canvas.getContext("2d");
@@ -9,8 +10,8 @@ export default function pong_game(view) {
     var y = CENTER_Y;
     var ball_throw = 0 // this is for change side ball throw
     var change_side = -1
-    var dx = 3;
-    var dy = 3;
+    var dx = 5;
+    var dy = 5;
     var	start_direction = dx
     var ballRadius = 4;
     var padHeight = 4
@@ -31,7 +32,18 @@ export default function pong_game(view) {
     var gameID
     var startTime = 3000
     var loopID
-
+    var is_player_left = 0;
+    var is_player_right = 0;
+    var is_spectator = 0;
+    if (MainSPA.SPA.router.currentuser.get('id') == view.first_player_id) {
+        is_player_left = 1;
+    }
+    else if (MainSPA.SPA.router.currentuser.get('id') == view.second_player_id) {
+        is_player_right = 1;
+    }
+    else {
+        is_spectator = 1;
+    }
     const  delay = (callback, wait = 1000) => {
         setTimeout(callback, wait)
     }
@@ -77,12 +89,14 @@ export default function pong_game(view) {
         }
     }
 
-
-    document.addEventListener("keydown", rightDownHandler, false);
-    document.addEventListener("keyup", rightUpHandler, false);
-    document.addEventListener("keydown", leftDownHandler, false);
-    document.addEventListener("keyup", leftUpHandler, false);
-
+    if (is_player_right == 1) {
+        document.addEventListener("keydown", rightDownHandler, false);
+        document.addEventListener("keyup", rightUpHandler, false);
+    }
+    if (is_player_left == 1) {
+        document.addEventListener("keydown", leftDownHandler, false);
+        document.addEventListener("keyup", leftUpHandler, false);
+    }
     function drawPixel() {
         ctx.beginPath();
         ctx.rect(leftPadX, leftPadY, 5, 5);
@@ -93,7 +107,8 @@ export default function pong_game(view) {
 
     function drawLeftPad() {
         ctx.beginPath();
-        ctx.rect(leftPadX, view.getLeftPadY(), padHeight, padWidth);
+        leftPadY = view.getLeftPadY();
+        ctx.rect(leftPadX, leftPadY, padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -101,7 +116,8 @@ export default function pong_game(view) {
 
     function drawRightPad() {
         ctx.beginPath()
-        ctx.rect(rightPadX, view.getRightPadY(), padHeight, padWidth);
+        rightPadY = view.getRightPadY();
+        ctx.rect(rightPadX, rightPadY, padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -109,6 +125,11 @@ export default function pong_game(view) {
 
     function drawBall() {
         ctx.beginPath();
+        if (is_player_right)
+        {
+            x = view.getBallX();
+            y = view.getBallY();
+        }
         ctx.arc(x, y, ballRadius, 0, Math.PI*2);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
@@ -116,24 +137,47 @@ export default function pong_game(view) {
     }
 
     function checkStats() {
-        if (x < 0)
+        if (is_player_left != 1)
         {
-            rightScore += 1
-            x = CENTER_X;
-            y = CENTER_Y;
-            ball_throw++
-
+            rightScore = view.getRightScore();
+            leftScore = view.getLeftScore();
         }
-        else if (x > canvas.width)
+        else
         {
-            leftScore += 1
-            x = CENTER_X;
-            y = CENTER_Y;
-            ball_throw++
+            if (x < 0)
+            {
+                rightScore += 1
+                view.broadcastScore({score: {left: leftScore, right: rightScore}})
+                view.setSecondPlayerScore(rightScore);
+                x = CENTER_X;
+                y = CENTER_Y;
+                ball_throw++
+
+            }
+            else if (x > canvas.width)
+            {
+                
+                leftScore += 1
+                view.broadcastScore({score: {left: leftScore, right: rightScore}});
+                view.setFirstPlayerScore(leftScore);
+                x = CENTER_X;
+                y = CENTER_Y;
+                ball_throw++
+            }
         }
         if (leftScore >= MAX_SCORE || rightScore >= MAX_SCORE)
         {
             clearInterval(loopID) // the main loop breaks here
+            if (leftScore >= MAX_SCORE) {
+                console.log("left won");
+                if (is_player_left)
+                    view.finishGame(view.first_player_id);
+            }
+            if (rightScore >= MAX_SCORE) {
+                console.log("right won");
+                if (is_player_left)
+                    view.finishGame(view.second_player_id);
+            }
             gameID = setInterval(drawGame, 10)
         }
         if (ball_throw === 2)
@@ -447,6 +491,8 @@ export default function pong_game(view) {
         drawRightPad()
         x += dx;
         y += dy;
+        if (is_player_left) 
+            view.broadcastBall({x: x, y: y});
     }
 
     function start()
@@ -475,4 +521,5 @@ export default function pong_game(view) {
     }
     //here the 'start' loop starts. the  main loop starts inside
     var startID = setInterval(start, 10);
+
 }

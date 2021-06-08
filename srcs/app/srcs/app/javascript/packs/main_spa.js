@@ -7,6 +7,7 @@ import RoomsView from "./views/rooms";
 import UsersView from "./views/users"
 import AlertsView from "./views/alerts";
 import AdminView from "./views/admin";
+import TournamentsView from "./views/tournaments";
 import GuildsView from "./views/guilds";
 import pong_game from "./pong_game";
 import MessagesView from "./views/messages";
@@ -36,6 +37,8 @@ let AppRouter = Backbone.Router.extend({
         "users/:id"             : "profile",
         "users/:id/guild_invitations" : "guild_invitations",
         "admin(/)(/:section)"   : "admin",
+        "tournaments"           : "tournaments",
+        "tournaments/:id"       : "tournamentpage",
         "users_not_in_guild"    : "guild_users_available",
         "guilds"                : "guilds",
         "guilds/:id"            : "guild_profile",
@@ -46,7 +49,7 @@ let AppRouter = Backbone.Router.extend({
         "guilds/:id/wars"       : "guild_wars",
         "wars"                  : "wars",
         "wars/:id"              : "war_profile",
-        ".*"                    : "pong" // 404???
+        ".*"                    : "home" // 404?
     },
     home: function () {
         this.main.view = new HomeView.View();
@@ -54,8 +57,7 @@ let AppRouter = Backbone.Router.extend({
     },
     pong: function (id) {
         this.main.view = new PongView.View(id);
-        this.main.el.html(this.main.view.render().el);
-        pong_game(this.main.view);
+        this.main.el.html(this.main.view.el);
     },
     settings: function () {
         this.main.view = new SettingsView.View();
@@ -131,6 +133,14 @@ let AppRouter = Backbone.Router.extend({
             this.main.el.html(this.main.view.render().el);
         }
         this.main.view.rendercontent(section);
+    },
+    tournaments: function () {
+        this.main.view = new TournamentsView.View();
+        this.main.el.html(this.main.view.render().el);
+    },
+    tournamentpage: function (id) {
+        this.main.view = new TournamentsView.PageView(id);
+        this.main.el.html(this.main.view.el);
     }
 });
 

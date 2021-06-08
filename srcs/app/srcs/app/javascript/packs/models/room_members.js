@@ -23,4 +23,13 @@ RoomMembers.RoomMembersCollection = Backbone.Collection.extend({
     comparator: 'id'
 });
 
+RoomMembers.Admin = Backbone.Model.extend({
+    initialize: function(options) {
+        this.id = options.id;
+    },
+    url: function () {
+        return '/api/room_admins/' + this.id;
+    }
+});
+
 export default RoomMembers;

@@ -30,15 +30,9 @@ $(function () {
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
-            this.model.attributes = this.model.previousAttributes();
-            this.render();
-        },
-        onsuccess: function () {
-            Utils.appAlert('success', {msg: 'Displayname has been changed'});
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
-            this.input = this.$('.displayname');
             let model = this.model;
             this.$('.user_icon').on("error",
                 function () { Utils.replaceAvatar(this, model); });
@@ -85,11 +79,6 @@ $(function () {
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
-            this.model.attributes = this.model.previousAttributes();
-            this.render();
-        },
-        onsuccess: function () {
-            Utils.appAlert('success', {msg: 'Changed'});
         },
         render: function() {
             if (this.model.attributes.status == "no" && this.model.attributes.main_id != this.model.attributes.current_user_id)
@@ -142,11 +131,6 @@ $(function () {
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
-            this.model.attributes = this.model.previousAttributes();
-            this.render();
-        },
-        onsuccess: function () {
-            Utils.appAlert('success', {msg: 'Changed'});
         },
         render: function() {
             // uncoment this to disable oportunity to accept or decline matches of other players
@@ -238,11 +222,11 @@ $(function () {
                 method: "POST",
                 data: {invited_user_id: this.model.attributes.id},
                 dataType: "json",
-                error: this.onerror,
+                error: Utils.alertOnAjaxError,
                 success: function () {
                     $this.matches_collection.fetch({reset: true, error: this.onerror, success: function () {
-                        let $match = $this.matches_collection.findWhere({first_player_id: MainSPA.SPA.router.currentuser.get('id'), second_player_id: $this.model.attributes.id});
-                        $match.set($match, {game_room: GameRoomInit.createGameRoom({match_id: $match.id, match: $match})});
+                        let $match = $this.matches_collection.findWhere({status: 1, first_player_id: MainSPA.SPA.router.currentuser.get('id'), second_player_id: $this.model.attributes.id});
+                        $match.set($match, {game_room: GameRoomInit.createGameRoom({match_id: $match.id})});
                     }})
                 }
             }));

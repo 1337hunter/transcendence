@@ -22,7 +22,7 @@ class Api::UsersController < ApplicationController
       include: { friends: { only: @filters },
                  requested_friends: {only: @filters},
                   guild: { only: @guildfilters } },
-    :methods => :is_current
+      methods: :is_current
     )
   end
 

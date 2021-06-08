@@ -6,7 +6,7 @@ import Utils from "../helpers/utils";
 const AdminView = {};
 
 $(function () {
-    AdminView.ModalConfirmView = Backbone.View.extend({
+    AdminView.ModalConfirmBanView = Backbone.View.extend({
         template: _.template($('#admin-modal-confirm-template').html()),
         events: {
             "click .btn-confirm"    : "confirm",
@@ -57,7 +57,7 @@ $(function () {
             this.listenTo(this.model, 'error', this.onerror);
         },
         openConfirm: function () {
-            this.confirmview = new AdminView.ModalConfirmView();
+            this.confirmview = new AdminView.ModalConfirmBanView();
             document.body.appendChild(this.confirmview.render(this.model).el);
             this.confirmview.reasoninput.focus();
         },
@@ -129,14 +129,63 @@ $(function () {
 		}
 	});
 
+    AdminView.ModalConfirmChatDestroyView = Backbone.View.extend({
+        template: _.template($('#admin-destroy-chat-modal-template').html()),
+        events: {
+            "click .btn-confirm"    : "confirm",
+            "click .btn-cancel"     : "close",
+            "click .btn-close"      : "close",
+            "click .modal"          : "clickOutside"
+        },
+        confirm: function () {
+            this.model.destroy({
+                wait: true,
+                success: function () {
+                    Utils.appAlert('success', {msg: 'Chat has been deleted'});
+                }
+            });
+            this.close();
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            $('body.modal-open').off('keydown', this.keylisten);
+            $('body').removeClass("modal-open");
+            let view = this;
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        keylisten: function (e) {
+            if (e.key === "Enter")
+                e.data.view.confirm();
+            if (e.key === "Escape")
+                e.data.view.close();
+        },
+        render: function(model) {
+            this.model = model;
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
+            return this;
+        }
+    });
+
     AdminView.SingleChatView = Backbone.View.extend({
         template: _.template($('#admin-singlechat-template').html()),
-        events: {},
+        events: {
+            "click .confirm-action" : "openConfirm"
+        },
         tagName: "tr",
         initialize: function () {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
+        },
+        openConfirm: function () {
+            this.confirmview = new AdminView.ModalConfirmChatDestroyView();
+            document.body.appendChild(this.confirmview.render(this.model).el);
+            this.$('.btn-confirm').blur();
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);

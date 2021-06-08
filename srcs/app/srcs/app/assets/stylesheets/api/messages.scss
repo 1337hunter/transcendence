@@ -1,12 +1,18 @@
 #messages {
     overflow-y: auto;
-    height: 78.5%;
     width: 90%;
     position: absolute;
     border-radius: 5px;
     left: 5%;
 }
 
+.messages_admin {
+    height: 73%;
+}
+
+.messages_user {
+    height: 74.5%;
+}
 
 #messages::-webkit-scrollbar {
     display: none;
@@ -46,5 +52,13 @@
     display: block;
     position: relative;
     left: 30%;
+    cursor: pointer;
 }
 
+#make_adm {
+    cursor: pointer;
+}
+
+#change_password {
+    cursor: pointer;
+}
