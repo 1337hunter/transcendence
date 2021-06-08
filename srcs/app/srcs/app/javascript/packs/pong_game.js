@@ -137,43 +137,52 @@ export default function pong_game(view) {
     }
 
     function checkStats() {
-        if (x < 0)
+        if (is_player_left != 1)
         {
-            console.log(rightScore)
-            rightScore += 1
-            view.setSecondPlayerScore(rightScore);
-            x = CENTER_X;
-            y = CENTER_Y;
-            ball_throw++
+            rightScore = view.getRightScore();
+            leftScore = view.getLeftScore();
+        }
+        else
+        {
+            if (x < 0)
+            {
+                rightScore += 1
+                view.broadcastScore({score: {left: leftScore, right: rightScore}})
+                view.setSecondPlayerScore(rightScore);
+                x = CENTER_X;
+                y = CENTER_Y;
+                ball_throw++
 
-        }
-        else if (x > canvas.width)
-        {
-            console.log(leftScore)
-            leftScore += 1
-            view.setFirstPlayerScore(leftScore);
-            x = CENTER_X;
-            y = CENTER_Y;
-            ball_throw++
-        }
-        if (leftScore >= MAX_SCORE || rightScore >= MAX_SCORE)
-        {
-            clearInterval(loopID) // the main loop breaks here
-            if (leftScore >= MAX_SCORE) {
-                console.log("left won");
-                view.finishGame(view.first_player_id);
             }
-            if (rightScore >= MAX_SCORE) {
-                console.log("right won");
-                view.finishGame(view.second_player_id);
+            else if (x > canvas.width)
+            {
+                
+                leftScore += 1
+                view.broadcastScore({score: {left: leftScore, right: rightScore}});
+                view.setFirstPlayerScore(leftScore);
+                x = CENTER_X;
+                y = CENTER_Y;
+                ball_throw++
             }
-            gameID = setInterval(drawGame, 10)
-        }
-        if (ball_throw === 2)
-        {
-            ball_throw = 0
-            dx = change_side * start_direction
-            change_side *= -1
+            if (leftScore >= MAX_SCORE || rightScore >= MAX_SCORE)
+            {
+                clearInterval(loopID) // the main loop breaks here
+                if (leftScore >= MAX_SCORE) {
+                    console.log("left won");
+                    view.finishGame(view.first_player_id);
+                }
+                if (rightScore >= MAX_SCORE) {
+                    console.log("right won");
+                    view.finishGame(view.second_player_id);
+                }
+                gameID = setInterval(drawGame, 10)
+            }
+            if (ball_throw === 2)
+            {
+                ball_throw = 0
+                dx = change_side * start_direction
+                change_side *= -1
+            }
         }
     }
 

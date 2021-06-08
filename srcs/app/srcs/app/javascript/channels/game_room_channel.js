@@ -7,6 +7,8 @@ var obtainedValues =
 	leftPadY: 1,
     ballx: 1,
     bally: 1,
+    leftScore: 0,
+    rightScore: 0,
 }
 
 var GameRoomInit = 
@@ -39,6 +41,11 @@ var GameRoomInit =
                 {
                     obtainedValues.ballx = data.ball.x;
                     obtainedValues.bally = data.ball.y;
+                }
+                if (data.score)
+                {
+                    obtainedValues.leftScore = data.score.left;
+                    obtainedValues.rightScore = data.score.right;
                 }
 
             //    console.log(data);
