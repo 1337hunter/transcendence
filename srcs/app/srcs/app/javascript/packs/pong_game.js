@@ -10,8 +10,8 @@ export default function pong_game(view) {
     var y = CENTER_Y;
     var ball_throw = 0 // this is for change side ball throw
     var change_side = -1
-    var dx = 3;
-    var dy = 3;
+    var dx = 2;
+    var dy = 2;
     var	start_direction = dx
     var ballRadius = 4;
     var padHeight = 4
@@ -107,7 +107,8 @@ export default function pong_game(view) {
 
     function drawLeftPad() {
         ctx.beginPath();
-        ctx.rect(leftPadX, view.getLeftPadY(), padHeight, padWidth);
+        leftPadY = view.getLeftPadY();
+        ctx.rect(leftPadX, leftPadY, padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -115,7 +116,8 @@ export default function pong_game(view) {
 
     function drawRightPad() {
         ctx.beginPath()
-        ctx.rect(rightPadX, view.getRightPadY(), padHeight, padWidth);
+        rightPadY = view.getRightPadY();
+        ctx.rect(rightPadX, rightPadY, padHeight, padWidth);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -123,7 +125,12 @@ export default function pong_game(view) {
 
     function drawBall() {
         ctx.beginPath();
-        ctx.arc(view.getBallX(), view.getBallY(), ballRadius, 0, Math.PI*2);
+        if (is_player_right)
+        {
+            x = view.getBallX();
+            y = view.getBallY();
+        }
+        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
         ctx.fillStyle = "#FFFFFF";
         ctx.fill();
         ctx.closePath();
@@ -133,6 +140,7 @@ export default function pong_game(view) {
         if (x < 0)
         {
             rightScore += 1
+            view.setLeftPlayerScore(leftScore);
             x = CENTER_X;
             y = CENTER_Y;
             ball_throw++
@@ -141,6 +149,7 @@ export default function pong_game(view) {
         else if (x > canvas.width)
         {
             leftScore += 1
+            view.setLeftPlayerScore(leftScore);
             x = CENTER_X;
             y = CENTER_Y;
             ball_throw++
@@ -148,10 +157,14 @@ export default function pong_game(view) {
         if (leftScore >= MAX_SCORE || rightScore >= MAX_SCORE)
         {
             clearInterval(loopID) // the main loop breaks here
-            if (leftScore >= MAX_SCORE)
+            if (leftScore >= MAX_SCORE) {
+                console.log("left won");
                 view.finishGame(view.first_player_id);
-            if (rightScore >= MAX_SCORE)
+            }
+            if (rightScore >= MAX_SCORE) {
+                console.log("right won");
                 view.finishGame(view.second_player_id);
+            }
             gameID = setInterval(drawGame, 10)
         }
         if (ball_throw === 2)

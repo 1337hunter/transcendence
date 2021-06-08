@@ -16,3 +16,18 @@ table#tournaments-table th, table#tournaments-table tr {
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
 }
+
+table#tournament-users-table {
+  border: 5px transparent;
+}
+
+table#tournament-users-table th, table#tournament-users-table tr {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+}
+
+table#tournament-users-table td {
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+}

@@ -27,12 +27,21 @@ $(function () {
 					$this.render();
 				}
 			});
+			this.first_player_score = 0;
+			this.second_player_score = 0;
 		},
-
 		render: function () {
 			this.$el.html(this.template());
 			pong_game(this);
 			return this;
+		},
+		setFirstPlayerScore: function (score)
+		{
+			this.first_player_score = score;
+		},
+		setSecondPlayerScore: function (score)
+		{
+			this.second_player_score = score;
 		},
 		broadcastRight: function (right)
 		{
@@ -65,15 +74,8 @@ $(function () {
 		finishGame: function (winner_id)
 		{
 			let $this = this;
-			this.model.save({status: 3, winner: winner_id});
-			consumer.subscriptions.subscriptions.forEach((subscription) => {
-				let found = subscription.identifier.search("{\"channel\":\"GameRoomChannel\",\"match_id\":" + $this.model.attributes.id + "}")
-				if (found != -1)
-				{
-					console.log("match_id: ", $this.model.attributes.id);
-				  consumer.subscriptions.remove(subscription)
-				}
-			})
+			this.model.save({status: 3, winner: winner_id, first_player_score: this.first_player_score, second_player_score: this.second_player_score});
+			this.cable.unsubscribe();
 		},
 	});
 });

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_07_162203) do
+ActiveRecord::Schema.define(version: 2021_06_08_112357) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,17 +61,19 @@ ActiveRecord::Schema.define(version: 2021_06_07_162203) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "winner"
+    t.integer "first_player_score"
+    t.integer "second_player_score"
     t.index ["first_player_id"], name: "index_matches_on_first_player_id"
     t.index ["second_player_id"], name: "index_matches_on_second_player_id"
   end
 
   create_table "messages", force: :cascade do |t|
     t.string "content"
-    t.integer "room_id"
-    t.boolean "private"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "room_id", null: false
+    t.index ["room_id"], name: "index_messages_on_room_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
@@ -100,6 +102,8 @@ ActiveRecord::Schema.define(version: 2021_06_07_162203) do
     t.boolean "private"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "message_id"
+    t.index ["message_id"], name: "index_rooms_on_message_id"
   end
 
   create_table "tournaments", force: :cascade do |t|
@@ -150,5 +154,7 @@ ActiveRecord::Schema.define(version: 2021_06_07_162203) do
 
   add_foreign_key "direct_messages", "direct_rooms"
   add_foreign_key "direct_messages", "users"
+  add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
+  add_foreign_key "rooms", "messages"
 end
