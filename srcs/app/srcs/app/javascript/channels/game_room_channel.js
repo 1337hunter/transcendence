@@ -30,7 +30,7 @@ var GameRoomInit =
             },
 
             received(data) {
-            //    console.log(data)
+               console.log(data)
                 if (data == "start")
                     MainSPA.SPA.router.navigate("#/play/" + args.match_id);
                 if (data.right)

@@ -51,14 +51,3 @@ class Api::MessagesController < ApplicationController
     end
 
 end
-# ActionCable.server.broadcast("room_2", 
-#             {
-#                 user_id: 2,
-#                 room_id: 2,
-#                 room_owner_id: 6,
-#                 admin: true,
-#                 avatar: "https://www.pexels.com/photo/close-up-photography-of-group-of-people-974320/",
-#                 displayname: "dummy",
-#                 content: "message",
-#                 block: {} 
-#             })
