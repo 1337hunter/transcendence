@@ -224,7 +224,7 @@ $(function () {
                 error: Utils.alertOnAjaxError,
                 success: function () {
                     $this.matches_collection.fetch({reset: true, error: this.onerror, success: function () {
-                        let $match = $this.matches_collection.findWhere({first_player_id: MainSPA.SPA.router.currentuser.get('id'), second_player_id: $this.model.attributes.id});
+                        let $match = $this.matches_collection.findWhere({status: 1, first_player_id: MainSPA.SPA.router.currentuser.get('id'), second_player_id: $this.model.attributes.id});
                         $match.set($match, {game_room: GameRoomInit.createGameRoom({match_id: $match.id})});
                     }})
                 }

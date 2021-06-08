@@ -10,8 +10,8 @@ export default function pong_game(view) {
     var y = CENTER_Y;
     var ball_throw = 0 // this is for change side ball throw
     var change_side = -1
-    var dx = 2;
-    var dy = 2;
+    var dx = 5;
+    var dy = 5;
     var	start_direction = dx
     var ballRadius = 4;
     var padHeight = 4
