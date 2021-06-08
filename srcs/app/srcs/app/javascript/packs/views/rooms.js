@@ -92,10 +92,8 @@ $(function () {
 			$("#input-room-password_" + room.attributes.id).css("display", "none");
 			$("#input-room-password_" + room.attributes.id).val('');
 		},
-		HideAll: function () {
+		HideAll: function (e) {
 			this.rooms.each(this.HideOne)
-			$(".new-chat-input").css("display", "none")
-			$("#new_message_input").css("display", "none")
 		},
 		room_click: function (e) {
 			let regex =  /\d+/;

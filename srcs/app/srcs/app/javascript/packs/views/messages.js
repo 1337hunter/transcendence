@@ -20,7 +20,8 @@ $(function () {
 		events: {
 			"click .user_icon" : "open_user_profile",
 			"click #block_user_room" : "block_user",
-			"click #make_adm" : "make_adm"
+			"click #make_adm" : "make_adm",
+			"click .make_adm" : "make_adm"
 		},
 		open_user_profile: function () {
 			var $this = this;
@@ -75,10 +76,9 @@ $(function () {
 			this.cable = SubToChannel.join(id);
 			this.listenTo(this.collection, 'add', this.addOne);
 			this.collection = new Messages.MessageCollection(null, {id: this.room_id});
-			this.admin_model = new RoomMembers.Admin({id: this.room_id})
 			this.room_model = new Rooms.RoomId({id: this.room_id});
-			this.admin = false;
 			var $this = this;
+			this.admin_model = new RoomMembers.Admin({id: this.room_id})
 			this.admin_model.fetch({
 				success: function () {
 					$this.admin = $this.admin_model.attributes.admin
@@ -112,9 +112,12 @@ $(function () {
 			return this;
 		},
 		addOne: function (msg) {
-			if (this.current_user_id == this.room_model.attributes.owner_id && this.current_user_id != msg.attributes.user_id)
-				this.admin = true
-			msg.set("admin", this.admin)
+			var show_admin = this.admin;
+			if (this.current_user_id == this.room_model.attributes.owner_id)
+				show_admin = true;
+			if (this.current_user_id == msg.attributes.user_id)
+				show_admin = false;
+			msg.set("admin", show_admin)
 			msg.view = new MessagesView.MessageView({model: msg});
 			this.$("#messages").append(msg.view.render().el);
 			$("#messages").scrollTop($("#messages")[0].scrollHeight);
@@ -232,8 +235,8 @@ $(function () {
 		},
 		addOne: function (msg) {
 			msg.view = new MessagesView.DirectMessageView({model: msg});
-			this.$("#messages").append(msg.view.render().el);
-			$("#messages").scrollTop($("#messages")[0].scrollHeight);
+			this.$("#direct_messages").append(msg.view.render().el);
+			$("#direct_messages").scrollTop($("#direct_messages")[0].scrollHeight);
 		},
 		addAll: function () {
 			this.collection.each(this.addOne, this);
@@ -266,7 +269,7 @@ $(function () {
 					});
 					mes.set({displayname: current_user.get("displayname")});
 					mes.set({avatar: current_user.get("avatar_url")});
-					$("#messages").scrollTop($("#messages")[0].scrollHeight);
+					$("#direct_messages").scrollTop($("#direct_messages")[0].scrollHeight);
 					$('#chat-input').val('');
 				}
 			}

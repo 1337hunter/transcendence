@@ -28,7 +28,7 @@ let SubToDirect = {
       received(data) {
         if (data.direct_room_id == this.id)
         {
-          $('#messages').append(`
+          $('#direct_messages').append(`
             <div class="message" data-user-id="${data.user_id}">
               <table>
                 <tr><th><img class="user_icon" width="35px" height="35px" src="${data.avatar}" style="margin-bottom: 10px"></th>
@@ -36,7 +36,8 @@ let SubToDirect = {
                 <th id="message-content"> ${data.content} </th></tr>
               </table>
             </div>`)
-            $("#messages").scrollTop($("#messages")[0].scrollHeight);
+            var element = document.getElementById("direct_messages");
+            element.scrollTop = element.scrollHeight;
         }
       }
     })

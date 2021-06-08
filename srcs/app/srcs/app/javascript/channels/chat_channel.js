@@ -1,5 +1,7 @@
 import consumer from "./consumer"
 import MainSPA from "../packs/main_spa";
+import MessagesView from "../packs/views/messages"
+import Messages from "../packs/models/messages"
 
 
 function disconnect_from_rooms () {
@@ -29,41 +31,42 @@ let SubToChannel = {
 
       received(data) {
         var current_user_id = MainSPA.SPA.router.currentuser.get('id')
+        var is_admin = false;
         var found = false;
-        for (let i = 0; i < data.block.length; ++i)
+        if (data.room_owner_id == current_user_id && data.room_owner_id !== data.user_id && data.user_id != current_user_id) {
+          is_admin = true;
+        }
+        else {
+          for (let i = 0; i < data.admins.length; ++i) {
+            if (data.admins[i].user_id == current_user_id) {
+              if (current_user_id != data.user_id) {
+                is_admin = true;
+                break ;
+              }
+            }
+          }
+        }
+        for (let i = 0; i < data.blocks.length; ++i)
         {
-          if (data.block[i].user_id == current_user_id) {
+          if (data.blocks[i].user_id == current_user_id) {
             found = true;
             break ;
           }
         }
         if (data.room_id == this.id && !found)
         {
-            // <div class="message" data-user-id="${data.user_id}">
-            //   <table>
-            //     <tr style="vertical-align:top;"><th><img class="user_icon" width="35px" height="35px" src="${data.avatar}" style="margin-bottom: 10px"></th>
-            //     <th id="user-name">${data.displayname}:</th>
-            //     <th id="message-content"> ${data.content} </th></tr>
-            //   </table>
-            // </div>
-            
-            $('#messages').append(`
-            <div class="message" data-user-id="${data.user_id}">
-              <table>
-                <tr style="vertical-align:top;"><th><img class="user_icon" width="35px" height="35px" src="${data.avatar}" style="margin-bottom: 10px"></th>
-                <th id="user-name">${data.displayname}:</th>
-                <th id="message-content"> ${data.content} </th>`)
-            if (current_user_id == data.room_owner_id && current_user_id != data.user_id)
-            {
-                $('#messages').append(`
-                <th>
-                  <div style="width: 7%; float:left;" id="block_user_room"><%= show_svg('block.svg') %></div></div>
-                </th>`)
-            }
-            $('#messages').append(`</tr>
-              </table>
-            </div>`)
-            $("#messages").scrollTop($("#messages")[0].scrollHeight);
+          var msg_model = new Messages.MessageModel({
+            user_id: data.user_id,
+            room_id: data.room_id,
+            avatar: data.avatar,
+            admin: is_admin,
+            displayname: data.displayname,
+            content: data.content,
+          })
+          var msg = new MessagesView.MessageView({model: msg_model});
+          $("#messages").append(msg.render().el);
+          var element = document.getElementById("messages");
+          element.scrollTop = element.scrollHeight;
         }
       }
     })
