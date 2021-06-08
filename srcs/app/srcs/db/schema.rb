@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 2021_06_08_112357) do
     t.bigint "users"
     t.datetime "start_date", null: false
     t.boolean "is_rating", default: false, null: false
-    t.string "status", default: "opened", null: false
+    t.string "status", default: "open", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

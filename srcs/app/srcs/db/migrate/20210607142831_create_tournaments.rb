@@ -4,7 +4,7 @@ class CreateTournaments < ActiveRecord::Migration[6.1]
       t.bigint "users", references: :users
       t.datetime :start_date, null: false
       t.boolean :is_rating, null: false, default: false
-      t.string :status, null: false, default: "opened"
+      t.string :status, null: false, default: "open"
 
       t.timestamps
     end
