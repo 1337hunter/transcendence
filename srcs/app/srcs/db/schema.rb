@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_08_112357) do
+ActiveRecord::Schema.define(version: 2021_06_08_163347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -111,6 +111,8 @@ ActiveRecord::Schema.define(version: 2021_06_08_112357) do
     t.string "status", default: "open", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "winner_id"
+    t.index ["winner_id"], name: "index_tournaments_on_winner_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -153,4 +155,5 @@ ActiveRecord::Schema.define(version: 2021_06_08_112357) do
   add_foreign_key "direct_messages", "direct_rooms"
   add_foreign_key "direct_messages", "users"
   add_foreign_key "messages", "users"
+  add_foreign_key "tournaments", "users", column: "winner_id"
 end

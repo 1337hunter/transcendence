@@ -5,20 +5,22 @@ class Api::TournamentsController < ApplicationController
   before_action :check_2fa!
   before_action :sign_out_if_banned
   before_action :check_admin, only: %i[create update destroy]
-  before_action :find_tournament, only: %i[show update destroy]
+  before_action :find_tournament, only: %i[show update destroy join_tournament leave_tournament]
   before_action :define_filters
   rescue_from ActiveRecord::RecordNotFound, :with => :tournament_not_found
 
   def index
-    render json: Tournament.all.as_json(include: {users: {only: @filters}})
+    render json: Tournament.all.as_json(
+      include: {users: {only: @filters}, winner: {only: @filters}}
+    )
   end
 
   def show
-    render json: @tournament
-                   .as_json(include: {users: {only: @filters}})
-                   .merge({'is_current_admin' => current_user.admin?,
-                           'is_in_tournament' =>
-                             current_user.tournament_id == @tournament.id})
+    render json:
+             @tournament
+               .as_json(include: {users: {only: @filters}, winner: {only: @filters}})
+               .merge({'is_current_admin' => current_user.admin?,
+                       'is_in_tournament' => current_user.tournament_id == @tournament.id})
   end
 
   def update
@@ -34,12 +36,18 @@ class Api::TournamentsController < ApplicationController
     @tournament.destroy
   end
 
-  def register_to_tournament
-
+  def join_tournament
+    if current_user.tournament_id.nil?
+      current_user.update(tournament_id: @tournament.id)
+      render json: { msg: 'Successfully joined tournament #' + @tournament.id }, status: :ok
+    end
   end
 
-  def unregister_from_tournament
-
+  def leave_tournament
+    if current_user.tournament_id == @tournament.id
+      current_user.update(tournament_id: nil)
+      render json: { msg: 'Successfully left tournament #' + @tournament.id }, status: :ok
+    end
   end
 
   private
