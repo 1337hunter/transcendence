@@ -28,12 +28,43 @@
     <button type="button" class="button-sm button-back" id="back-button" onclick="window.history.back();">
       <%= show_svg('arrow-left.svg') %>
     </button>
-    Tounament #<%%= id %>
+    Tournament #<%%= id %> (<%%= status %>)
     <button type="button" class="button-sm button-refresh" id="refresh-button">
       <%= show_svg('refresh.svg') %>
     </button>
   </h1>
-  <p>Starts: <%%= new Date(start_date).toLocaleString() %></p>
-  <p>Status: <%%= status %></p>
-  <p>Registred: <%%= users.length %></p>
+  <p>Starts: <%%= new Date(start_date) %></p>
+  <div id="registredusers"></div>
+</script>
+
+<script type="text/template" id="single-tournament-user-template">
+  <td>
+    <div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+      <%= show_svg('user-astronaut.svg') %>
+    </div>
+  </td>
+  <td>
+    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= avatar_url %>">
+  </td>
+  <td class="users-displayname"><label><%%= displayname %></label></td>
+  <td><label><%%= wins %></label></td>
+  <td><label><%%= loses %></label></td>
+  <td><label><%%= elo %></label></td>
+  <td><label><%%= nickname %></label></td>
+</script>
+
+<script type="text/template" id="tournament-users-template">
+  <h4>Registred users (<%%= usercount %>)</h4>
+  <table id="tournament-users-table" border-spacing="20px" padding="0 2em 1em 0">
+    <tr>
+      <th></th><th></th>
+      <th class="users-displayname">Display name</th>
+      <th>Wins</th>
+      <th>Loses</th>
+      <th>Rating</th>
+      <th>Intra nickname</th>
+      <th>Actions</th>
+    </tr>
+  </table>
 </script>
