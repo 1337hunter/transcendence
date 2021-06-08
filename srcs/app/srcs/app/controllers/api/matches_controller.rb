@@ -22,6 +22,7 @@ class Api::MatchesController < ApplicationController
         end
         if (params.has_key?(:first_player_score) and params.has_key?(:second_player_score))
             @match.update(first_player_score: params[:first_player_score], second_player_score: params[:second_player_score])
+        end
         render json: [], status: :ok
     end
 

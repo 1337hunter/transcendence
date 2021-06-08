@@ -37,7 +37,8 @@ let SubToDirect = {
               </table>
             </div>`)
             var element = document.getElementById("direct_messages");
-            element.scrollTop = element.scrollHeight;
+            if (element != null)
+              element.scrollTop = element.scrollHeight;
         }
       }
     })
