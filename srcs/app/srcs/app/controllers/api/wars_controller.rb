@@ -76,7 +76,7 @@ class Api::WarsController < ApplicationController
   end
 
   def check_active_war
-    render json: { error: 'You have a war in progress' }, status: :forbidden if @guild_cur.has_active_war
+    render json: { error: 'You have a war in progress' }, status: :forbidden if @guild_cur.active_war
   end
 
   def check_opponent_fail
@@ -84,7 +84,7 @@ class Api::WarsController < ApplicationController
       render json: { error: 'Opponent not found' }, status: :not_found
     elsif @opponent.id == current_user.guild_id
       render json: { error: "You can't start war with yourself" }, status: :forbidden
-    elsif @opponent.has_active_war
+    elsif @opponent.active_war
       render json: { error: "#{@opponent.name} has a war in progress" }, status: :forbidden
     else
       false

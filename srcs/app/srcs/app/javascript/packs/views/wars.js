@@ -120,21 +120,13 @@ $(function () {
             MainSPA.SPA.router.navigate("#/wars/" + this.model.get('id'));
         },
         accept:  function() {
-            $.ajax({
-                url: 'api/guilds/' + this.model.get('guild2_id') + '/war_invites/' + this.model.get('id'),
-                type: 'PUT',
-                success: () => {
-                    Utils.appAlert('success', {msg: 'Request accepted'});
-                    this.remove();
-                },
-                error: (response) => {
-                    Utils.alertOnAjaxError(response);
-                }
-            });
+           Utils.accept_war_invite(this, true)
         },
         decline:  function() {
-            this.model.destroy();
-            //TODO:feedback on error?
+            this.model.destroy( {
+                success: () => {
+                    Utils.appAlert('success', {msg: 'War canceled'});
+                }, error: this.onerror});
         },
         remove: function() {
             this.$el.empty().off();
@@ -203,7 +195,8 @@ $(function () {
         },
         refresh: function () {
             this.collection.fetch({
-                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
+                success: function () {
+                    Utils.appAlert('success', {msg: 'Up to date'});},
                 error: this.onerror});
         },
         onerror: function (model, response) {
@@ -220,7 +213,9 @@ $(function () {
         cur_user : new Users.CurrentUserModel,
         template: _.template($('#war-profile-template').html()),
         events: {
-            "click #refresh-button" :   "refresh"
+            "click #refresh-button" :   "refresh",
+            "click #accept-button": "accept",
+            "click #decline-button": "decline"
         },
         initialize: function (id) {
             this.model = new Wars.WarId({id: id});
@@ -236,6 +231,16 @@ $(function () {
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
+        },
+        accept:  function() {
+            Utils.accept_war_invite(this, false)
+        },
+        decline:  function() {
+            this.model.destroy( { success: () => {
+                    Utils.appAlert('success', {msg: 'War canceled'});
+                }, error: this.onerror});
+            //TODO: navigate to previous page instead of guilds
+            MainSPA.SPA.router.navigate("#/guilds");
         },
         render: function () {
             this.model.attributes.wartime_start = Utils.getTime(this.model.attributes.wartime_start);
@@ -330,8 +335,10 @@ $(function () {
                 url: 'api/wars/',
                 type: 'POST',
                 data: data,
-                success: () => {
+                success: (result) => {
                     Utils.appAlert('success', {msg: 'You declared war to the ' + this.model.get('name')});
+                    MainSPA.SPA.router.navigate("#/wars/" + result.id);
+                    this.close();
                 },
                 error: (response) => {
                     Utils.alertOnAjaxError(response);

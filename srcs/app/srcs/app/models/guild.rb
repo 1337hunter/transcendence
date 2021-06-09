@@ -21,9 +21,13 @@ class Guild < ApplicationRecord
     War.where('guild1_id = :id OR guild2_id = :id', id: id).where(accepted: true)
   end
 
-  def has_active_war
+  def active_war
     wars = War.where('guild1_id = :id OR guild2_id = :id', id: id).where(accepted: true).where(finished: false)
-    wars.empty? == false
+    if wars.empty?
+      false
+    else
+      [wars[0].id, wars[0].g1_name, wars[0].g2_name]
+    end
   end
 
   def wars_counter
@@ -31,4 +35,37 @@ class Guild < ApplicationRecord
     wars.length
   end
 
+  def current_user_role
+    user = Guild.current_user
+    # user = User.find(user.id)
+    if user.guild_id == id
+      if user.guild_accepted
+        if user.guild_master
+          'master'
+        else
+          user.guild_officer ? 'officer' : 'member'
+        end
+      else
+        'seeker'
+      end
+    elsif user.guild_master
+      wars = War.where('guild1_id = :id OR guild2_id = :id', id: user.guild_id).where(accepted: true).where(finished: false)
+      wars.empty? ? 'other-free-master' : 'other-member'
+    elsif user.guild_accepted
+      'other-member'
+    else
+      invite = GuildInvitation.find_by_user_id_and_guild_id(user.id, id)
+      invite ? 'invited' : 'none'
+    end
+  end
+
+  class << self
+    def current_user=(user)
+      Thread.current[:current_user] = user
+    end
+
+    def current_user
+      Thread.current[:current_user]
+    end
+  end
 end
