@@ -111,7 +111,8 @@ export default class Utils {
                     type: 'PUT',
                     success: () => {
                         Utils.appAlert('success', {msg: 'You left the guild ' + name});
-                        Utils.view_rerender(view);
+                        view.model.collection.fetch();
+                        // Utils.view_rerender(view);
                     },
                     error: (response) => {
                         Utils.alertOnAjaxError(response);
@@ -184,7 +185,8 @@ export default class Utils {
                         Utils.appAlert('success', {msg: 'Request to ' + view.model.get('name') + ' sent'});
                         if (name)
                             Utils.appAlert('success', {msg: 'Request to ' + name + ' canceled'});
-                        Utils.view_rerender(view);
+                        view.model.collection.fetch();
+                        // Utils.view_rerender(view);
                     },
                     onerror: Utils.alertOnAjaxError
                 });
@@ -209,7 +211,8 @@ export default class Utils {
                     type: 'PUT',
                     success: () => {
                         Utils.appAlert('success', {msg: 'Request canceled'});
-                        Utils.view_rerender(view);
+                        view.model.collection.fetch();
+                        // Utils.view_rerender(view);
                     },
                     error: (response) => {
                         Utils.alertOnAjaxError(response);
