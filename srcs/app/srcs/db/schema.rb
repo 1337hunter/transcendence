@@ -86,11 +86,11 @@ ActiveRecord::Schema.define(version: 2021_06_09_110054) do
 
   create_table "messages", force: :cascade do |t|
     t.string "content"
+    t.integer "room_id"
+    t.boolean "private"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "room_id", null: false
-    t.index ["room_id"], name: "index_messages_on_room_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
@@ -112,14 +112,13 @@ ActiveRecord::Schema.define(version: 2021_06_09_110054) do
 
   create_table "rooms", force: :cascade do |t|
     t.string "name"
-    t.string "password"
+    t.boolean "password_present"
+    t.string "password_digest"
     t.string "owner_name"
-    t.string "owner_id"
+    t.integer "owner_id"
     t.boolean "private"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "message_id"
-    t.index ["message_id"], name: "index_rooms_on_message_id"
   end
 
   create_table "tournaments", force: :cascade do |t|
@@ -210,7 +209,6 @@ ActiveRecord::Schema.define(version: 2021_06_09_110054) do
   add_foreign_key "direct_messages", "users"
   add_foreign_key "guild_invitations", "guilds"
   add_foreign_key "guild_invitations", "users"
-  add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
   add_foreign_key "tournaments", "users", column: "winner_id"
   add_foreign_key "users", "guilds"
