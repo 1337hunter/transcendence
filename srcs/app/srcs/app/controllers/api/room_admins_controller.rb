@@ -14,6 +14,16 @@ class Api::RoomAdminsController < ApplicationController
     end
 
     def create
+        #create or remove admin by name
+        @user = User.where(displayname: params[:name]).first
+        if !@user.blank? and @user != nil
+            @admin = RoomAdmin.where(room_id: params[:room_id], user_id: @user.id).first
+            if @admin.blank?
+                RoomAdmin.create(room_id: params[:room_id], user_id: @user.id)
+            else
+                @admin.destroy
+            end
+        end
     end
 
     def update

@@ -53,6 +53,14 @@
       <%= show_svg('destroy.svg') %>
     </button>
   </td>
+  <td>
+    <button id="<%%= id %>" type="button" title="Add/Remove" class="button-sm add_remove_admin">
+      <svg viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="50"/>
+    </svg>
+    </button>
+    <input id="add_remove_admin_input_<%%= id %>" type="text" style="display:none" class="form-control" autocomplete="off"\>
+  </td>
 </script>
 
 <script type="text/template" id="admin-chatlist-template">
@@ -60,7 +68,7 @@
     <%= show_svg('refresh.svg') %></button>
   </h1>
   <table id="chats-table" padding="0 2em 1em 0">
-    <tr><th></th><th></th><th>Id</th><th>Name</th><th>Owner</th><th>Actions</th></tr>
+    <tr><th></th><th></th><th>Id</th><th>Name</th><th>Owner</th><th>Remove chat</th><th>Add/Remove admin</th></tr>
   </table>
 </script>
 
