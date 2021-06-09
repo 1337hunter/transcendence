@@ -35,6 +35,22 @@ class Guild < ApplicationRecord
     wars.length
   end
 
+  def members_counter
+    members.length
+  end
+
+  def join_requests_counter
+    requests.length
+  end
+
+  def war_invites_counter
+    war_invites.length
+  end
+
+  def war_requests_counter
+    war_requests.length
+  end
+
   def current_user_role
     user = Guild.current_user
     if user.guild_id == id

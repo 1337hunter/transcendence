@@ -131,12 +131,23 @@
     <!--<pattern="[A-Za-z0-9]{2,5}" required="required" title="Anagram can only have 2-5 letters, no whitespaces allowed"></pattern>-->
   </div>
   <div class="row"><a>Current score:&nbsp;<%%= score %></a></div>
-  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/members">members</a>`%></div>
-  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/wars">war history</a>`%></div>
-  <div class="row" <%%=current_user_role == 'master' || current_user_role == 'officer' ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/guilds/${id}/requests">join requests</a>`%></div>
+  <div class="row"><div class="col-10">Master: <%%=`<a class="link-light" href="#/users/${master.id}">`%><%%= master.displayname %></a></div></div>
+  <div class="row"><div class="col-10"><%%=`<a class="link-light" href="#/guilds/${id}/members">All members</a>`%> (<%%=members_counter %>)</div></div>
+  <div class="row">
+    <div>
+      <%%=`<a class="link-light" href="#/guilds/${id}/wars">War history</a>`%>:
+      <span <%%=active_war ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/wars/${active_war[0]}">`%>current</a>: with <%%= active_war[1] == name ? active_war[1] : active_war[2] %>,</span>
+      <span <%%=active_war ? 'style="display:none"' : '' %>>current: none, </span>
+      all: <%%=wars_counter %>
+    </div>
+  </div>
+  <div class="row" <%%=current_user_role == 'master' || current_user_role == 'officer' ? '' : 'style="display:none"' %>>
+    <div><%%=`<a class="link-light" href="#/guilds/${id}/requests">join requests</a>`%> (<%%=join_requests_counter %>)</div></div>
   <div class="row" <%%=current_user_role == 'master' || current_user_role == 'officer' ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/users_not_in_guild">invite users</a>`%></div>
-  <div class="row" <%%=current_user_role == 'master' ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/guilds/${id}/war_invites">war invites from other guilds</a>`%></div>
-  <div class="row" <%%=current_user_role == 'master' ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/guilds/${id}/war_requests">war requests sent by you</a>`%></div>
+  <div class="row" <%%=current_user_role == 'master' ? '' : 'style="display:none"' %>>
+    <div><%%=`<a class="link-light" href="#/guilds/${id}/war_invites">war invites from other guilds</a>`%> (<%%=war_invites_counter%>)</div></div>
+  <div class="row" <%%=current_user_role == 'master' ? '' : 'style="display:none"' %>>
+    <div><%%=`<a class="link-light" href="#/guilds/${id}/war_requests">war requests sent by you</a>`%> (<%%=war_requests_counter%>)</div></div>
 </script>
 
 <script type="text/template" id="delete-guild-modal-template">
