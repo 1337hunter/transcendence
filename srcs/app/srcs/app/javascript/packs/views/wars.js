@@ -298,27 +298,21 @@ $(function () {
         declareWar: function() {
             let start = $('#war-start').val().trim();
             let end = $('#war-end').val().trim();
-            if (moment(end).diff(moment(start), 'hours') < 24) {
-                Utils.appAlert('danger', {msg: 'War duration must be not less then 24 hours'});
-                return
-            }
-            if (moment(start).diff(moment(), 'minutes') < 30) {
-                Utils.appAlert('danger', {msg: 'War must start in the future, at least 30 min from now'});
-                return
-            }
             let wartime_start = $('#wartime-start').val().trim();
             let wartime_end = $('#wartime-end').val().trim();
             if (moment('2021-01-01 ' + wartime_end).diff(moment('2021-01-01 ' + wartime_start), 'hours') < 1) {
                 Utils.appAlert('danger', {msg: 'War time gap must be not less then 1 hour'});
                 return
             }
+            //TODO: 23-00 - 3:00 now is not valid
+            //TODO:check in WarValidator
             let tz = $('#timezone').val();
             let data = 'guild2_id='+ this.model.get('id') +
                 '&stake=' + $('#stake').val().trim() +
-                '&start=' + start + tz +
-                '&end=' + end + tz +
-                '&wartime_start=' + wartime_start + tz +
-                '&wartime_end=' + wartime_end + tz;
+                '&start=' + start + ':59' + tz +
+                '&end=' + end + ':59' + tz +
+                '&wartime_start=' + wartime_start + ':59' + tz +
+                '&wartime_end=' + wartime_end + ':59' + tz;
             let max_unanswered = $('#max-unanswered').val().trim();
             if (max_unanswered)
                 data += '&max_unanswered=' + max_unanswered;

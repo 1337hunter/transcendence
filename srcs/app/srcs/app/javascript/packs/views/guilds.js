@@ -26,24 +26,6 @@ $(function () {
             this.listenTo(this.model, 'destroy', this.remove);
         },
         render: function() {
-            /*let view = this;
-           *  let id = this.model.get('id');
-             this.cur_user.fetch({
-                 success: function (model) {
-                     if (model.get('guild_accepted')) {
-                         if (model.get('guild_id') == id)
-                             view.model.attributes.view = 'leave';
-                         else if (!view.model.get('active_war') && ((model.get('guild_officer') || model.get('guild_master'))))
-                             view.model.attributes.view = 'war';
-                     }
-                     else if (model.get('guild_id') == id)
-                         view.model.attributes.view = 'request';
-                     else if (Utils.has_guild_invitation(model.get('id'), id))
-                         view.model.attributes.view = 'invite';
-                     else
-                         view.model.attributes.view = 'join';
-                     view.$el.html(view.template(view.model.toJSON()));
-                 }});*/
             this.$el.html(this.template(this.model.toJSON()));
             return this;
         },
@@ -274,11 +256,10 @@ $(function () {
             "click #decline-button": "decline"
         },
         tagName: "div",
-        initialize: function (/*user*/) {
+        initialize: function () {
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
-           // this.u_id = user.id;
         },
         render: function() {
             this.model.attributes.view = 'invite';
@@ -314,7 +295,6 @@ $(function () {
             this.listenTo(this.collection, 'add', this.addOne);
             this.listenTo(this.collection, 'reset', this.addAll);
             this.collection.fetch({reset: true, error: this.onerror});
-            //this.u_id = id;
         },
         addOne: function (guild) {
             guild.view = new GuildsView.GuildInvitationView({model: guild/*, id: this.u_id*/});

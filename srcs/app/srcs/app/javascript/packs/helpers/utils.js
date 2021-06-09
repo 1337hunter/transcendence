@@ -120,7 +120,6 @@ export default class Utils {
                             view.model.fetch();
                         else
                             view.model.collection.fetch();
-                        // Utils.view_rerender(view);
                     },
                     error: (response) => {
                         Utils.alertOnAjaxError(response);
@@ -197,7 +196,6 @@ export default class Utils {
                             view.model.fetch();
                         else
                             view.model.collection.fetch();
-                        // Utils.view_rerender(view);
                     },
                     onerror: Utils.alertOnAjaxError
                 });
@@ -226,7 +224,6 @@ export default class Utils {
                             view.model.fetch();
                         else
                             view.model.collection.fetch();
-                        // Utils.view_rerender(view);
                     },
                     error: (response) => {
                         Utils.alertOnAjaxError(response);
