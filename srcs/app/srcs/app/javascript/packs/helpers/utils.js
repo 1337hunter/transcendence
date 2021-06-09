@@ -1,4 +1,5 @@
 import MainSPA from "../main_spa";
+import {toString} from "underscore/modules/_setup";
 
 export default class Utils {
     // replaces avatar with default from db
@@ -45,4 +46,113 @@ export default class Utils {
             }).done(resolve).fail(reject);
         }));
     }
+
+    static getShortDate(s) {
+        let date = new Date(s);
+        return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear().toString().substring(2,5);
+    }
+
+    static getTime(s) {
+        let date = new Date(s);
+        return date.getHours() + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+    }
+
+    static accept_guild_invite(guild_id, guild_name) {
+        $.ajax({
+            url: 'api/users/current/' + '/join_guild',
+            type: 'PUT',
+            data: `guild_id=${guild_id}`,
+            success: () => {
+                Utils.appAlert('success', {msg: guild_name + '\'s request accepted'});
+                MainSPA.SPA.router.navigate("#/guilds/" + guild_id);
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+
+    static decline_guild_invite(user_id, guild_id, msg) {
+        $.ajax({
+            url: '/api/users/' + user_id  + '/guild_invitations/' + guild_id,
+            type: 'DELETE',
+            success: () => {
+                Utils.appAlert('success', {msg: msg});
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+
+    static decline_join_guild_request(user_id, username) {
+        $.ajax({
+            url: 'api/users/' + user_id + '/leave_guild',
+            type: 'PUT',
+            success: () => {
+                Utils.appAlert('success', {msg: username + '\'s request declined'});
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+
+    static accept_join_guild_request(user_id, username) {
+        $.ajax({
+            url: 'api/users/' + user_id + '/join_guild',
+            type: 'PUT',
+            data: `guild_accepted=${true}`,
+            success: () => {
+                Utils.appAlert('success', {msg: username + '\'s request accepted'});
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+
+    static has_guild_invitation(user_id, guild_id) {
+        let response = $.ajax({
+            url: '/api/users/' + user_id + '/guild_invitations/' + guild_id,
+            type: 'GET',
+            async: false,
+        }).responseText;
+        return response ? true : false;
+    }
+
+    static change_user_guildrole(view, data) {
+        $.ajax({
+            url: 'api/users/' + view.model.get('id')+ '/join_guild',
+            type: 'PUT',
+            data: data,
+            success: () => {
+                Utils.appAlert('success', {msg: view.model.get('displayname') + '\'s role changed'});
+                if (data != `guild_master=${true}`) {
+                    view.model.fetch({
+                        success: function () {
+                            view.render();
+                        }
+                    });
+                } else
+                    MainSPA.SPA.router.navigate("#/guilds/" + view.model.get('guild_id'));
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+
+    /*static decline_war_invite(id, msg) {
+        $.ajax({
+            url: '/api/wars/' + id,
+            type: 'DELETE',
+            success: () => {
+                Utils.appAlert('success', {msg: msg});
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }*/
 }

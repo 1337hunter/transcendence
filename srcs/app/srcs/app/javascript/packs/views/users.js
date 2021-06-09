@@ -9,6 +9,7 @@ import Rooms from "../models/rooms"
 // game stuff
 import GameRoomInit from "../../channels/game_room_channel";
 import {obtainedValues} from "../../channels/game_room_channel";
+import AdminView from "./admin";
 
 const UsersView = {};
 
@@ -16,7 +17,7 @@ $(function () {
 	UsersView.SingleUserView = Backbone.View.extend({
         template: _.template($('#singleuser-template').html()),
         events: {
-            "click" : "openprofile",
+            "click" : "openprofile"
         },
         tagName: "tr",
         initialize: function () {
@@ -319,6 +320,354 @@ $(function () {
             return this;
         }
     });
+
+    UsersView.InviteUserView = Backbone.View.extend({
+        cur_user: new Users.CurrentUserModel,
+        template1: _.template($('#invite-user-template').html()),
+        template2: _.template($('#invited-user-template').html()),
+        template3: _.template($('#guild-request-template').html()),
+        events: {
+            "click #displayname" : "openprofile",
+            "click #invite-button" :   "invite",
+            "click #cancel-invite-button" :   "cancelInvite",
+            "click #accept-button" :   "accept",
+            "click #decline-button" :   "decline"
+        },
+        tagName: "tr",
+        initialize: function () {
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'error', this.onerror);
+        },
+        openprofile: function () {
+            MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
+        },
+        invite: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $.ajax({
+                url: 'api/users/' + this.model.get('id') + '/guild_invitations/',
+                type: 'POST',
+                data: `user_id=${this.model.get('id')}`,
+                success: () => {
+                    Utils.appAlert('success', {msg: 'Invitation to ' + this.model.get('displayname') + ' sent'});
+                    this.render();
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
+            this.render();
+        },
+        cancelInvite: function () {
+            let view = this;
+            this.cur_user.fetch({
+                success: function (model) {
+                    Utils.decline_guild_invite(view.model.get('id'), model.get('guild_id'), 'Invitation to ' + view.model.get('displayname') +  ' canceled');
+                    view.render();
+                    }}
+            );
+        },
+        accept: function () {
+            Utils.accept_join_guild_request(this.model.get('id'), this.model.get('displayname'));
+            this.$el.empty().off();
+            this.stopListening();
+            return this;
+        },
+        decline: function () {
+            Utils.decline_join_guild_request(this.model.get('id'), this.model.get('displayname'));
+            let view = this;
+            this.model.fetch({
+                success: function () {
+                    view.render();
+                }
+            });
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+            this.model.attributes = this.model.previousAttributes();
+            this.render();
+        },
+        onsuccess: function () {
+            Utils.appAlert('success', {msg: 'Done'});
+        },
+        render: function() {
+            let view = this;
+            view.cur_user.fetch({
+                success: function (model) {
+                    if (Utils.has_guild_invitation(view.model.get('id'), model.get('guild_id')))
+                        view.$el.html(view.template2(view.model.toJSON()));
+                    else if (view.model.get('guild_id') == model.get('guild_id'))
+                        view.$el.html(view.template3(view.model.toJSON()));
+                    else
+                        view.$el.html(view.template1(view.model.toJSON()));
+                }});
+            return this;
+        }
+    });
+
+    UsersView.AvailableForGuildView = Backbone.View.extend({
+        template: _.template($('#userlist-template').html()),
+        cur_user: new Users.CurrentUserModel,
+        events: {
+            "click #displayname" : "openprofile",
+            "click #refresh-button" :   "refresh"
+        },
+        initialize: function () {
+            this.collection = new Users.NoGuildUsersCollection;
+            this.listenTo(this.collection, 'add', this.addOne);
+            this.listenTo(this.collection, 'reset', this.addAll);
+            this.listenTo(this.collection, 'change', this.render);
+            this.collection.fetch({reset: true, error: this.onerror});
+        },
+        addOne: function (user) {
+            let view = this;
+            this.cur_user.fetch({
+                success: function (model) {
+                    if (model.get('guild_master') || model.get('guild_officer'))
+                        user.view = new UsersView.InviteUserView({model: user});
+                    else
+                        user.view = new UsersView.SingleUserView({model: user});
+                    view.$("tbody").append(user.view.render().$el);
+                },
+                error: function () {
+                    user.view = new UsersView.SingleUserView({model: user});
+                    view.$("tbody").append(user.view.render().$el);
+                }
+            });
+        },
+        addAll: function () {
+            this.collection.each(this.addOne, this);
+        },
+        refresh: function () {
+            this.collection.fetch({
+                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
+                error: this.onerror});
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+        },
+        render: function () {
+            this.$el.html(this.template());
+            this.addAll();
+            return this;
+        }
+    });
+
+    UsersView.GuildRequestView = Backbone.View.extend({
+        template: _.template($('#guild-request-template').html()),
+        events: {
+            "click #displayname" : "openprofile",
+            "click #accept-button" :   "accept",
+            "click #decline-button" :   "decline"
+        },
+        tagName: "tr",
+        initialize: function () {
+            this.listenTo(this.model, 'change', this.remove);
+            this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'error', this.onerror);
+        },
+        openprofile: function () {
+            MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            return this;
+        },
+        accept: function () {
+            Utils.accept_join_guild_request(this.model.get('id'), this.model.get('displayname'));
+            this.remove();
+        },
+        decline: function () {
+            Utils.decline_join_guild_request(this.model.get('id'), this.model.get('displayname'));
+            this.remove();
+        },
+        remove: function() {
+            this.$el.empty().off(); /* off to unbind the events */
+            this.stopListening();
+            return this;
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+        }
+    });
+
+    UsersView.GuildRequestsView = Backbone.View.extend({
+        template: _.template($('#userlist-template').html()),
+        events: {
+            "click #refresh-button" :   "refresh"
+        },
+        initialize: function (id) {
+            this.collection = new Users.GuildRequestsCollection([], {id: id});
+            this.listenTo(this.collection, 'add', this.addOne);
+            this.listenTo(this.collection, 'reset', this.addAll);
+            this.listenTo(this.collection, 'change', this.render);
+            this.collection.fetch({reset: true, error: this.onerror});
+        },
+        addOne: function (user) {
+            user.view = new UsersView.GuildRequestView({model: user});
+            this.$("tbody").append(user.view.render().el);
+        },
+        addAll: function () {
+            this.collection.each(this.addOne, this);
+        },
+        refresh: function () {
+            this.collection.fetch({
+                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
+                error: this.onerror});
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+        },
+        render: function () {
+            this.$el.html(this.template());
+            this.addAll();
+            return this;
+        }
+    });
+
+    UsersView.ToMasterConfirmView = Backbone.View.extend({
+        template: _.template($('#to-master-modal-confirm-template').html()),
+        events: {
+            "click .btn-confirm"    : "confirm",
+            "click .btn-cancel"     : "close",
+            "click .modal"          : "clickOutside"
+        },
+        confirm: function () {
+            Utils.change_user_guildrole(this,`guild_master=${true}`);
+            this.close();
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            $('body.modal-open').off('keydown', this.keylisten);
+            $('body').removeClass("modal-open");
+            let view = this;
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        keylisten: function (e) {
+            if (e.key === "Enter")
+                e.data.view.confirm();
+            if (e.key === "Escape")
+                e.data.view.close();
+        },
+        render: function(model) {
+            this.model = model;
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
+            return this;
+        }
+    });
+
+    UsersView.GuildMemberView = Backbone.View.extend({
+        template1: _.template($('#guildmember-template').html()),
+        template2: _.template($('#guildmember-kick-template').html()),
+        template3: _.template($('#guildmember-edit-template').html()),
+        cur_user: new Users.CurrentUserModel,
+        events: {
+            "click #displayname" : "openprofile",
+            "click #to-officer-button" : "toOfficer",
+            "click #to-master-button" : "openConfirm",
+            "click #demote-button" : "demote",
+            "click #kick-button" : "kick"
+        },
+        tagName: "tr",
+        initialize: function (guild) {
+            this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'error', this.onerror);
+            this.guild_id = guild.id;
+        },
+        openprofile: function () {
+            MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
+        },
+        render: function() {
+            let view = this;
+            this.cur_user.fetch({
+                success: function (model) {
+                    if (model.get('id') != view.model.get('id') && model.get('guild_id') == view.guild_id) {
+                        if (model.get('guild_master')) {
+                            view.$el.html(view.template3(view.model.toJSON()));
+                        }
+                        else if ((model.get('guild_officer') && !view.model.get('guild_officer') && !view.model.get('guild_master')))
+                            view.$el.html(view.template2(view.model.toJSON()));
+                        else
+                            view.$el.html(view.template1(view.model.toJSON()));
+                    } else
+                        view.$el.html(view.template1(view.model.toJSON()));
+                },
+                error: function () {
+                    view.$el.html(view.template1(view.model.toJSON()));
+                }
+            });
+            return this;
+        },
+        openConfirm: function () {
+            this.confirmview = new UsersView.ToMasterConfirmView();
+            document.body.appendChild(this.confirmview.render(this.model).el);
+        },
+        demote: function () {
+            Utils.change_user_guildrole(this,`guild_officer=${false}`);
+        },
+        toOfficer: function () {
+            Utils.change_user_guildrole(this,`guild_officer=${true}`);
+        },
+        kick:  function() {
+            $.ajax({
+                url: 'api/users/' + this.model.get('id') + '/leave_guild',
+                type: 'PUT',
+                data: `guild_id=${this.model.get('guild_id')}`, //join request is active
+                success: () => {
+                    Utils.appAlert('success', {msg: 'You kicked ' + this.model.get('displayname')});
+                    this.$el.empty().off();
+                    this.stopListening();
+                    return this;
+                },
+                error: (response) => {
+                    Utils.alertOnAjaxError(response);
+                }
+            });
+        }
+    });
+
+    UsersView.GuildMembersView = Backbone.View.extend({
+        template: _.template($('#guildmembers-template').html()),
+        events: {
+            "click #refresh-button" :   "refresh"
+        },
+        initialize: function (id) {
+            this.collection = new Users.GuildMembersCollection([], {id: id});
+            this.listenTo(this.collection, 'add', this.addOne);
+            this.listenTo(this.collection, 'reset', this.addAll);
+            this.listenTo(this.collection, 'change', this.render);
+            this.collection.fetch({reset: true, error: this.onerror});
+            this.g_id = id;
+        },
+        addOne: function (user) {
+            user.view = new UsersView.GuildMemberView({model: user, id: this.g_id});
+            this.$("tbody").append(user.view.render().el);
+        },
+        addAll: function () {
+            this.collection.each(this.addOne, this);
+        },
+        refresh: function () {
+            this.collection.fetch({
+                success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
+                error: this.onerror});
+        },
+        onerror: function (model, response) {
+            Utils.alertOnAjaxError(response);
+        },
+        render: function () {
+            this.$el.html(this.template());
+            this.addAll();
+            return this;
+        }
+    });
+
 });
 
 export default UsersView;

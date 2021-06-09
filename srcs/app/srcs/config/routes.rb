@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     patch 'settings/2fa', to: 'two_factor#disable'
     resources :users do
       resources :matches
+      resources :guild_invitations
     #  post 'matches/invite_user', to: 'matches#invite_user'
     end
     resources :settings
@@ -30,6 +31,21 @@ Rails.application.routes.draw do
     delete 'admin/chats/:id', to: 'admin#chat_destroy'
 
     resources :tournaments
+
+    resources :guilds do
+      resources :wars
+    end
+    get 'users_not_in_guild', to: 'guilds#users_available'
+    get 'guilds/:id/members', to: 'guilds#show_members'
+    get 'guilds/:id/requests', to: 'guilds#show_requests'
+    put 'users/:id/leave_guild', to: 'users#remove_from_guild'
+    put 'users/:id/join_guild', to: 'users#add_to_guild'
+    get 'guilds/:id/war_invites', to: 'wars#index_war_invites'
+    put 'guilds/:guild_id/war_invites/:id', to: 'wars#accept'
+    get 'guilds/:id/war_requests', to: 'wars#index_war_requests'
+
+    resources :wars
+
   end
 
   get '/pong', to: 'pong#index'

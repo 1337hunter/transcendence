@@ -36,14 +36,14 @@ class Api::TournamentsController < ApplicationController
   end
 
   def join_tournament
-    if current_user.tournament_id.nil?
+    if current_user.tournament_id.nil? && @tournament.status == "open"
       current_user.update(tournament_id: @tournament.id)
       render json: { msg: 'Successfully joined tournament #' + @tournament.id }, status: :ok
     end
   end
 
   def leave_tournament
-    if current_user.tournament_id == @tournament.id
+    if current_user.tournament_id == @tournament.id && @tournament.status == "open"
       current_user.update(tournament_id: nil)
       render json: { msg: 'Successfully left tournament #' + @tournament.id }, status: :ok
     end
