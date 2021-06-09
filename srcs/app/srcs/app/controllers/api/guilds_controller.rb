@@ -8,6 +8,7 @@ class Api::GuildsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :guild_not_found
 
   def index
+    set_current_user_in_guild
     @guilds = Guild.all.joins(:master).
       select([
                Guild.arel_table[Arel.star],
@@ -18,6 +19,7 @@ class Api::GuildsController < ApplicationController
   end
 
   def show
+    set_current_user_in_guild
     render json: @guild.as_json(
       only: %i[id name anagram score],
       include: { members: { only: @filters },
@@ -236,6 +238,10 @@ class Api::GuildsController < ApplicationController
     else
       return true
     end
+  end
+
+  def set_current_user_in_guild
+    Guild.current_user = current_user
   end
 
 end

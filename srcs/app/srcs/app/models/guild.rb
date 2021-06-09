@@ -36,8 +36,8 @@ class Guild < ApplicationRecord
   end
 
   def current_user_role
-    user = Thread.current[:current_user]
-    user = User.find(user.id)
+    user = Guild.current_user
+    # user = User.find(user.id)
     if user.guild_id == id
       if user.guild_accepted
         if user.guild_master
@@ -59,4 +59,13 @@ class Guild < ApplicationRecord
     end
   end
 
+  class << self
+    def current_user=(user)
+      Thread.current[:current_user] = user
+    end
+
+    def current_user
+      Thread.current[:current_user]
+    end
+  end
 end
