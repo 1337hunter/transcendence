@@ -32,4 +32,14 @@ RoomMembers.Admin = Backbone.Model.extend({
     }
 });
 
+RoomMembers.AdminName = Backbone.Model.extend({
+    initialize: function(options) {
+        this.name = options.name,
+        this.room_id = options.room_id
+    },
+    url: function () {
+        return '/api/room_admins/?name=' + this.name + '&room_id=' + this.room_id;
+    }
+});
+
 export default RoomMembers;

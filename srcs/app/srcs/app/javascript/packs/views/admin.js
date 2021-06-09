@@ -2,6 +2,8 @@ import Backbone from "backbone";
 import _ from "underscore";
 import Admin from "../models/admin";
 import Utils from "../helpers/utils";
+import RoomMembers from "../models/room_members";
+
 
 const AdminView = {};
 
@@ -174,7 +176,9 @@ $(function () {
     AdminView.SingleChatView = Backbone.View.extend({
         template: _.template($('#admin-singlechat-template').html()),
         events: {
-            "click .confirm-action" : "openConfirm"
+            "click      .confirm-action"    : "openConfirm",
+            "click      .add_remove_admin"  : "show_admin_input",
+            "keypress   .form-control"      : "grab_admin_nickname",
         },
         tagName: "tr",
         initialize: function () {
@@ -186,6 +190,33 @@ $(function () {
             this.confirmview = new AdminView.ModalConfirmChatDestroyView();
             document.body.appendChild(this.confirmview.render(this.model).el);
             this.$('.btn-confirm').blur();
+        },
+        show_admin_input: function (e) {
+            var id = e.currentTarget.id;
+            $("#" + String(id)).css("display", "block");
+            $("#add_remove_admin_input_" + String(id)).css("display", "block");
+            $("#" + String(id)).css("display", "none");
+            $("#add_remove_admin_input_" + String(id)).focus();
+
+        },
+        grab_admin_nickname: function (e) {
+            if (e.keyCode !== 13) return ;
+            
+            let regex =  /\d+/;
+			let id = String(e.currentTarget.id)
+            id = id.match(regex);
+            $("#" + String(id)).css("display", "block");
+            $("#" + String(id)).css("margin", "auto");
+            $("#" + e.currentTarget.id).css("display", "none");
+            var name = $("#" + e.currentTarget.id).val().trim();
+            $("#" + e.currentTarget.id).val("");
+            if (name == null || name.length == 0)
+                return ;
+            var admin = new RoomMembers.AdminName({
+                name: name,
+                room_id: id
+            });
+            admin.save();
         },
         onerror: function (model, response) {
             Utils.alertOnAjaxError(response);
