@@ -57,14 +57,19 @@ export default class Utils {
         return date.getHours() + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
     }
 
-    static accept_guild_invite(guild_id, guild_name) {
+    static accept_guild_invite(guild_id, guild_name, model) {
         $.ajax({
             url: 'api/users/current/' + '/join_guild',
             type: 'PUT',
             data: `guild_id=${guild_id}`,
             success: () => {
                 Utils.appAlert('success', {msg: guild_name + '\'s invitation accepted'});
-                MainSPA.SPA.router.navigate("#/guilds/" + guild_id);
+                if (model.collection == null)
+                    model.fetch();
+                else {
+                    model.collection.fetch();
+                    MainSPA.SPA.router.navigate("#/guilds/" + guild_id);
+                }
             },
             error: (response) => {
                 Utils.alertOnAjaxError(response);

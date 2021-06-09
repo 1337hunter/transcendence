@@ -58,12 +58,7 @@ $(function () {
         },
         accept: function() {
             let id = this.model.get('id')
-            Utils.accept_guild_invite(id, this.model.get('name'));
-            this.model.fetch({
-                success: function () {
-                    MainSPA.SPA.router.navigate("#/guilds/" + id);
-                }
-            });
+            Utils.accept_guild_invite(id, this.model.get('name'), this.model);
         },
         decline:  function() {
             Utils.decline_guild_invite('current', this.model.get('id'), this.model.get('name') + '\'s invitation declined');
@@ -188,8 +183,7 @@ $(function () {
             Utils.leave_guild(this);
         },
         accept: function() {
-            Utils.accept_guild_invite(this.model.get('id'), this.model.get('name'));
-            MainSPA.SPA.router.navigate("#/guilds/" + this.model.get('id'));
+            Utils.accept_guild_invite(this.model.get('id'), this.model.get('name'), this.model);
         },
         decline:  function() {
             Utils.decline_guild_invite('current', this.model.get('id'), this.model.get('name') + '\'s invitation declined');
@@ -292,7 +286,7 @@ $(function () {
             return this;
         },
         accept:  function() {
-            Utils.accept_guild_invite(this.model.get('id'), this.model.get('name'));
+            Utils.accept_guild_invite(this.model.get('id'), this.model.get('name'), this.model);
             this.remove();
         },
         decline:  function() {
