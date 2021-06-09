@@ -22,11 +22,10 @@ class Api::GuildsController < ApplicationController
     set_current_user_in_guild
     render json: @guild.as_json(
       only: %i[id name anagram score],
-      include: { members: { only: @filters },
-                 requests: { only: @filters },
-                 war_requests: { only: %i[id guild1_id guild2_id g1_name g2_name stake
-                                          start end finished accepted winner] } },
-      methods: %i[active_war wars_counter current_user_role]
+      include: { master: { only: @filters },
+                 requests: { only: @filters } },
+      methods: %i[active_war current_user_role
+                  wars_counter members_counter join_requests_counter war_invites_counter war_requests_counter]
     )
   end
 
