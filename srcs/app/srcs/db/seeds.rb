@@ -14,6 +14,7 @@ Guild.create([{
               {
                 name: "Dogs",
                 anagram: "dog",
+                score: 12
               }])
 
 War.create(guild1_id:1, guild2_id:2, g1_name:"Cats", g2_name:"Dogs", finished:true, winner:1, accepted:true, stake:10, duel:true,

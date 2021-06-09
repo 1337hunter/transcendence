@@ -37,7 +37,6 @@ class Guild < ApplicationRecord
 
   def current_user_role
     user = Guild.current_user
-    # user = User.find(user.id)
     if user.guild_id == id
       if user.guild_accepted
         if user.guild_master

@@ -18,14 +18,13 @@ class Api::GuildInvitationsController < ApplicationController
                  User.arel_table[:displayname].as('master_name'),
                  User.arel_table[:id].as('master_id')
                ])
-      render json: @guilds
+      render json: @guilds.as_json(methods: %i[active_war wars_counter current_user_role])
     #end
   end
 
   def show
     @invitation = find_invitation(params[:user_id], params[:id])
-    @guild = Guild.find(params[:id])
-    render json: @guild if @invitation && check_user_rights
+    render json: @invitation, only: [:id] if @invitation && check_user_rights
   end
 
   def create
