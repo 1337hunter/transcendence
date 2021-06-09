@@ -1,0 +1,200 @@
+
+<script type="text/template" id="guild-template-join">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
+    <div class="col-2"><%= current_user.guild_id %></div>
+    <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="join-button">send request</button></div>
+  </div>
+</script>
+
+<script type="text/template" id="guild-template-cancel">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
+    <div class="col-2"><%= current_user.guild_id %></div>
+    <div class="col-2"> <button type="button" class="btn btn-danger options-button" id="cancel-button">cancel request</button></div>
+  </div>
+</script>
+
+<script type="text/template" id="guild-template-accept">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
+    <div class="col-2"><%= current_user.guild_id %></div>
+    <div class="col-2"> <button type="button" class="btn btn-light options-button join" id="accept-button">accept invite</button></div>
+    <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></div>
+  </div>
+</script>
+
+<script type="text/template" id="guild-template-leave">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
+    <div class="col-2"><%= current_user.guild_id %></div>
+    <%if !current_user.guild_master %>
+    <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="leave-button">leave</button></div>
+    <%end %>
+  </div>
+</script>
+
+<script type="text/template" id="guild-template-other">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
+    <div class="col-2"><%= current_user.guild_id %></div>
+  </div>
+</script>
+
+<script type="text/template" id="guild-template-other-war">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
+    <div class="col-2"><%= current_user.guild_id %></div>
+    <div class="col-2"> <button type="button" class="btn btn-light options-button" id="war-button">declare war</button></div>
+  </div>
+</script>
+
+<script type="text/template" id="guild-template-invite">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
+    <div class="col-2"><%= current_user.guild_id %></div>
+    <div class="col-1"> <button type="button" class="btn btn-light options-button join" id="accept-button">accept</button></div>
+    <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></div>
+  </div>
+</script>
+
+<script>
+    function openForm() {
+        document.getElementById("newGuildForm").style.display = "block"; }
+    function closeForm() {
+        document.getElementById("newGuildForm").style.display = "none";
+    }
+</script>
+
+<script type="text/template" id="guilds-template">
+  <h1>Guilds
+    <button type="button" class="button-sm" id="refresh-button">
+    <%= show_svg('refresh.svg') %></button>
+  </h1>
+    <div class="row" style="max-width: 1000px; min-width: 300px">
+      <div class="col-3">Name</div>
+      <div class="col-1">Score</div>
+      <div class="col-2">Master</div>
+      <div class="col-2">Wars</div>
+    </div>
+</script>
+
+<script type="text/template" id="guilds-template-create">
+    <button class="open-button" onclick="openForm()">Create Guild</button>
+    <div class="form-popup" id="newGuildForm">
+      <form id="create-guild" class="form-container">
+        <input type="text" class="form-control" id="newGuildName" placeholder="The Guild Name" pattern="[A-Za-z ]{3,20}" required="required" title="Guild Name can only have 3-20 letters, no special symbols allowed"><br>
+        <button type="submit" class="btn btn-success">Create Guild</button>
+        <button type="button" class="btn btn-danger" onclick="closeForm()">Cancel</button>
+      </form>
+    </div>
+  <h1>Guilds <button type="button" class="button-sm" id="refresh-button">
+    <%= show_svg('refresh.svg') %></button></h1>
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3">Name</div>
+    <div class="col-1">Score</div>
+    <div class="col-2">Master</div>
+    <div class="col-2">Wars</div>
+  </div>
+</script>
+
+<script type="text/template" id="guild-profile-template">
+  <h1><button type="button" class="button-sm button-back" id="back-button"
+              onclick="window.history.back();">
+    <%= show_svg('arrow-left.svg') %>
+  </button>
+    <%%= name %>&nbsp;<span style="color:grey;font-size: 30px">[<%%= anagram%>]</span>
+    <button type="button" class="button-sm button-refresh" id="refresh-button">
+      <%= show_svg('refresh.svg') %>
+    </button>
+  </h1>
+  <div class="row"><a>Current score:&nbsp;<%%= score %></a></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/members">members</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/wars">war history</a>`%></div>
+</script>
+
+<script type="text/template" id="guild-edit-officer-template">
+  <h1><button type="button" class="button-sm button-back" id="back-button"
+              onclick="window.history.back();">
+    <%= show_svg('arrow-left.svg') %>
+  </button>
+    <%%= name %>&nbsp;<span style="color:grey;font-size: 30px">[<%%= anagram%>]</span>
+    <button type="button" class="button-sm button-refresh" id="refresh-button">
+      <%= show_svg('refresh.svg') %>
+    </button>
+  </h1>
+  <div class="row">Current score:&nbsp;<%%= score %></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/members">members</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/wars">war history</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/requests">join requests</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/users_not_in_guild">invite users</a>`%></div>
+</script>
+
+<script type="text/template" id="guild-edit-master-template">
+  <h1><button type="button" class="button-sm button-back" id="back-button"
+              onclick="window.history.back();">
+    <%= show_svg('arrow-left.svg') %>
+  </button>
+    <%%= name %>
+    <button type="button" class="button-sm button-refresh" id="refresh-button">
+      <%= show_svg('refresh.svg') %>
+    </button>
+  </h1>
+  <div class="row" style="margin-bottom: 20px">
+    <div class="col-2">
+      <button  id="delete-button" type="button" class="btn btn-danger options-button">
+        Delete guild</button>
+    </div>
+  </div>
+  <div class="row" style="margin-left: 0px">Anagram:&nbsp;
+      <input type="text" class="form-control" id="anagram"
+             value="<%%= anagram %>"
+             style="width: 6ch; background-color: #00000e; color:white; padding: 1px;">
+      <!--<pattern="[A-Za-z0-9]{2,5}" required="required" title="Anagram can only have 2-5 letters, no whitespaces allowed"></pattern>-->
+  </div>
+  <div class="row" style="margin-left: 0px">Current score:&nbsp;<%%= score %></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/members">members</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/wars">war history</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/requests">join requests</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/users_not_in_guild">invite users</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/war_invites">war invites from other guilds</a>`%></div>
+  <div class="row"><%%=`<a class="link-light" href="#/guilds/${id}/war_requests">war requests sent by you</a>`%></div>
+</script>
+
+<script type="text/template" id="delete-guild-modal-template">
+  <div class="modal fade show" aria-modal="true" role="dialog" style="display: block;">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background: #090909">
+        <div class="modal-header" style="border-bottom-color: #111111;">
+          <h5 class="modal-title">
+            You are about to delete your guild <%%= name %>
+          </h5>
+        </div>
+        <div class="modal-body">
+          <p>
+            The action cannot be undone
+          </p>
+        </div>
+        <div class="modal-footer" style="border-top-color: #111111;">
+          <button type="button" class="btn btn-dark btn-cancel">Cancel</button>
+          <button type="button" class="btn btn-danger btn-confirm">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+</script>
