@@ -5,7 +5,7 @@ class Api::UsersController < ApplicationController
   before_action :check_2fa!
   before_action :define_filters
   before_action :sign_out_if_banned
-  before_action :find_user, only: %i[show update destroy accept_friend remove_friend]
+  before_action :find_user, only: %i[show update destroy add_to_guild remove_from_guild accept_friend remove_friend]
   rescue_from ActiveRecord::RecordNotFound, :with => :user_not_found
 
   # GET /api/users.json
@@ -19,7 +19,9 @@ class Api::UsersController < ApplicationController
     render json: @user.as_json(only: @filters,
                                include: {
                                  friends: { only: @filters },
-                                 requested_friends: {only: @filters}})
+                                 requested_friends: { only: @filters },
+                                 guild: { only: @guildfilters }
+                               })
                       .merge(:is_current => @user == current_user)
   end
 
@@ -34,6 +36,64 @@ class Api::UsersController < ApplicationController
     else
       @user.errors.add :base, 'You have no permission'
       render json: @user.errors, status: :forbidden
+    end
+  end
+
+  def add_to_guild
+    if (guild_head_action && @user != current_user)
+      if !@user.guild_id
+        render json: { error: 'No request found' }, status: :not_found
+      else
+        @user.update(guild_user_params)
+        if @user.guild_master == true
+          @user.guild_officer = false
+          @user.save
+          current_user.guild_master = false
+          current_user.save
+        end
+      end
+    elsif @user == current_user && params[:guild_id] != nil
+      if !(@invitation = GuildInvitation.find_by_user_id_and_guild_id(@user.id, params[:guild_id]))
+        render json: { error: 'No invitation found' }, status: :not_found
+      elsif @user.guild_accepted
+        render json: { error: 'You are in the guild already' }, status: :forbidden
+      else
+        @user.update(guild_id: params[:guild_id])
+        @user.guild_accepted = true
+        @user.save
+        @invitation.destroy
+      end
+    else
+      render json: { error: 'No permission' }, status: :forbidden
+    end
+  end
+
+  def remove_from_guild
+    if (!@user.guild_id)
+      render json: { error: 'User has no guild or guild request' }, status: :forbidden
+    elsif (current_user == @user || guild_head_action)
+      if @user.guild_master == true
+        @guild = Guild.find(@user.guild_id)
+        if @guild.members.size = 1
+          @user.errors.add :base, 'Not possible, delete the guild instead'
+          #TODO:redirect to guild profile
+        else
+          @user.errors.add :base, 'Promote other user to master before leaving the guild.'
+          #TODO:redirect to members list
+        end
+        render json: @user.errors, status: :forbidden
+      else
+        if (!params[:guild_id]) #kick - join request is active
+          @user.guild_id = nil
+        end
+        @user.guild_accepted = false
+        @user.guild_officer = false
+        #@user.guild_master = false #tmp for test
+        @user.save
+        render json: @user, only: @filters, status: :ok
+      end
+    else
+      render json: { error: 'No permission' }, status: :forbidden
     end
   end
 
@@ -68,12 +128,25 @@ class Api::UsersController < ApplicationController
   # DRY filters for json responses
   def define_filters
     @filters = %i[id nickname displayname email admin banned online last_seen_at
-                  wins loses elo avatar_url avatar_default_url]
+                  wins loses elo avatar_url avatar_default_url
+                  guild_id guild_accepted guild_master guild_officer]
+    @guildfilters = %i[name anagram]
   end
 
   # Only allow a list of trusted parameters through.
   def user_params
-    params.require(:user).permit(%i[displayname avatar_url])
+    params.require(:user).permit(%i[displayname avatar_url guild_id])
+  end
+
+  def guild_user_params
+    params.permit(%i[guild_accepted guild_officer guild_master])
+  end
+
+  def guild_head_action
+    current_user.guild_id == @user.guild_id &&
+      (current_user.guild_master ||
+        (current_user.guild_officer &&
+        params[:guild_master] == nil && params[:guild_officer] == nil))
   end
 
   def is_numeric(str)
@@ -82,6 +155,6 @@ class Api::UsersController < ApplicationController
   end
 
   def user_not_found
-    render json: {error: 'User not found'}, status: :not_found
+    render json: { error: 'User not found' }, status: :not_found
   end
 end

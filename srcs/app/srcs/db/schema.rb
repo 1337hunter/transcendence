@@ -54,6 +54,23 @@ ActiveRecord::Schema.define(version: 2021_06_09_110054) do
     t.index ["friendable_id", "friend_id"], name: "index_friendships_on_friendable_id_and_friend_id", unique: true
   end
 
+  create_table "guild_invitations", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id", null: false
+    t.bigint "guild_id", null: false
+    t.index ["guild_id"], name: "index_guild_invitations_on_guild_id"
+    t.index ["user_id"], name: "index_guild_invitations_on_user_id"
+  end
+
+  create_table "guilds", force: :cascade do |t|
+    t.string "name"
+    t.string "anagram", limit: 5
+    t.integer "score", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "matches", force: :cascade do |t|
     t.integer "first_player_id"
     t.integer "second_player_id"
@@ -141,19 +158,60 @@ ActiveRecord::Schema.define(version: 2021_06_09_110054) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
     t.boolean "otp_validated"
+    t.boolean "guild_master", default: false
+    t.boolean "guild_officer", default: false
     t.string "ban_reason"
     t.boolean "online"
     t.datetime "last_seen_at"
+    t.boolean "guild_accepted", default: false
+    t.bigint "guild_id"
     t.bigint "tournament_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["tournament_id"], name: "index_users_on_tournament_id"
     t.index ["uid"], name: "index_users_on_uid"
   end
 
+  create_table "wars", force: :cascade do |t|
+    t.bigint "guild1_id"
+    t.bigint "guild2_id"
+    t.string "g1_name"
+    t.string "g2_name"
+    t.boolean "finished", default: false
+    t.boolean "accepted", default: false
+    t.datetime "start"
+    t.datetime "end"
+    t.integer "stake", default: 0
+    t.integer "g1_score", default: 0
+    t.integer "g2_score", default: 0
+    t.time "wartime_start"
+    t.time "wartime_end"
+    t.integer "wait_minutes", default: 10
+    t.integer "max_unanswered", default: 5
+    t.integer "matches_total", default: 0
+    t.integer "g1_matches_won", default: 0
+    t.integer "g1_matches_unanswered", default: 0
+    t.integer "g2_matches_won", default: 0
+    t.integer "g2_matches_unanswered", default: 0
+    t.boolean "ladder", default: false
+    t.boolean "tournament", default: false
+    t.boolean "duel", default: false
+    t.integer "winner"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["guild1_id"], name: "index_wars_on_guild1_id"
+    t.index ["guild2_id"], name: "index_wars_on_guild2_id"
+  end
+
   add_foreign_key "direct_messages", "direct_rooms"
   add_foreign_key "direct_messages", "users"
+  add_foreign_key "guild_invitations", "guilds"
+  add_foreign_key "guild_invitations", "users"
   add_foreign_key "messages", "users"
   add_foreign_key "tournaments", "users", column: "winner_id"
+  add_foreign_key "users", "guilds"
+  add_foreign_key "wars", "guilds", column: "guild1_id"
+  add_foreign_key "wars", "guilds", column: "guild2_id"
 end
