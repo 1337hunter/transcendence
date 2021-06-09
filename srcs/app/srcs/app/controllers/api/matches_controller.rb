@@ -19,6 +19,12 @@ class Api::MatchesController < ApplicationController
             @player_loser = params[:winner] == params[:second_player_id] ? User.find(params[:first_player_id]) : User.find(params[:second_player_id])
             @player_loser.update(loses: @player_loser.loses + 1)
             @player_winer.update(wins: @player_winer.wins + 1)
+            @player_winer.update(elo: @player_winer.elo + 25)
+            if @player_loser.elo < 25
+                @player_loser.update(elo: 0)
+            else
+                @player_loser.updaet(elo: @player_loser.elo - 25)
+            end
         end
         if (params.has_key?(:status))
             @match.update(status: params[:status])
