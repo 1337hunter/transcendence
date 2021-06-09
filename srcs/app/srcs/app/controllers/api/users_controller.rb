@@ -74,8 +74,8 @@ class Api::UsersController < ApplicationController
     elsif (current_user == @user || guild_head_action)
       if @user.guild_master == true
         @guild = Guild.find(@user.guild_id)
-        if @guild.members.size = 1
-          @user.errors.add :base, 'Not possible, delete the guild instead'
+        if @guild.members.length < 2
+          @user.errors.add :base, 'Not possible. Delete the guild instead'
           #TODO:redirect to guild profile
         else
           @user.errors.add :base, 'Promote other user to master before leaving the guild.'

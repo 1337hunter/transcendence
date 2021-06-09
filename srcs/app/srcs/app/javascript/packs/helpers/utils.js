@@ -63,7 +63,7 @@ export default class Utils {
             type: 'PUT',
             data: `guild_id=${guild_id}`,
             success: () => {
-                Utils.appAlert('success', {msg: guild_name + '\'s request accepted'});
+                Utils.appAlert('success', {msg: guild_name + '\'s invitation accepted'});
                 MainSPA.SPA.router.navigate("#/guilds/" + guild_id);
             },
             error: (response) => {
@@ -98,6 +98,30 @@ export default class Utils {
         });
     }
 
+    static leave_guild(view) {
+        let name = view.model.get('name');
+        view.cur_user.fetch({
+            success: function (model) {
+                if (model.get('guild_id') != view.model.get('id')) {
+                    Utils.appAlert('danger', {msg: 'You are not a member of ' + name});
+                    return;
+                }
+                $.ajax({
+                    url: 'api/users/' + model.get('id') + '/leave_guild',
+                    type: 'PUT',
+                    success: () => {
+                        Utils.appAlert('success', {msg: 'You left the guild ' + name});
+                        Utils.view_rerender(view);
+                    },
+                    error: (response) => {
+                        Utils.alertOnAjaxError(response);
+                    }
+                });
+            },
+            error: Utils.alertOnAjaxError
+        });
+    }
+
     static accept_join_guild_request(user_id, username) {
         $.ajax({
             url: 'api/users/' + user_id + '/join_guild',
@@ -129,11 +153,7 @@ export default class Utils {
             success: () => {
                 Utils.appAlert('success', {msg: view.model.get('displayname') + '\'s role changed'});
                 if (data != `guild_master=${true}`) {
-                    view.model.fetch({
-                        success: function () {
-                            view.render();
-                        }
-                    });
+                    Utils.view_rerender(view);
                 } else
                     MainSPA.SPA.router.navigate("#/guilds/" + view.model.get('guild_id'));
             },
@@ -143,16 +163,83 @@ export default class Utils {
         });
     }
 
-    /*static decline_war_invite(id, msg) {
+    static join_guild_request(view) {
+        let name;
+        view.cur_user.fetch({
+            success: function (model) {
+                if (model.get('guild_accepted')) {
+                    Utils.appAlert('danger', {msg: 'You are in the guild already'});
+                    return;
+                }
+                if (model.get('guild_id')) {
+                    if (model.get('guild_id') == view.model.get('id')) {
+                        Utils.appAlert('danger', {msg: 'Request already sent'});
+                        return;
+                    }
+                    name = model.attributes.guild.name;
+                }
+                model.save({guild_id: view.model.id}, {
+                    patch: true,
+                    success: function () {
+                        Utils.appAlert('success', {msg: 'Request to ' + view.model.get('name') + ' sent'});
+                        if (name)
+                            Utils.appAlert('success', {msg: 'Request to ' + name + ' canceled'});
+                        Utils.view_rerender(view);
+                    },
+                    onerror: Utils.alertOnAjaxError
+                });
+            },
+            error: Utils.alertOnAjaxError
+        });
+    }
+
+    static cancel_guild_request(view) {
+        view.cur_user.fetch({
+            success: function (model) {
+                if (model.get('guild_accepted')) {
+                    Utils.appAlert('danger', {msg: 'You are in the guild already'});
+                    return;
+                }
+                if (!model.get('guild_id') || model.get('guild_id') != view.model.get('id')) {
+                    Utils.appAlert('danger', {msg: 'Request not found'});
+                    return;
+                }
+                $.ajax({
+                    url: 'api/users/' + model.get('id') + '/leave_guild',
+                    type: 'PUT',
+                    success: () => {
+                        Utils.appAlert('success', {msg: 'Request canceled'});
+                        Utils.view_rerender(view);
+                    },
+                    error: (response) => {
+                        Utils.alertOnAjaxError(response);
+                    }
+                });
+            },
+            error: Utils.alertOnAjaxError
+        });
+    }
+
+    static view_rerender(view) {
+        view.model.fetch({
+            success: function () {
+                view.render();
+            }
+        });
+    }
+
+    static accept_war_invite(view, remove) {
         $.ajax({
-            url: '/api/wars/' + id,
-            type: 'DELETE',
+            url: 'api/guilds/' + view.model.get('guild2_id') + '/war_invites/' + view.model.get('id'),
+            type: 'PUT',
             success: () => {
-                Utils.appAlert('success', {msg: msg});
+                Utils.appAlert('success', {msg: 'Get ready to the war!'}); //TODO:start time?
+                remove ? view.remove() : view.render();
             },
             error: (response) => {
                 Utils.alertOnAjaxError(response);
             }
         });
-    }*/
+    }
+
 }

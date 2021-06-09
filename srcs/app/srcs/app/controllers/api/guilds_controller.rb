@@ -1,6 +1,6 @@
 class Api::GuildsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :define_user_filters, only: %i[show_members]
+  before_action :define_user_filters, only: %i[show show_members show_requests]
   before_action :check_in_other_guild, only: [:create]
   before_action :find_guild, only: %i[show update destroy show_master show_officers show_members show_requests]
   before_action :check_master_rights, only: %i[destroy update]
@@ -14,11 +14,18 @@ class Api::GuildsController < ApplicationController
                User.arel_table[:displayname].as('master_name'),
                User.arel_table[:id].as('master_id')
              ])
-    render json: @guilds
+    render json: @guilds.as_json(methods: %i[active_war wars_counter current_user_role])
   end
 
   def show
-    render json: @guild
+    render json: @guild.as_json(
+      only: %i[id name anagram score],
+      include: { members: { only: @filters },
+                 requests: { only: @filters },
+                 war_requests: { only: %i[id guild1_id guild2_id g1_name g2_name stake
+                                          start end finished accepted winner] } },
+      methods: %i[active_war wars_counter current_user_role]
+    )
   end
 
   def create
@@ -43,7 +50,7 @@ class Api::GuildsController < ApplicationController
   end
 
   def destroy
-    if @guild.has_active_war
+    if @guild.active_war
       render json: { error: 'You have a war in progress' }, status: :forbidden
       return
     end

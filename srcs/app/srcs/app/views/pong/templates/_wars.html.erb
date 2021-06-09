@@ -108,7 +108,7 @@
     <div class="col-1"> <button type="button" class="btn btn-success options-button" id="accept-button">accept</button></div>
     <div class="col-1"> <button type="button" class="btn btn-danger options-button" id="decline-button">decline</button></div>
   </div>
-  <div class="col-2" <%%=!accepted && winner == 'request' ? '' : 'style="display:none"' %>> <button type="button" class="btn btn-danger options-button" id="cancel-button">cancel request</button></div>
+  <div class="col-2" <%%=!accepted && winner == 'request' ? '' : 'style="display:none"' %>> <button type="button" class="btn btn-danger options-button" id="decline-button">cancel request</button></div>
 </script>
 
 <script type="text/template" id="war-modal-template">
@@ -139,7 +139,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputUnans">Max number of unanswered calls per day:</span>
             </div>
-            <input id="max-unanswered"  type="number" class="form-control">
+            <input id="max-unanswered"  type="number" min="0" class="form-control">
           </div>
           <p style="font-size: small">(default: 5)</p>
 
