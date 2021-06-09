@@ -3,4 +3,6 @@ class Tournament < ApplicationRecord
   validates_with TournamentValidator
   has_many :users
   belongs_to :winner, class_name: "User", optional: true
+
+  enum status: [ :open, :closed, :active, :finished ]
 end

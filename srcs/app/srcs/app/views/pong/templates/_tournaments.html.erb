@@ -37,15 +37,17 @@
   <h4>Start</h4>
   <p><%%= new Date(start_date) %></p>
 
-  <p>
-    <h4>Actions</h4>
-    <button class="btn btn-outline-success join-tournament-button" <%%= is_in_tournament ? 'style="display: none;"' : '' %> >
-      Join tournament
-    </button>
-    <button class="btn btn-outline-danger leave-tournament-button" <%%= is_in_tournament ? '' : 'style="display: none;"' %> >
-      Leave tournament
-    </button>
-  </p>
+  <div class="tournament-actions" <%%= status == "open" ? '' : 'style="display: none;"' %>>
+    <p>
+      <h4>Actions</h4>
+      <button class="btn btn-outline-success join-tournament-button" <%%= is_in_tournament ? 'style="display: none;"' : '' %> >
+        Join tournament
+      </button>
+      <button class="btn btn-outline-danger leave-tournament-button" <%%= is_in_tournament ? '' : 'style="display: none;"' %> >
+        Leave tournament
+      </button>
+    </p>
+  </div>
 
   <div class="tournament-administration" <%%= is_current_admin ? '' : 'style="display: none;"' %>>
     <h4>Administration</h4>
@@ -53,7 +55,7 @@
       <button class="btn btn-outline-primary begin-tournament-button" >
         Begin tournament
       </button>
-      <button class="btn btn-outline-warning close-tournament-button" >
+      <button class="btn btn-outline-warning close-tournament-button" <%%= status == "open" ? '' : 'style="display: none;"' %>>
         Close registration
       </button>
       <button class="btn btn-outline-danger destroy-tournament-button" >

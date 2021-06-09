@@ -44,21 +44,26 @@ class Api::RoomsController < ApplicationController
                 render json: {error: "Wrong password", status: 400},  status: 400
             end
         else #save new room
-            @room = Room.new
-            if (params.has_key?(:name))
-                @room.name = params[:name]
-                if params.has_key?(:password) && params[:password] != ""
-                    @room.password_present = true
-                    @room.password = params[:password]
-                else
-                    @room.password_present = false
-                    @room.password = ""
+            @check_exist = Room.where(name: params[:name])
+            if @check_exist != nil
+                render json: {error: "Room with name #{params[:name]} is already exist", status: 400},  status: 400
+            else
+                @room = Room.new
+                if (params.has_key?(:name))
+                    @room.name = params[:name]
+                    if params.has_key?(:password) && params[:password] != ""
+                        @room.password_present = true
+                        @room.password = params[:password]
+                    else
+                        @room.password_present = false
+                        @room.password = ""
+                    end
+                    @room.owner_id = current_user.id
+                    @room.owner_name = current_user.displayname
+                    @room.private = params[:private]
+                    @room.save!
+                    render json: @room, status: :ok
                 end
-                @room.owner_id = current_user.id
-                @room.owner_name = current_user.displayname
-                @room.private = params[:private]
-                @room.save!
-                render json: @room, status: :ok
             end
         end
     end
