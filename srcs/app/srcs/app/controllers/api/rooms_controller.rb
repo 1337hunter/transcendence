@@ -32,6 +32,7 @@ class Api::RoomsController < ApplicationController
         if @room["owner_id"] == current_user.id
             @room[:admin] = true
         end
+        @room["current_user_id"] = current_user.id
         render json: @room, status: :ok
     end
 

@@ -19,7 +19,7 @@
 <script type="text/template" id="messages-template">
     <table>
       <t><h1 id="room-name"></h1></t>
-      <td> <div id="change_password" <%%= admin ? '' : 'style="display:none"' %>> Change password⠀⠀</td>
+      <td> <div id="change_password" <%%= owner_id == current_user_id ? '' : 'style="display:none"' %>> Change password⠀⠀</td>
       <td>
         <input id="new_password_input" type="password" class="form-control" style="display:none" autocomplete="off"\>
       </td>
