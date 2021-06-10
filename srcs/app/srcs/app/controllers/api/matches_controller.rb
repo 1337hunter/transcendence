@@ -29,19 +29,16 @@ class Api::MatchesController < ApplicationController
     @match.update(status: params[:status]) if (params.has_key?(:status))
     if (params.has_key?(:winner))
       @match.update(winner: params[:winner])
-      if @match.war_id
-        war = War.find(@match.war_id)
-          if !war.finished
-            if @player_winner.guild_id == war.guild1_id
-              @war.g1_score += 1
-              @war.g1_matches_won += 1
-              @war.save
-            else
-              @war.g2_score += 1
-              @war.g2_matches_won += 1
-              @war.save
-            end
-          end
+      if @match.war_id && !(war = War.find(@match.war_id)).finished
+        @war.matches_total += 1
+        if @player_winner.guild_id == war.guild1_id
+          @war.g1_score += 1
+          @war.g1_matches_won += 1
+        else
+          @war.g2_score += 1
+          @war.g2_matches_won += 1
+        end
+        @war.save
       else
         @player_winner.guild.score += 1;
         @player_winner.guild.save
@@ -89,7 +86,7 @@ class Api::MatchesController < ApplicationController
   end
 
   def check_war
-    !@war.finished && @war.accepted && @war.start >= DateTime.now() && check_wartime
+    !@war.finished && @war.accepted && @war.start >= DateTime.now && check_wartime
 
       #TODO: check match type: @war.ladder / tournament / duel
   end
