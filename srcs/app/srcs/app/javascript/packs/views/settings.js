@@ -31,17 +31,25 @@ $(function () {
 				function () { Utils.replaceAvatar(this, model); });
 			return this;
 		},
-		input_email: function (input)
+		input_email: function ()
 		{
 			let newemail = $('#email').val().trim();
 			if (this.model.get('email') !== newemail)
-				this.model.save({email: newemail}, {patch: true});
+				this.model.save({email: newemail}, {
+					patch: true,
+					success: function () {Utils.appAlert('success', {msg: 'Email changed'})},
+					error: this.onerror
+				});
 		},
-		input_displayname: function (input)
+		input_displayname: function ()
 		{
 			let newdisplayname = $('#displayname').val().trim();
 			if (this.model.get('displayname') !== newdisplayname)
-				this.model.save({displayname: newdisplayname}, {patch: true});
+				this.model.save({displayname: newdisplayname}, {
+					patch: true,
+					success: function () {Utils.appAlert('success', {msg: 'Displayname changed'})},
+					error: this.onerror
+				});
 		},
 		update_avatar: function () {
 			this.$('.table-avatar').addClass('edit_url');
@@ -49,11 +57,20 @@ $(function () {
 		},
 		update_avatar_close: function () {
 			if ($('.upload_user_avatar').val().trim()) {
-				this.model.save({avatar_url: $('.upload_user_avatar').val().trim()},
-					{patch: true});
+				this.model.save({avatar_url: $('.upload_user_avatar').val().trim()}, {
+					patch: true,
+					success: function (model) {
+						Utils.appAlert('success', {msg: 'Avatar url changed'});
+						$("img.navbar_user_icon").attr('src', model.get('avatar_url'));
+					},
+					error: this.onerror
+				});
 			}
 			this.$('.table-avatar').addClass('edit_url');
 			this.render();
+		},
+		onerror: function (model, response) {
+			Utils.alertOnAjaxError(response);
 		},
 		open_2fa: function () {
 			if (this.otpview)
