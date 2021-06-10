@@ -100,7 +100,6 @@ $(function () {
 					_.defer(function() {
 						$this.$('#chat-input').focus();
 				  	});
-					console.log($this.room_model.toJSON())
 					$this.$el.html($this.template($this.room_model.toJSON()));
 					$this.collection.fetch({
 						success: function() {

@@ -85,8 +85,7 @@ $(function () {
 		},
 		finishGame: function (winner_id)
 		{
-			console.log(this.first_player_score);
-			console.log(this.second_player_score);
+			console.log("GAME IS FINISHED");
 			this.model.save({status: 3, winner: winner_id, first_player_score: this.first_player_score, second_player_score: this.second_player_score});
 			this.cable.send("finish")
 		},

@@ -23,7 +23,7 @@ class Api::MatchesController < ApplicationController
             if @player_loser.elo < 25
                 @player_loser.update(elo: 0)
             else
-                @player_loser.updaet(elo: @player_loser.elo - 25)
+                @player_loser.update(elo: @player_loser.elo - 25)
             end
         end
         if (params.has_key?(:status))

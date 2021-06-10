@@ -21,7 +21,6 @@ var GameRoomInit =
                 console.log("Connected to game room channel " + args.match_id);
                 $this.user_id = args.user_id;
                 consumer.id = args.user_id;
-                console.log(consumer);
             },
 
             disconnected() {
@@ -30,7 +29,6 @@ var GameRoomInit =
             },
 
             received(data) {
-               console.log(data)
                 if (data == "start")
                     MainSPA.SPA.router.navigate("#/play/" + args.match_id);
                 if (data.right)
@@ -47,12 +45,6 @@ var GameRoomInit =
                     obtainedValues.leftScore = data.score.left;
                     obtainedValues.rightScore = data.score.right;
                 }
-
-            //    console.log(data);
-            //    obtainedValues.rightPadX = data.x1;
-            //    obtainedValues.rightPadY = data.y1;
-			//	obtainedValues.leftPadX = data.x2;
-            //    obtainedValues.leftPadY = data.y2;
             }
       });
       return GameRoom;
