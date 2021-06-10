@@ -11,6 +11,8 @@ class WarJob < ApplicationJob
         loser_guild = Guild.find(@war.winner == 1 ? guild2_id : guild1_id)
         winner_guild.score += war.stake
         loser_guild.score -= war.stake
+        winner_guild.save
+        loser_guild.save
       end
     else
       @war.destroy
