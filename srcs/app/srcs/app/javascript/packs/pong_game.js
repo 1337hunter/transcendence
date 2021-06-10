@@ -125,7 +125,7 @@ export default function pong_game(view) {
 
     function drawBall() {
         ctx.beginPath();
-        if (is_player_right)
+        if (is_player_left == 0)
         {
             x = view.getBallX();
             y = view.getBallY();

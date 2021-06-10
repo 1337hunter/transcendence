@@ -98,6 +98,7 @@ $(function () {
             "click .accept-match-button" : "acceptMatch",
             "click .decline-match-button" : "declineMatch",
             "click .cancel-invite-button" : "cancelInvite",
+            "click .spectate-match-button" : "spectateMatch",
         },
         tagName: "tr",
         initialize: function (e) {
@@ -118,6 +119,11 @@ $(function () {
             this.model.save({status: 2}, {patch: true, success: function() {
                 $this.model.set({game_room: GameRoomInit.createGameRoom({match_id: $this.model.id})});
             }});
+        },
+        spectateMatch: function () {
+            console.log("spectate match ation");
+            GameRoomInit.createGameRoom({match_id: this.model.id});
+            MainSPA.SPA.router.navigate("#/play/" + this.model.id);
         },
         declineMatch: function () {
             console.log("decline match event");
