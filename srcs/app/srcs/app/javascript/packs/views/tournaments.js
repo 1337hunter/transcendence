@@ -83,18 +83,16 @@ $(function () {
                 error: this.onerror});
         },
         join: function () {
-            Utils.ajax(`api/tournaments/${this.model.get('id')}/join`,'POST')
-                .then((data) => {
-                    Utils.appAlert('success', {json: data});
-                    this.model.fetch();
-                    }, this.onerror
-                );
+            this.tournament_ajax('join');
         },
         leave: function () {
-            Utils.ajax(`api/tournaments/${this.model.get('id')}/leave`,'POST')
+            this.tournament_ajax('leave');
+        },
+        tournament_ajax: function (action) {
+            Utils.ajax(`api/tournaments/${this.model.get('id')}/${action}`,'POST')
                 .then((data) => {
-                    Utils.appAlert('success', {json: data});
-                    this.model.fetch();
+                        Utils.appAlert('success', {json: data});
+                        this.model.fetch();
                     }, this.onerror
                 );
         },
