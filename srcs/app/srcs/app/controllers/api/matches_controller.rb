@@ -65,8 +65,11 @@ class Api::MatchesController < ApplicationController
                           player_two: User.find(params["invited_user_id"]),
                           status: 1)
       if @war && check_war
-        @match.update(war_id: @war.id)
-        WarMatchJob.set(wait_until: DateTime.now + @war.wait_minutes.minutes).perform_later(@match)
+        another_match = Match.find_by_war_id(@war.id)
+        if another_match.status != 3
+          @match.update(war_id: @war.id)
+          WarMatchJob.set(wait_until: DateTime.now + @war.wait_minutes.minutes).perform_later(@match)
+        end
       end
       puts 'MATCH CREATED'
       render json: @match, status: :ok
