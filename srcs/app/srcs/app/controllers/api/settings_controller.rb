@@ -4,27 +4,28 @@ class Api::SettingsController < ApplicationController
     before_action :authenticate_user!
     before_action :check_2fa!
     before_action :sign_out_if_banned
+    before_action :define_filters
 
     def index
-        @user = current_user
-        respond_to do |format|
-            format.json { render json: @user, :only =>
-              [:id, :displayname, :email, :avatar_url, :avatar_default_url] }
-        end
+        render json: current_user, :only => @filters
     end
 
     def update
         @user = current_user
-        if (params.has_key?(:displayname))
-            @user.update(displayname: params[:displayname])
+        if @user.update(user_params)
+            render json: @user, :only => @filters, status: :ok
+        else
+            render json: @user.errors, status: :unprocessable_entity
         end
-        if (params.has_key?(:email))
-            @user.update(email: params[:email])
-        end
-        if (params.has_key?(:avatar_url))
-            @user.update(avatar_url: params[:avatar_url])
-        end
-        render json: @user, :only =>
-          [:id, :displayname, :email, :avatar_url, :avatar_default_url]
+    end
+
+    private
+
+    def define_filters
+        @filters = %i[id displayname email avatar_url avatar_default_url]
+    end
+
+    def user_params
+        params.require(:setting).permit(%i[displayname email avatar_url])
     end
 end
