@@ -20,6 +20,7 @@ $(function () {
 		initialize: function () {
 			this.model = new SettingsModel;
 			this.listenTo(this.model, 'change', this.render);
+			this.listenTo(this.model, 'error', this.onerror)
 			this.model.fetch();
 		},
 		render: function () {
@@ -37,8 +38,7 @@ $(function () {
 			if (this.model.get('email') !== newemail)
 				this.model.save({email: newemail}, {
 					patch: true,
-					success: function () {Utils.appAlert('success', {msg: 'Email changed'})},
-					error: this.onerror
+					success: function () {Utils.appAlert('success', {msg: 'Email changed'})}
 				});
 		},
 		input_displayname: function ()
@@ -47,8 +47,7 @@ $(function () {
 			if (this.model.get('displayname') !== newdisplayname)
 				this.model.save({displayname: newdisplayname}, {
 					patch: true,
-					success: function () {Utils.appAlert('success', {msg: 'Displayname changed'})},
-					error: this.onerror
+					success: function () {Utils.appAlert('success', {msg: 'Displayname changed'})}
 				});
 		},
 		update_avatar: function () {
@@ -62,8 +61,7 @@ $(function () {
 					success: function (model) {
 						Utils.appAlert('success', {msg: 'Avatar url changed'});
 						$("img.navbar_user_icon").attr('src', model.get('avatar_url'));
-					},
-					error: this.onerror
+					}
 				});
 			}
 			this.$('.table-avatar').addClass('edit_url');
@@ -71,6 +69,8 @@ $(function () {
 		},
 		onerror: function (model, response) {
 			Utils.alertOnAjaxError(response);
+			this.model.attributes = this.model.previousAttributes();
+			this.render();
 		},
 		open_2fa: function () {
 			if (this.otpview)

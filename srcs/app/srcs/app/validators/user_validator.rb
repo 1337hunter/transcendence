@@ -13,5 +13,9 @@ class UserValidator < ActiveModel::Validator
     record.errors.add :displayname, 'Displayname is longer than 20 symbols' if record.displayname.size > 20
     record.errors.add :displayname, 'Special symbols are not allowed' unless record.displayname.match? '^[a-zA-Z0-9 ]+$'
     record.errors.add :displayname, 'Bad displayname' if @badnames.include? record.displayname.downcase
+
+    # validate avatar_url
+    record.avatar_url = record.avatar_url.strip
+    record.errors.add :avatar_url, 'Bad avatar url' if @badnames.include? record.avatar_url.downcase
   end
 end
