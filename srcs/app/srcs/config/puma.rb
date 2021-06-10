@@ -44,3 +44,5 @@ plugin :tmp_restart
 
 puts 'Setting all users offline'
 User.update_all(online: false) if User.has_attribute?('online')
+
+TournamentJob.perform_now
