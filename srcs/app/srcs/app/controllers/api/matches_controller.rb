@@ -23,7 +23,7 @@ class Api::MatchesController < ApplicationController
             if @player_loser.elo < 25
                 @player_loser.update(elo: 0)
             else
-                @player_loser.updaet(elo: @player_loser.elo - 25)
+                @player_loser.update(elo: @player_loser.elo - 25)
             end
         end
         if (params.has_key?(:status))
@@ -31,6 +31,11 @@ class Api::MatchesController < ApplicationController
         end
         if (params.has_key?(:winner))
             @match.update(winner: params[:winner])
+            winner = User.find(@match.winner)
+            if winner.guild_id
+                winner.guild.score += 1;
+                winner.guild.save
+            end
         end
         puts '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
         puts params
