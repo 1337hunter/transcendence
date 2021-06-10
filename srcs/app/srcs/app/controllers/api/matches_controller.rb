@@ -31,6 +31,11 @@ class Api::MatchesController < ApplicationController
         end
         if (params.has_key?(:winner))
             @match.update(winner: params[:winner])
+            winner = User.find(@match.winner)
+            if winner.guild_id
+                winner.guild.score += 1;
+                winner.guild.save
+            end
         end
         puts '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
         puts params

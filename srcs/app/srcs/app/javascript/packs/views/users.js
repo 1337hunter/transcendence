@@ -586,8 +586,8 @@ $(function () {
             let view = this;
             this.cur_user.fetch({
                 success: function (model) {
-                    if (model.get('id') != view.model.get('id') && model.get('guild_id') == view.guild_id) {
-                        if (model.get('guild_master')) {
+                    if ((model.get('id') != view.model.get('id') && model.get('guild_id') == view.guild_id) || view.cur_user.get('admin') ) {
+                        if (model.get('guild_master') || view.cur_user.get('admin')) {
                             view.$el.html(view.template3(view.model.toJSON()));
                         }
                         else if ((model.get('guild_officer') && !view.model.get('guild_officer') && !view.model.get('guild_master')))
