@@ -10,7 +10,7 @@ $(function () {
     TournamentsView.SingleTournamentView = Backbone.View.extend({
         template: _.template($('#singletournament-template').html()),
         events: {
-            "click" : "openprofile",
+            "click" : "openprofile"
         },
         tagName: "tr",
         initialize: function () {
@@ -66,7 +66,9 @@ $(function () {
     TournamentsView.PageView = Backbone.View.extend({
         template: _.template($('#tournamentpage-template').html()),
         events: {
-            "click #refresh-button" :   "refresh"
+            "click #refresh-button"             :   "refresh",
+            "click .join-tournament-button"     :   "join",
+            "click .leave-tournament-button"    :   "leave"
         },
         initialize: function (id) {
             this.model = new Tournaments.ModelById({id: id})
@@ -80,7 +82,27 @@ $(function () {
                     },
                 error: this.onerror});
         },
+        join: function () {
+            Utils.ajax(`api/tournaments/${this.model.get('id')}/join`,'POST')
+                .then((data) => {
+                    Utils.appAlert('success', {json: data});
+                    this.model.fetch();
+                    }, this.onerror
+                );
+        },
+        leave: function () {
+            Utils.ajax(`api/tournaments/${this.model.get('id')}/leave`,'POST')
+                .then((data) => {
+                    Utils.appAlert('success', {json: data});
+                    this.model.fetch();
+                    }, this.onerror
+                );
+        },
         onerror: function (model, response) {
+            if (response == null && model?.responseJSON != null) {
+                Utils.alertOnAjaxError(model);
+                return;
+            }
             Utils.alertOnAjaxError(response);
         },
         render: function() {

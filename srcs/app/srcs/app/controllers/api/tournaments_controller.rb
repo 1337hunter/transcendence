@@ -5,7 +5,7 @@ class Api::TournamentsController < ApplicationController
   before_action :check_2fa!
   before_action :sign_out_if_banned
   before_action :check_admin, only: %i[create update destroy]
-  before_action :find_tournament, only: %i[show update destroy join_tournament leave_tournament]
+  before_action :find_tournament, only: %i[show update destroy join leave]
   before_action :define_filters
   rescue_from ActiveRecord::RecordNotFound, :with => :tournament_not_found
 
@@ -35,17 +35,29 @@ class Api::TournamentsController < ApplicationController
     @tournament.destroy
   end
 
-  def join_tournament
-    if current_user.tournament_id.nil? && @tournament.status == "open"
-      current_user.update(tournament_id: @tournament.id)
-      render json: { msg: 'Successfully joined tournament #' + @tournament.id }, status: :ok
+  # POST /api/tournaments/id/join
+  def join
+    unless @tournament.open?
+      render json: { error: 'Registration to tournament is closed' }, status: :forbidden
+      return
     end
+    unless current_user.tournament_id.nil?
+      render json: { error: 'You are registered to another tournament' }, status: :forbidden
+      return
+    end
+    current_user.update(tournament_id: @tournament.id)
+    render json: { msg: "Successfully joined tournament ##{@tournament.id}" }, status: :ok
   end
 
-  def leave_tournament
-    if current_user.tournament_id == @tournament.id && @tournament.status == "open"
+  # POST /api/tournaments/id/leave
+  def leave
+    if @tournament.active?
+      render json: { error: 'You cant unregister from active tournament' }, status: :forbidden
+      return
+    end
+    if current_user.tournament_id == @tournament.id
       current_user.update(tournament_id: nil)
-      render json: { msg: 'Successfully left tournament #' + @tournament.id }, status: :ok
+      render json: { msg: "Successfully left tournament ##{@tournament.id}" }, status: :ok
     end
   end
 
