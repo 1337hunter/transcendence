@@ -36,16 +36,17 @@ class Api::WarsController < ApplicationController
     @opponent = Guild.find(params[:guild2_id])
     return if check_opponent_fail || not_enough_points
 
-    if params[:start] < DateTime.now
+    if params[:start].to_time < DateTime.now
       render json: { error: 'Start date must be in future' }, status: :unprocessable_entity
+      return
     end
-    if params[:end] < (params[:start] + 1.0/48.0)
-       render json: { error: 'The gap between start and date must be not less then 30 minutes' }, status: :unprocessable_entity
+    #if params[:end].to_time < (params[:start].to_time + 1.0 / 48.0)
+    #  render json: { error: 'The gap between start and date must be not less then 30 minutes' }, status: :unprocessable_entity
+    #  return
     end
-    if params[:end] >= (params[:start] + 1.0)
-      if params[:wartime_end] < (params[:wartime_start] + 1.0/24.0) && params[:wartime_start] != params[:wartime_end]
-          render json: { error: 'War time must be at least 1 hour long' }, status: :unprocessable_entity
-      end
+    if params[:end].to_time >= (params[:start].to_time + 1.0) && (params[:wartime_end].to_time < (params[:wartime_start].to_time + 1.0 / 24.0) && params[:wartime_start].to_time != params[:wartime_end].to_time)
+      render json: { error: 'War time must be at least 1 hour long' }, status: :unprocessable_entity
+      return
     end
     war = @guild_cur.war_requests.create(war_params)
     if war.save
