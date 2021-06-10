@@ -40,7 +40,7 @@ class Api::UsersController < ApplicationController
   end
 
   def add_to_guild
-    if (guild_head_action && @user != current_user)
+    if (guild_head_action && @user != current_user) || current_user.admin
       if !@user.guild_id
         render json: { error: 'No request found' }, status: :not_found
       else
@@ -71,7 +71,7 @@ class Api::UsersController < ApplicationController
   def remove_from_guild
     if (!@user.guild_id)
       render json: { error: 'User has no guild or guild request' }, status: :forbidden
-    elsif (current_user == @user || guild_head_action)
+    elsif (current_user == @user || guild_head_action || current_user.admin)
       if @user.guild_master == true
         @guild = Guild.find(@user.guild_id)
         if @guild.members.length < 2
