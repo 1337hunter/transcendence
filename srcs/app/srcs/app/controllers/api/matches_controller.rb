@@ -16,7 +16,7 @@ class Api::MatchesController < ApplicationController
         @match = Match.find(params[:id])
         if (params.has_key?(:winner) and params.has_key?(:first_player_score) and params.has_key?(:second_player_score))
             @player_winner = User.find(params[:winner])
-            @player_loser = params[:winner] == params[:second_player_id] ? User.find(params[:first_player_id]) : User.find(params[:second_player_id])
+            @player_loser = params[:winner] == params[:second_player_id] ? User.find(params[:ç]) : User.find(params[:second_player_id])
             @player_loser.update(loses: @player_loser.loses + 1)
             @player_winner.update(wins: @player_winner.wins + 1)
             @player_winner.update(elo: @player_winner.elo + 25)
@@ -59,16 +59,23 @@ class Api::MatchesController < ApplicationController
         if find_invitation(params[:user_id], params[:invited_user_id], 1) or find_invitation(params[:invited_user_id], params[:user_id], 1)
             render json: {error: 'Invitation already exists'}, status: :unprocessable_entity
         else
-            war = War.find_by_guild1_id_and_guild2_id(@player_winner.guild_id, @player_loser.guild_id)
-            if !war
-                war = War.find_by_guild1_id_and_guild2_id(@player_loser.guild_id, @player_winner.guild_id)
+            user1 = User.find(params[:user_id])
+            user2 = User.find(params[:invited_user_id])
+            if user1.guild_accepted && user2.guild_accepted
+                @war = War.find_by_guild1_id_and_guild2_id(user1.guild_id, user2.guild_id)
+                if !@war
+                    @war = War.find_by_guild1_id_and_guild2_id(user2.guild_id, user1.guild_id)
+                end
             end
-            if war && check_war
-                @match.update(war_id: war.id)
-            end
+
             @match = Match.create(player_one: User.find(params["user_id"]),
                                 player_two: User.find(params["invited_user_id"]),
                                 status: 1)
+            if @war
+                @match.update(war_id: @war.id)
+                #WarMatchJob.set(wait_until: DateTime.now + @war.wait_minutes.minutes).perform_later(@match)
+                @war.update(g1_score: @war.g1_score + 1, g1_matches_won: @war.g1_matches_won + 1, g2_matches_unanswered: @war.g2_matches_unanswered + 1)
+            end
             puts 'MATCH CREATED'
             render json: @match, status: :ok
         end
