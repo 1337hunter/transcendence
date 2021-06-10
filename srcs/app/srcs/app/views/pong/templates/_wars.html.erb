@@ -158,14 +158,14 @@
             <div class="to-div">War ends</div>
             <input id="war-start" class="from-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="from" type="datetime-local" required/>
             <input id="war-end" class="to-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="to" type="datetime-local" required/>
-            <p style="font-size: small">(the required war duration is 24 hours or more, 1 hour at least from now to start) </p>
+            <p style="font-size: small">(start must be in the future) </p>
           </div>
 
           <div style="margin-top: 20px">
             Select War hours<br>
-            <input type="time" data-format="hh:mm:ss" id="wartime-start" class="from-div" placeholder="from" required>
-            <input type="time" data-format="hh:mm:ss" id="wartime-end" class="to-div" placeholder="to" required>
-            <p style="font-size: small">(the period of day when guilds can ask for a fight, at least 1 hour gap required) </p>
+            <input type="time" data-format="hh:mm:ss" id="wartime-start" class="from-div" placeholder="from">
+            <input type="time" data-format="hh:mm:ss" id="wartime-end" class="to-div" placeholder="to">
+            <p style="font-size: small">(for wars 24 h or longer: the period of day when guilds can ask for a fight, if empty there would be now limitations; must not be less then 1 hour) </p>
           </div>
 
           <label for="timezone">Select timezone</label>
@@ -213,8 +213,8 @@
           </select>
 
           <ul class="options" style="margin-top: 20px">Include matches of types:
+            <li class="w"><i class="material-icons">done</i>&nbsp;Duel</li>
             <li class="w"> <input type="checkbox" id="include-tournament">&nbsp;Tournament</li>
-            <li class="w"><input type="checkbox" id="include-duel">&nbsp;Duel</li>
             <li class="w"><input type="checkbox" id="include-ladder">&nbsp;Ladder</li>
           </ul>
         </div>

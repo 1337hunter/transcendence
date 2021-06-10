@@ -300,12 +300,20 @@ $(function () {
             let end = $('#war-end').val().trim();
             let wartime_start = $('#wartime-start').val().trim();
             let wartime_end = $('#wartime-end').val().trim();
-            if (moment('2021-01-01 ' + wartime_end).diff(moment('2021-01-01 ' + wartime_start), 'hours') < 1) {
-                Utils.appAlert('danger', {msg: 'War time gap must be not less then 1 hour'});
-                return
+            if (moment(end).diff(moment(start), 'hours') < 24) {
+                wartime_start = '2021-01-01 00:00:00.0 +0000'
+                wartime_end = '2021-01-01 00:00:00.0 +0000'
             }
-            //TODO: 23-00 - 3:00 now is not valid
-            //TODO:check in WarValidator
+            else {
+                if (wartime_start)
+                    wartime_start = '2021-01-01 ' + wartime_start;
+                else
+                    wartime_start = '2021-01-01 00:00:00.0 +0000'
+                if (wartime_end)
+                    wartime_end = parseInt(wartime_end) < parseInt(wartime_start) ? '2021-01-02 ' + wartime_end : '2021-01-01 ' + wartime_end;
+                else
+                    wartime_end = '2021-01-01 00:00:00.0 +0000'
+            }
             let tz = $('#timezone').val();
             let data = 'guild2_id='+ this.model.get('id') +
                 '&stake=' + $('#stake').val().trim() +
@@ -323,8 +331,6 @@ $(function () {
                 data += '&tournament=true';
             if($('#include-ladder').is(":checked"))
                 data += '&ladder=true';
-            if($('#include-duel').is(":checked"))
-                data += '&duel=true';
             $.ajax({
                 url: 'api/wars/',
                 type: 'POST',

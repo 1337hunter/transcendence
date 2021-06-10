@@ -1,10 +1,15 @@
 class WarValidator < ActiveModel::Validator
   def validate(record)
-    if record.start < (DateTime.now + 1.0/24.0)
-      record.errors.add :start, 'Start date and time is earlier than 1 hour in future'
+    if record.start < (DateTime.now)
+      record.errors.add :start, 'Start date must be in future'
     end
-    if record.end < (record.start + 1.0)
-      record.errors.add :start, 'The gap between start and date must be not less then 24 hours'
+    if record.end < (record.start + 1.0/48.0)
+      record.errors.add :start, 'The gap between start and date must be not less then 30 minutes'
+    end
+    if record.end >= (record.start + 1.0)
+      if record.wartime_end < (record.wartime_start + 1.0/24.0) && record.wartime_start != record.wartime_end
+        record.errors.add :wartime_end, 'War time must be at least 1 hour long'
+      end
     end
     # TODO: wartime_start wartime_end (1h gap)
     record.errors.add :stake, 'Stake must be not less then 1 point' if record.stake < 1
