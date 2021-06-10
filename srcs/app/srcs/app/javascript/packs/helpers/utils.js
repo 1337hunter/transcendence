@@ -31,7 +31,7 @@ export default class Utils {
     };
 
     static alertOnAjaxError(response) {
-        if (response.responseJSON == null)  //  true for undefined too
+        if (response?.responseJSON == null)  //  true for undefined too
             Utils.appAlert('danger', {msg: 'No response from API'});
         else
             Utils.appAlert('danger', {json: response.responseJSON});

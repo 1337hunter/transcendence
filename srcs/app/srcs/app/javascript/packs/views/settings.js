@@ -15,13 +15,18 @@ $(function () {
 			'blur input.upload_user_avatar' : 'update_avatar_close',
 			'click .user_avatar' : 'update_avatar',
 			'click #upload_user_avatar' : 'upload_avatar_url',
-			'click #2fa-button' : 'open_2fa'
+			'click #2fa-button' : 'open_2fa',
+			"keypress input" : "blurOnEnter",
 		},
 		initialize: function () {
 			this.model = new SettingsModel;
 			this.listenTo(this.model, 'change', this.render);
 			this.listenTo(this.model, 'error', this.onerror)
 			this.model.fetch();
+		},
+		blurOnEnter: function (e) {
+			if (e.key !== "Enter") return;
+			e.target.blur();
 		},
 		render: function () {
 			if (this.otpview)

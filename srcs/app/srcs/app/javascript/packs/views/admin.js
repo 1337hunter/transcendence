@@ -64,7 +64,7 @@ $(function () {
             this.confirmview.reasoninput.focus();
         },
         updateOnEnter: function (e) {
-            if (e.keyCode !== 13) return;
+            if (e.key !== "Enter") return;
 
             let newdisplayname = this.input.val().trim();
             if (this.model.get('displayname') !== newdisplayname)

@@ -37,13 +37,13 @@
   <h4>Start</h4>
   <p><%%= new Date(start_date) %></p>
 
-  <div class="tournament-actions" <%%= status == "open" ? '' : 'style="display: none;"' %>>
+  <div class="tournament-actions" <%%= status == "active" || status == "finished" || (!is_in_tournament && status == "closed") ? 'style="display: none;"' : '' %> >
     <p>
       <h4>Actions</h4>
-      <button class="btn btn-outline-success join-tournament-button" <%%= is_in_tournament ? 'style="display: none;"' : '' %> >
+      <button class="btn btn-outline-success join-tournament-button" <%%= !is_in_tournament && status == "open" ? '' : 'style="display: none;"' %> >
         Join tournament
       </button>
-      <button class="btn btn-outline-danger leave-tournament-button" <%%= is_in_tournament ? '' : 'style="display: none;"' %> >
+      <button class="btn btn-outline-danger leave-tournament-button" <%%= is_in_tournament && status != "active" ? '' : 'style="display: none;"' %> >
         Leave tournament
       </button>
     </p>

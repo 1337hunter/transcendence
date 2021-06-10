@@ -24,7 +24,6 @@ Rails.application.routes.draw do
     resources :direct_rooms, only: [:index, :create, :show, :update]
     resources :direct_messages, only: [:index, :create, :show]
 
-    post 'friends/:id', to: "friends#add_friend"
     get 'admin/users', to: 'admin#users'
     patch 'admin/users/:id', to: 'admin#user_update'
     get 'admin/chats', to: 'admin#chatlist'
@@ -45,6 +44,9 @@ Rails.application.routes.draw do
     get 'guilds/:id/war_requests', to: 'wars#index_war_requests'
 
     resources :wars
+
+    post 'tournaments/:id/join', to: 'tournaments#join'
+    post 'tournaments/:id/leave', to: 'tournaments#leave'
 
   end
 
