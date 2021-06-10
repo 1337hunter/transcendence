@@ -54,6 +54,7 @@ class Api::WarsController < ApplicationController
     else
       @opponent = Guild.find(@war.guild1_id)
       @war.update(accepted: true) if !check_opponent_fail && !not_enough_points
+      WarJob.set(wait_until: @war.end).perform_later(@war)
     end
   end
 
@@ -134,7 +135,7 @@ class Api::WarsController < ApplicationController
     params.permit(:guild1_id, :guild2_id, :stake,
                   :start, :end, :wartime_start, :wartime_end,
                   :wait_minutes, :max_unanswered,
-                  :ladder, :tournament)
+                  :ladder, :tournament, :duel)
   end
   
   def define_filters
