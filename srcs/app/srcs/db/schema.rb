@@ -158,14 +158,14 @@ ActiveRecord::Schema.define(version: 2021_06_09_110054) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
     t.boolean "otp_validated"
+    t.boolean "guild_master", default: false
+    t.boolean "guild_officer", default: false
     t.string "ban_reason"
     t.boolean "online"
     t.datetime "last_seen_at"
-    t.bigint "tournament_id"
-    t.boolean "guild_master", default: false
-    t.boolean "guild_officer", default: false
     t.boolean "guild_accepted", default: false
     t.bigint "guild_id"
+    t.bigint "tournament_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
