@@ -71,10 +71,9 @@ class Api::MatchesController < ApplicationController
             @match = Match.create(player_one: User.find(params["user_id"]),
                                 player_two: User.find(params["invited_user_id"]),
                                 status: 1)
-            if @war
+            if @war && check_war
                 @match.update(war_id: @war.id)
-                #WarMatchJob.set(wait_until: DateTime.now + @war.wait_minutes.minutes).perform_later(@match)
-                @war.update(g1_score: @war.g1_score + 1, g1_matches_won: @war.g1_matches_won + 1, g2_matches_unanswered: @war.g2_matches_unanswered + 1)
+                WarMatchJob.set(wait_until: DateTime.now + @war.wait_minutes.minutes).perform_later(@match)
             end
             puts 'MATCH CREATED'
             render json: @match, status: :ok
@@ -102,11 +101,15 @@ class Api::MatchesController < ApplicationController
     end
 
     def check_wartime
-        @war.wartime_start.utc.strftime( "%H%M" ) >= DateTime.now.utc.strftime( "%H%M" )
-        if wartime_start.to_s(:date) > wartime_end.to_s(:date)
-            @war.wartime_end.utc.strftime( "%H%M" ) < DateTime.now.utc.strftime( "%H%M" )
-        else
-            @war.wartime_end.utc.strftime( "%H%M" ) < DateTime.now.utc.strftime( "%H%M" ) + 1
+        if @war.wartime_start == @war.wartime_end
+            return
+        end
+        if @war.wartime_start.utc.strftime( "%H%M" ) >= DateTime.now.utc.strftime( "%H%M" )
+            if wartime_start.to_s(:date) > wartime_end.to_s(:date)
+                @war.wartime_end.utc.strftime( "%H%M" ) < DateTime.now.utc.strftime( "%H%M" )
+            else
+                @war.wartime_end.utc.strftime( "%H%M" ) < DateTime.now.utc.strftime( "%H%M" ) + 1
+            end
         end
     end
 
