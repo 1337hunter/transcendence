@@ -15,6 +15,12 @@ var GameRoomInit =
 {
     createGameRoom: function (args) {
         let $this = this;
+        obtainedValues.rightPadY = 1;
+        obtainedValues.leftPadY = 1;
+        obtainedValues.ballx = 1;
+        obtainedValues.bally = 1;
+        obtainedValues.leftScore = 0;
+        obtainedValues.rightScore = 0;
         const GameRoom = consumer.subscriptions.create({channel: "GameRoomChannel", match_id: args.match_id}, {
             connected() {
             // Called when the subscription is ready for use on the server
