@@ -114,10 +114,8 @@ $(function () {
         },
         acceptMatch: function () {
             console.log("accept match event");
-            console.log(this.model);
             let $this = this;
             this.model.save({status: 2}, {patch: true, success: function() {
-                console.log($this.model);
                 $this.model.set({game_room: GameRoomInit.createGameRoom({match_id: $this.model.id})});
             }});
         },
@@ -134,8 +132,7 @@ $(function () {
         },
         render: function() {
             // uncoment this to disable oportunity to accept or decline matches of other players
-            console.log("main: " + this.model.attributes.main_id);
-            console.log("current: " + this.model.attributes.current_user_id);
+
             if (this.model.attributes.status == 1 && this.model.attributes.main_id != this.model.attributes.current_user_id)
                 return (this);
             let $this = this;
@@ -212,6 +209,7 @@ $(function () {
             this.$("#matches-table").append(match.view.render().el);
         },
         addAllMatches: function () {
+            this.$("#matches-table").html("");
             this.matches_collection.each(this.addOneMatch, this);
         },
         inviteToBattle: function () {

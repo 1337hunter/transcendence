@@ -170,13 +170,17 @@ export default function pong_game(view) {
             clearInterval(loopID) // the main loop breaks here
             if (leftScore >= MAX_SCORE) {
                 console.log("left won");
-                if (is_player_left)
+                if (is_player_left == 1)
+                {
                     view.finishGame(view.first_player_id);
+                }
             }
             if (rightScore >= MAX_SCORE) {
                 console.log("right won");
-                if (is_player_left)
+                if (is_player_left == 1)
+                {
                     view.finishGame(view.second_player_id);
+                }
             }
             gameID = setInterval(drawGame, 10)
         }
