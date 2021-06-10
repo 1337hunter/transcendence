@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_09_110054) do
+ActiveRecord::Schema.define(version: 2021_06_10_122257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -166,6 +166,7 @@ ActiveRecord::Schema.define(version: 2021_06_09_110054) do
     t.boolean "guild_accepted", default: false
     t.bigint "guild_id"
     t.bigint "tournament_id"
+    t.boolean "first_login", default: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
