@@ -158,14 +158,14 @@ ActiveRecord::Schema.define(version: 2021_06_10_122257) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
     t.boolean "otp_validated"
-    t.boolean "guild_master", default: false
-    t.boolean "guild_officer", default: false
     t.string "ban_reason"
     t.boolean "online"
     t.datetime "last_seen_at"
+    t.bigint "tournament_id"
+    t.boolean "guild_master", default: false
+    t.boolean "guild_officer", default: false
     t.boolean "guild_accepted", default: false
     t.bigint "guild_id"
-    t.bigint "tournament_id"
     t.boolean "first_login", default: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
@@ -187,8 +187,8 @@ ActiveRecord::Schema.define(version: 2021_06_10_122257) do
     t.integer "stake", default: 0
     t.integer "g1_score", default: 0
     t.integer "g2_score", default: 0
-    t.time "wartime_start"
-    t.time "wartime_end"
+    t.datetime "wartime_start"
+    t.datetime "wartime_end"
     t.integer "wait_minutes", default: 10
     t.integer "max_unanswered", default: 5
     t.integer "matches_total", default: 0

@@ -134,7 +134,7 @@ class Api::WarsController < ApplicationController
     params.permit(:guild1_id, :guild2_id, :stake,
                   :start, :end, :wartime_start, :wartime_end,
                   :wait_minutes, :max_unanswered,
-                  :ladder, :tournament, :duel)
+                  :ladder, :tournament)
   end
   
   def define_filters
