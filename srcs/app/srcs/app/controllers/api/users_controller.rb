@@ -44,12 +44,15 @@ class Api::UsersController < ApplicationController
       if !@user.guild_id
         render json: { error: 'No request found' }, status: :not_found
       else
+        @current_master = User.where(guild_id: @user.guild_id, guild_master: true).first
         @user.update(guild_user_params)
         if @user.guild_master == true
           @user.guild_officer = false
           @user.save
-          current_user.guild_master = false
-          current_user.save
+          if @current_master.id != @user.id
+            @current_master.guild_master = false
+            @current_master.save
+          end
         end
       end
     elsif @user == current_user && params[:guild_id] != nil
