@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_10_122257) do
+ActiveRecord::Schema.define(version: 2021_06_10_155423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,8 +80,10 @@ ActiveRecord::Schema.define(version: 2021_06_10_122257) do
     t.integer "winner"
     t.integer "first_player_score"
     t.integer "second_player_score"
+    t.bigint "war_id"
     t.index ["first_player_id"], name: "index_matches_on_first_player_id"
     t.index ["second_player_id"], name: "index_matches_on_second_player_id"
+    t.index ["war_id"], name: "index_matches_on_war_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -210,6 +212,7 @@ ActiveRecord::Schema.define(version: 2021_06_10_122257) do
   add_foreign_key "direct_messages", "users"
   add_foreign_key "guild_invitations", "guilds"
   add_foreign_key "guild_invitations", "users"
+  add_foreign_key "matches", "wars"
   add_foreign_key "messages", "users"
   add_foreign_key "tournaments", "users", column: "winner_id"
   add_foreign_key "users", "guilds"
