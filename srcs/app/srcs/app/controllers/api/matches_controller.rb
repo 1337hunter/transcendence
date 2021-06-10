@@ -26,14 +26,12 @@ class Api::MatchesController < ApplicationController
         @player_loser.update(elo: @player_loser.elo - 25)
       end
     end
-    if (params.has_key?(:status))
-      @match.update(status: params[:status])
-    end
+    @match.update(status: params[:status]) if (params.has_key?(:status))
     if (params.has_key?(:winner))
       @match.update(winner: params[:winner])
-      if @match.war_id 
-        war = War.find(@match.war_id) 
-          if !war.finished 
+      if @match.war_id
+        war = War.find(@match.war_id)
+          if !war.finished
             if @player_winner.guild_id == war.guild1_id
               @war.g1_score += 1
               @war.g1_matches_won += 1
@@ -63,9 +61,7 @@ class Api::MatchesController < ApplicationController
       user2 = User.find(params[:invited_user_id])
       if user1.guild_accepted && user2.guild_accepted
         @war = War.find_by_guild1_id_and_guild2_id(user1.guild_id, user2.guild_id)
-        if !@war
-          @war = War.find_by_guild1_id_and_guild2_id(user2.guild_id, user1.guild_id)
-        end
+        @war = War.find_by_guild1_id_and_guild2_id(user2.guild_id, user1.guild_id) if !@war
       end
 
       @match = Match.create(player_one: User.find(params["user_id"]),
@@ -88,9 +84,7 @@ class Api::MatchesController < ApplicationController
     private
 
   def find_invitation(first_player_id, second_player_id, status)
-    if first_player_id == 'current'
-      first_player_id = current_user.id
-    end
+    first_player_id = current_user.id if first_player_id == 'current'
     return Match.find_by_first_player_id_and_second_player_id_and_status(first_player_id, second_player_id, status)
   end
 
@@ -101,10 +95,12 @@ class Api::MatchesController < ApplicationController
   end
 
   def check_wartime
-    if @war.wartime_start == @war.wartime_end
-      return
-    end
-    #TODO: to be continued
+    return if @war.wartime_start == @war.wartime_end
+
+    now = DateTime.now
+    check_start = DateTime.new(now.year, now.month, now.day, @war.wartime_start.hour, @war.wartime_start.min, @war.wartime_start.sec, now.zone)
+    check_end = DateTime.new(now.year, now.month, now.day + @war.wartime_end.day - 1, @war.wartime_end.hour, @war.wartime_end.min, @war.wartime_end.sec, now.zone)
+    check_start <= now && check_end > now
   end
 
 end
