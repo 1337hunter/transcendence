@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_11_112944) do
+ActiveRecord::Schema.define(version: 2021_06_11_150926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,6 +131,7 @@ ActiveRecord::Schema.define(version: 2021_06_11_112944) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "winner_id"
     t.integer "status", default: 0, null: false
+    t.datetime "end_date", null: false
     t.index ["winner_id"], name: "index_tournaments_on_winner_id"
   end
 
@@ -160,14 +161,14 @@ ActiveRecord::Schema.define(version: 2021_06_11_112944) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
     t.boolean "otp_validated"
+    t.boolean "guild_master", default: false
+    t.boolean "guild_officer", default: false
     t.string "ban_reason"
     t.boolean "online"
     t.datetime "last_seen_at"
-    t.bigint "tournament_id"
-    t.boolean "guild_master", default: false
-    t.boolean "guild_officer", default: false
     t.boolean "guild_accepted", default: false
     t.bigint "guild_id"
+    t.bigint "tournament_id"
     t.boolean "first_login", default: true
     t.boolean "owner", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -190,8 +191,8 @@ ActiveRecord::Schema.define(version: 2021_06_11_112944) do
     t.integer "stake", default: 0
     t.integer "g1_score", default: 0
     t.integer "g2_score", default: 0
-    t.time "wartime_start"
-    t.time "wartime_end"
+    t.datetime "wartime_start"
+    t.datetime "wartime_end"
     t.integer "wait_minutes", default: 10
     t.integer "max_unanswered", default: 5
     t.integer "matches_total", default: 0

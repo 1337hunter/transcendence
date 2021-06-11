@@ -35,7 +35,7 @@ class Api::AdministrationController < ApplicationController
   def user_update
     if params.has_key?('admin')
       unless current_user.owner?
-        render json: {error: "You have no permission"}, status: :forbidden
+        render json: {error: "You are not an owner of this server"}, status: :forbidden
         return
       end
     end

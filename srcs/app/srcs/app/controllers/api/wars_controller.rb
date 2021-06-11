@@ -43,7 +43,7 @@ class Api::WarsController < ApplicationController
     #if params[:end].to_time < (params[:start].to_time + 1.0 / 48.0)
     #  render json: { error: 'The gap between start and date must be not less then 30 minutes' }, status: :unprocessable_entity
     #  return
-    end
+    #end
     if params[:end].to_time >= (params[:start].to_time + 1.0) && (params[:wartime_end].to_time < (params[:wartime_start].to_time + 1.0 / 24.0) && params[:wartime_start].to_time != params[:wartime_end].to_time)
       render json: { error: 'War time must be at least 1 hour long' }, status: :unprocessable_entity
       return
@@ -69,7 +69,7 @@ class Api::WarsController < ApplicationController
       WarJob.set(wait_until: @war.end).perform_later(@war)
       #TEST IT
       now = DateTime.now.new_offset(0)
-      time_to_start_unmatch_counter_reset = DateTime.new(@war.start.month, @war.start.month, 
+      time_to_start_unmatch_counter_reset = DateTime.new(@war.start.month, @war.start.month,
                                   @war.start.day, @war.wartime_end.hour,
                                   @war.wartime_end.min, @war.wartime_end.sec, now.zone)
       ResetUnunsweredMatchesCounterJob.set(wait_until: time_to_start_unmatch_counter_reset).perform_later(@war)
@@ -155,7 +155,7 @@ class Api::WarsController < ApplicationController
                   :wait_minutes, :max_unanswered,
                   :ladder, :tournament, :duel)
   end
-  
+
   def define_filters
     @filters = %i[id guild1_id guild2_id g1_name g2_name stake
                   start end finished accepted winner]
