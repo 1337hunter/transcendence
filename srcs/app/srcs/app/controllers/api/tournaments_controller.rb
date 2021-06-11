@@ -4,8 +4,8 @@ class Api::TournamentsController < ApplicationController
   before_action :authenticate_user!
   before_action :check_2fa!
   before_action :sign_out_if_banned
-  before_action :check_admin, only: %i[create update destroy]
-  before_action :find_tournament, only: %i[show update destroy join leave]
+  before_action :check_admin, only: %i[create destroy open close begin finish]
+  before_action :find_tournament, only: %i[show destroy join leave open close begin finish]
   before_action :define_filters
   rescue_from ActiveRecord::RecordNotFound, :with => :tournament_not_found
 
@@ -18,21 +18,20 @@ class Api::TournamentsController < ApplicationController
   def show
     render json: @tournament
                    .as_json(include: {users: {only: @filters}, winner: {only: @filters}})
-                   .merge({:is_current_admin => current_user.admin?,
+                   .merge({:is_current_admin => current_user.owner? || current_user.admin?,
                            :is_in_tournament => current_user.tournament_id == @tournament.id})
   end
 
-  def update
-
-  end
-
+  # POST /api/tournaments/
   def create
-    @tournament.create!(start_date: DateTime.now + 365)
+    @tournament.create!(start_date: params[:start_date], end_date: [:end_date])
   end
 
+  # DELETE /api/tournaments/id/
   def destroy
     @tournament.users.each { |user| user.update(tournament_id: nil) }
     @tournament.destroy
+    render json: { error: 'Tournament has been destroyed' }, status: :ok
   end
 
   # POST /api/tournaments/id/join
@@ -61,6 +60,46 @@ class Api::TournamentsController < ApplicationController
     end
   end
 
+  # POST /api/tournaments/id/open
+  def open
+    if @tournament.active? || @tournament.finished?
+      render json: { error: 'You cant reopen registration to active or finished tournament' }, status: :forbidden
+      return
+    end
+    @tournament.open! unless @tournament.open?
+    render json: { msg: "Registration to tournament ##{@tournament.id} opened" }, status: :ok
+  end
+
+  # POST /api/tournaments/id/close
+  def close
+    if @tournament.active? || @tournament.finished?
+      render json: { error: 'You cant close registration to active or finished tournament' }, status: :forbidden
+      return
+    end
+    @tournament.closed! unless @tournament.closed?
+    render json: { msg: "Registration to tournament ##{@tournament.id} closed" }, status: :ok
+  end
+
+  # POST /api/tournaments/id/begin
+  def begin
+    if @tournament.finished?
+      render json: { error: 'You cant begin finished tournament' }, status: :forbidden
+      return
+    end
+    @tournament.active! unless @tournament.active?
+    render json: { msg: "Tournament ##{@tournament.id} has begun" }, status: :ok
+  end
+
+  # POST /api/tournaments/id/finish
+  def finish
+    unless @tournament.active?
+      render json: { error: 'You must start tournament to finish it' }, status: :forbidden
+      return
+    end
+    @tournament.finished! unless @tournament.finished?
+    render json: { msg: "Tournament ##{@tournament.id} finished" }, status: :ok
+  end
+
   private
 
   def find_tournament
@@ -72,7 +111,7 @@ class Api::TournamentsController < ApplicationController
   end
 
   def check_admin
-    render json: {error: "You have no permission"}, status: :forbidden unless current_user.admin?
+    render json: {error: "You have no permission"}, status: :forbidden unless current_user.owner? || current_user.admin?
   end
 
   def define_filters

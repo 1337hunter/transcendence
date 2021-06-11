@@ -47,7 +47,10 @@ Rails.application.routes.draw do
 
     post 'tournaments/:id/join', to: 'tournaments#join'
     post 'tournaments/:id/leave', to: 'tournaments#leave'
-
+    post 'tournaments/:id/open', to: 'tournaments#open'
+    post 'tournaments/:id/close', to: 'tournaments#close'
+    post 'tournaments/:id/begin', to: 'tournaments#begin'
+    post 'tournaments/:id/finish', to: 'tournaments#finish'
   end
 
   get '/pong', to: 'pong#index'

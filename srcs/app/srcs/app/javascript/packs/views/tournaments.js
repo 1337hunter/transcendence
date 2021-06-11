@@ -68,11 +68,17 @@ $(function () {
         events: {
             "click #refresh-button"             :   "refresh",
             "click .join-tournament-button"     :   "join",
-            "click .leave-tournament-button"    :   "leave"
+            "click .leave-tournament-button"    :   "leave",
+            "click .begin-tournament-button"    :   "begin",
+            "click .close-tournament-button"    :   "close",
+            "click .open-tournament-button"     :   "open",
+            "click .finish-tournament-button"   :   "finish",
+            "click .destroy-tournament-button"  :   "destroy"
         },
         initialize: function (id) {
             this.model = new Tournaments.ModelById({id: id})
             this.listenTo(this.model, 'change', this.render);
+            this.listenTo(this.model, 'error', this.onerror);
             this.model.fetch({error: this.onerror});
         },
         refresh: function () {
@@ -87,6 +93,27 @@ $(function () {
         },
         leave: function () {
             this.tournament_ajax('leave');
+        },
+        begin: function () {
+            this.tournament_ajax('begin');
+        },
+        close: function () {
+            this.tournament_ajax('close');
+        },
+        open: function () {
+            this.tournament_ajax('open');
+        },
+        finish: function () {
+            this.tournament_ajax('finish');
+        },
+        destroy: function () {
+            this.model.destroy({
+                wait: true,
+                success: function (model, response) {
+                    Utils.appAlert('success', {json: response});
+                    MainSPA.SPA.router.navigate("#/tournaments");
+                }
+            });
         },
         tournament_ajax: function (action) {
             Utils.ajax(`api/tournaments/${this.model.get('id')}/${action}`,'POST')

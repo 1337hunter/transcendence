@@ -52,13 +52,19 @@
   <div class="tournament-administration" <%%= is_current_admin ? '' : 'style="display: none;"' %>>
     <h4>Administration</h4>
     <p>
-      <button class="btn btn-outline-primary begin-tournament-button" >
+      <button class="btn btn-outline-primary begin-tournament-button" <%%= status == "closed" ? '' : 'style="display: none;"' %> >
         Begin tournament
+      </button>
+      <button class="btn btn-outline-warning open-tournament-button" <%%= status == "closed" ? '' : 'style="display: none;"' %>>
+        Open registration
       </button>
       <button class="btn btn-outline-warning close-tournament-button" <%%= status == "open" ? '' : 'style="display: none;"' %>>
         Close registration
       </button>
-      <button class="btn btn-outline-danger destroy-tournament-button" >
+      <button class="btn btn-outline-success finish-tournament-button" <%%= status == "active" ? '' : 'style="display: none;"' %>>
+        Finish tournament
+      </button>
+      <button class="btn btn-outline-danger destroy-tournament-button" <%%= status != "finished" ? '' : 'style="display: none;"' %>>
         Destroy tournament
       </button>
     </p>
