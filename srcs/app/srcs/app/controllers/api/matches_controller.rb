@@ -98,8 +98,9 @@ class Api::MatchesController < ApplicationController
     return if @war.wartime_start == @war.wartime_end
 
     now = DateTime.now.new_offset(0)
+    end_day = @war.wartime_end.day == @war.wartime_start.day ? now.day : now.day + 1
     check_start = DateTime.new(now.year, now.month, now.day, @war.wartime_start.hour, @war.wartime_start.min, @war.wartime_start.sec, now.zone)
-    check_end = DateTime.new(now.year, now.month, now.day + @war.wartime_end.day - 1, @war.wartime_end.hour, @war.wartime_end.min, @war.wartime_end.sec, now.zone)
+    check_end = DateTime.new(now.year, now.month, end_day, @war.wartime_end.hour, @war.wartime_end.min, @war.wartime_end.sec, now.zone)
     check_start <= now && check_end > now
   end
 
