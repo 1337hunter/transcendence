@@ -300,27 +300,27 @@ $(function () {
             let end = $('#war-end').val().trim();
             let wartime_start = $('#wartime-start').val().trim();
             let wartime_end = $('#wartime-end').val().trim();
+            let tz = $('#timezone').val();
             if (moment(end).diff(moment(start), 'hours') < 24) {
                 wartime_start = '2021-01-01 00:00:00.0 %2B0000'
                 wartime_end = '2021-01-01 00:00:00.0 %2B0000'
             }
             else {
                 if (wartime_start)
-                    wartime_start = '2021-01-01 ' + wartime_start;
+                    wartime_start = '2021-01-01 ' + wartime_start + tz;
                 else
                     wartime_start = '2021-01-01 00:00:00.0 %2B0000'
                 if (wartime_end)
-                    wartime_end = parseInt(wartime_end) < parseInt(wartime_start) ? '2021-01-02 ' + wartime_end : '2021-01-01 ' + wartime_end;
+                    wartime_end = parseInt(wartime_end) < parseInt(wartime_start) ? '2021-01-02 ' + wartime_end + tz : '2021-01-01 ' + wartime_end + tz ;
                 else
                     wartime_end = '2021-01-01 00:00:00.0 %2B0000'
             }
-            let tz = $('#timezone').val();
             let data = 'guild2_id='+ this.model.get('id') +
                 '&stake=' + $('#stake').val().trim() +
                 '&start=' + start + ':59' + tz +
                 '&end=' + end + ':59' + tz +
-                '&wartime_start=' + wartime_start + ':59' + tz +
-                '&wartime_end=' + wartime_end + ':59' + tz;
+                '&wartime_start=' + wartime_start + ':59' +
+                '&wartime_end=' + wartime_end + ':59' ;
             let max_unanswered = $('#max-unanswered').val().trim();
             if (max_unanswered)
                 data += '&max_unanswered=' + max_unanswered;
