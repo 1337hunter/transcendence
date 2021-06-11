@@ -4,7 +4,7 @@ import Tournaments from "../models/tournaments";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
 import moment from "moment";
-import "moment-timezone";
+import Users from "../models/users";
 
 const TournamentsView = {};
 
@@ -25,8 +25,8 @@ $(function () {
         },
         confirm: function () {
             const modal = this;
-            let start = moment(this.startdateinput.val().trim()).tz('Europe/Moscow');
-            let end = moment(this.enddateinput.val().trim()).tz('Europe/Moscow');
+            let start = moment(this.startdateinput.val().trim());
+            let end = moment(this.enddateinput.val().trim());
             this.model.save(
                 {
                     start_date: start,
@@ -130,7 +130,15 @@ $(function () {
         render: function () {
             this.$el.html(this.template());
             this.addAll();
-            this.$("#create-button").show();
+            {
+                let view = this;
+                (new Users.CurrentUserModel()).fetch({
+                    success: function (model) {
+                        if (model.get('owner') || model.get('admin'))
+                            view.$("#create-button").show();
+                    }
+                });
+            }
             return this;
         }
     });
