@@ -308,6 +308,7 @@ $(function () {
             this.$('#admin-users-tab').removeClass('active', 200);
             this.$('#admin-bans-tab').removeClass('active', 200);
             this.$('#admin-admins-tab').removeClass('active', 200);
+            this.$('#admin-owners-tab').removeClass('active', 200);
             this.$('#admin-chats-tab').removeClass('active', 200);
         },
         rendercontent: function (section) {
@@ -319,6 +320,9 @@ $(function () {
             } else if (this.section === 'admins') {
                 this.content = new AdminView.UserlistView('admin', 'Admins');
                 this.$('#admin-admins-tab').addClass('active', 200);
+            } else if (this.section === 'owners') {
+                this.content = new AdminView.UserlistView('owner', 'Owners');
+                this.$('#admin-owners-tab').addClass('active', 200);
             } else if (this.section === 'chats') {
                 this.content = new AdminView.ChatlistView();
                 this.$('#admin-chats-tab').addClass('active', 200);

@@ -21,7 +21,7 @@ button.nav-link.active {
   background-color: indigo!important;
 }
 
-button#admin-admins-tab.nav-link.active {
+button#admin-admins-tab.nav-link.active, button#admin-owners-tab.nav-link.active {
   background-color: darkorange!important;
   color: black;
 }

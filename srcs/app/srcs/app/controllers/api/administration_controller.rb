@@ -47,7 +47,7 @@ class Api::AdministrationController < ApplicationController
           return
         end
         if @user.owner? || @user.admin?
-          render json: {error: "You can't ban another admin"}, status: :forbidden
+          render json: {error: "You can't ban another admin/owner"}, status: :forbidden
           return
         end
       end
