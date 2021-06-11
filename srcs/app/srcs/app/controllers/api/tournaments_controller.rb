@@ -62,25 +62,41 @@ class Api::TournamentsController < ApplicationController
 
   # POST /api/tournaments/id/open
   def open
-    @tournament.open!
+    if @tournament.active? || @tournament.finished?
+      render json: { error: 'You cant reopen registration to active or finished tournament' }, status: :forbidden
+      return
+    end
+    @tournament.open! unless @tournament.open?
     render json: { msg: "Registration to tournament ##{@tournament.id} opened" }, status: :ok
   end
 
   # POST /api/tournaments/id/close
   def close
-    @tournament.closed!
+    if @tournament.active? || @tournament.finished?
+      render json: { error: 'You cant close registration to active or finished tournament' }, status: :forbidden
+      return
+    end
+    @tournament.closed! unless @tournament.closed?
     render json: { msg: "Registration to tournament ##{@tournament.id} closed" }, status: :ok
   end
 
   # POST /api/tournaments/id/begin
   def begin
-    @tournament.active!
+    if @tournament.finished?
+      render json: { error: 'You cant begin finished tournament' }, status: :forbidden
+      return
+    end
+    @tournament.active! unless @tournament.active?
     render json: { msg: "Tournament ##{@tournament.id} has begun" }, status: :ok
   end
 
   # POST /api/tournaments/id/finish
   def finish
-    @tournament.finished!
+    unless @tournament.active?
+      render json: { error: 'You must start tournament to finish it' }, status: :forbidden
+      return
+    end
+    @tournament.finished! unless @tournament.finished?
     render json: { msg: "Tournament ##{@tournament.id} finished" }, status: :ok
   end
 
