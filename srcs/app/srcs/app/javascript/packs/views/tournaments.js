@@ -5,10 +5,75 @@ import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
 import TournamentChannel from "../../channels/tournament_channel"
 import consumer from "../../channels/consumer"
+import moment from "moment";
+import Users from "../models/users";
 
 const TournamentsView = {};
 
 $(function () {
+    TournamentsView.ModalCreateTournamentView = Backbone.View.extend({
+        template: _.template($('#tournament-create-modal-template').html()),
+        events: {
+            "click .btn-confirm"    : "confirm",
+            "click .btn-cancel"     : "close",
+            "click .btn-close"      : "close",
+            "click .modal"          : "clickOutside"
+        },
+        initialize: function (collection) {
+            this.collection = collection;
+            this.model = new collection.model();
+            // this.model.attributes.start_date = moment().add(1, 'hours').format("YYYY-MM-DDThh:mm");
+            // this.model.attributes.end_date = moment().add(2, 'hours').format("YYYY-MM-DDThh:mm");
+        },
+        confirm: function () {
+            const modal = this;
+            let start = moment(this.startdateinput.val().trim());
+            let end = moment(this.enddateinput.val().trim());
+            this.model.save(
+                {
+                    start_date: start,
+                    end_date: end
+                },
+                {
+                    patch: true,
+                    success: function (model) {
+                        modal.collection.fetch();
+                        Utils.appAlert('success', {msg: `Tournament #${model.get('id')} created`});
+                        modal.close();
+                    },
+                    error: function (model, response) {
+                        Utils.alertOnAjaxError(response);
+                        modal.close();
+                    }
+                }
+            );
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            $('body.modal-open').off('keydown', this.keylisten);
+            $('body').removeClass("modal-open");
+            let view = this;
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        keylisten: function (e) {
+            if (e.key === "Enter")
+                e.data.view.confirm();
+            if (e.key === "Escape")
+                e.data.view.close();
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            this.startdateinput = this.$("input#start-date");
+            this.enddateinput = this.$("input#end-date");
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
+            return this;
+        }
+    });
+
     TournamentsView.SingleTournamentView = Backbone.View.extend({
         template: _.template($('#singletournament-template').html()),
         events: {
@@ -35,7 +100,8 @@ $(function () {
     TournamentsView.View = Backbone.View.extend({
         template: _.template($('#tournaments-template').html()),
         events: {
-            "click #refresh-button" :   "refresh"
+            "click #refresh-button" :   "refresh",
+            "click #create-button"  :   "openmodal"
         },
         initialize: function () {
             this.collection = new Tournaments.Collection;
@@ -50,6 +116,11 @@ $(function () {
         addAll: function () {
             this.collection.each(this.addOne, this);
         },
+        openmodal: function () {
+            this.createmodal = new TournamentsView.ModalCreateTournamentView(this.collection);
+            document.body.appendChild(this.createmodal.render().el);
+            this.createmodal.startdateinput.focus();
+        },
         refresh: function () {
             this.collection.fetch({
                 success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
@@ -61,6 +132,15 @@ $(function () {
         render: function () {
             this.$el.html(this.template());
             this.addAll();
+            {
+                let view = this;
+                (new Users.CurrentUserModel()).fetch({
+                    success: function (model) {
+                        if (model.get('owner') || model.get('admin'))
+                            view.$("#create-button").show();
+                    }
+                });
+            }
             return this;
         }
     });

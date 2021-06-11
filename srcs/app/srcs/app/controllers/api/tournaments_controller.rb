@@ -24,7 +24,18 @@ class Api::TournamentsController < ApplicationController
 
   # POST /api/tournaments/
   def create
-    @tournament = Tournament.new(start_date: params[:start_date], end_date: [:end_date])
+    unless params.has_key?(:start_date) && params.has_key?(:end_date)
+      render json: {error: 'Dates not provided'}, status: :unprocessable_entity
+      return
+    end
+    begin
+      startdate = DateTime.parse(params[:start_date])
+      enddate = DateTime.parse(params[:end_date])
+    rescue
+      invalid_date
+      return
+    end
+    @tournament = Tournament.new(start_date: startdate, end_date: enddate)
     if @tournament.save
       render json: @tournament.as_json(
         include: {users: {only: @filters}, winner: {only: @filters}}
@@ -140,5 +151,9 @@ class Api::TournamentsController < ApplicationController
       }
     end
     collection.to_json
+  end
+
+  def invalid_date
+    render json: {error: 'Invalid date'}, status: :unprocessable_entity
   end
 end
