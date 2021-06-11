@@ -158,7 +158,8 @@ $(function () {
 	UsersView.View = Backbone.View.extend({
 		template: _.template($('#users-template').html()),
 		events: {
-		    "click #refresh-button" :   "refresh"
+		    "click #refresh-button" :   "refresh",
+            "click .find-match-button" : "findMatch",
         },
 		initialize: function () {
 		    this.collection = new Users.UserCollection;
@@ -172,6 +173,9 @@ $(function () {
         },
         addAll: function () {
             this.collection.each(this.addOne, this);
+        },
+        findMatch: function () {
+            console.log("find match action");
         },
         refresh: function () {
             this.collection.fetch({
