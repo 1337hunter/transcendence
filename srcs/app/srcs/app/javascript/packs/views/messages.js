@@ -29,18 +29,31 @@ $(function () {
 			MainSPA.SPA.router.navigate("#/users/" + u_id);
 		},
 		block_user: function () {
-			let dname = this.model.get("displayname");
-			var BlockTime = prompt("Are you sure you want to block " + dname + "?\nEnter time in minutes:", "");
-			if (isNaN(BlockTime) || BlockTime == null || BlockTime.length == 0)
-			{
-				Utils.appAlert('danger', {msg: 'Time must be integer'});
-				return this;
-			}
-			var BlockToRoom = new RoomMembers.RoomMembersModel({
-				user_id: this.model.get("user_id"),
-				room_id: this.model.get("room_id"),
-				time: BlockTime
+			var $this = this
+			var room = new Rooms.RoomId({id: this.model.get("room_id")})
+			room.fetch({
+				success: function () {
+					let dname = $this.model.get("displayname");
+					if (room.attributes.owner_id == $this.model.get("user_id"))
+					{
+						Utils.appAlert('danger', {msg: 'This is room owner. He will be upset if you will block him :('});
+						return ;
+					}
+					var BlockTime = prompt("Are you sure you want to block " + dname + "?\nEnter time in minutes:", "");
+					if (isNaN(BlockTime) || BlockTime == null || BlockTime.length == 0)
+					{
+						if (isNaN(BlockTime))
+							Utils.appAlert('danger', {msg: 'Time must be integer'});
+						return $this;
+					}
+					var BlockToRoom = new RoomMembers.RoomMembersModel({
+						user_id: $this.model.get("user_id"),
+						room_id: $this.model.get("room_id"),
+						time: BlockTime
+					})
+				}
 			})
+			return ;
 			BlockToRoom.save(null, {
 				success: function () {
 					Utils.appAlert('success', {msg: 'User ' + dname + ' is banned for ' + BlockTime});
