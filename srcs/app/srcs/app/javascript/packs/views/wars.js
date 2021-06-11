@@ -306,11 +306,11 @@ $(function () {
             }
             else {
                 if (wartime_start)
-                    wartime_start = '2021-01-01 ' + wartime_start + '%2B0000';
+                    wartime_start = '2021-01-01 ' + wartime_start + ' %2B0000';
                 else
                     wartime_start = '2021-01-01 00:00:00.0 %2B0000'
                 if (wartime_end)
-                    wartime_end = parseInt(wartime_end) < parseInt(wartime_start) ? '2021-01-02 ' + wartime_end + '%2B0000' : '2021-01-01 ' + wartime_end + '%2B0000';
+                    wartime_end = parseInt(wartime_end) < parseInt(wartime_start) ? '2021-01-02 ' + wartime_end + ' %2B0000' : '2021-01-01 ' + wartime_end + ' %2B0000';
                 else
                     wartime_end = '2021-01-01 00:00:00.0 %2B0000'
             }
