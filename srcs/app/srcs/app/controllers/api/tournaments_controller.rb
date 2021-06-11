@@ -8,7 +8,6 @@ class Api::TournamentsController < ApplicationController
   before_action :find_tournament, only: %i[show destroy join leave open close begin finish]
   before_action :define_filters
   rescue_from ActiveRecord::RecordNotFound, :with => :tournament_not_found
-  rescue_from Date::Error, :with => :invalid_date
 
   def index
     render json: Tournament.all.as_json(
@@ -29,8 +28,13 @@ class Api::TournamentsController < ApplicationController
       render json: {error: 'Dates not provided'}, status: :unprocessable_entity
       return
     end
-    startdate = DateTime.parse(params[:start_date])
-    enddate = DateTime.parse(params[:end_date])
+    begin
+      startdate = DateTime.parse(params[:start_date])
+      enddate = DateTime.parse(params[:end_date])
+    rescue
+      invalid_date
+      return
+    end
     @tournament = Tournament.new(start_date: startdate, end_date: enddate)
     if @tournament.save
       render json: @tournament.as_json(

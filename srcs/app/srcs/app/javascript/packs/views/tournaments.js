@@ -3,6 +3,8 @@ import _ from "underscore";
 import Tournaments from "../models/tournaments";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
+import moment from "moment";
+import "moment-timezone";
 
 const TournamentsView = {};
 
@@ -18,18 +20,23 @@ $(function () {
         initialize: function (collection) {
             this.collection = collection;
             this.model = new collection.model();
+            // this.model.attributes.start_date = moment().add(1, 'hours').format("YYYY-MM-DDThh:mm");
+            // this.model.attributes.end_date = moment().add(2, 'hours').format("YYYY-MM-DDThh:mm");
         },
         confirm: function () {
             const modal = this;
+            let start = moment(this.startdateinput.val().trim()).tz('Europe/Moscow');
+            let end = moment(this.enddateinput.val().trim()).tz('Europe/Moscow');
             this.model.save(
                 {
-                    start_date: this.startdateinput.val().trim(),
-                    end_date: this.enddateinput.val().trim()
+                    start_date: start,
+                    end_date: end
                 },
                 {
                     patch: true,
-                    success: function () {
+                    success: function (model) {
                         modal.collection.fetch();
+                        Utils.appAlert('success', {msg: `Tournament #${model.get('id')} created`});
                         modal.close();
                     },
                     error: function (model, response) {
