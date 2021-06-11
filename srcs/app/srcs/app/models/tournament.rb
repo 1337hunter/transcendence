@@ -1,6 +1,7 @@
 class Tournament < ApplicationRecord
   include ActiveModel::Validations
-  validates_with TournamentValidator
+  validates :start_date, :end_date, presence: true
+  validates_with TournamentValidator, on: :create
   has_many :users
   belongs_to :winner, class_name: "User", optional: true
 

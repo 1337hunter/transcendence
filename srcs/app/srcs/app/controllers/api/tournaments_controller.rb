@@ -24,7 +24,14 @@ class Api::TournamentsController < ApplicationController
 
   # POST /api/tournaments/
   def create
-    @tournament.create!(start_date: params[:start_date], end_date: [:end_date])
+    @tournament = Tournament.new(start_date: params[:start_date], end_date: [:end_date])
+    if @tournament.save
+      render json: @tournament.as_json(
+        include: {users: {only: @filters}, winner: {only: @filters}}
+      )
+    else
+      render json: @tournament.errors, status: :unprocessable_entity
+    end
   end
 
   # DELETE /api/tournaments/id/
