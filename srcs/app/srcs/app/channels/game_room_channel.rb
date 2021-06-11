@@ -9,9 +9,6 @@ class GameRoomChannel < ApplicationCable::Channel
   end
 
   def receive(data)
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    puts data
-    puts params
     ActionCable.server.broadcast("game_room_channel_#{params[:match_id]}", data)
     if data == 'finish'
       @match = Match.find(params[:match_id])
