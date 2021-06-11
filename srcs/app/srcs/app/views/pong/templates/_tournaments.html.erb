@@ -4,6 +4,7 @@
   </td>
   <td><label><%%= status %></label></td>
   <td><label><%%= new Date(start_date).toLocaleString() %></label></td>
+  <td><label><%%= new Date(end_date).toLocaleString() %></label></td>
   <td><label><%%= users.length %></label></td>
 </script>
 
@@ -21,6 +22,7 @@
       <th style="text-align: left">Tournament</th>
       <th>Status</th>
       <th>Starts</th>
+      <th>Ends</th>
       <th>Registred</th>
     </tr>
   </table>
@@ -65,8 +67,11 @@
     </button>
   </h1>
 
-  <h4>Start</h4>
+  <h4>Starts</h4>
   <p><%%= new Date(start_date) %></p>
+
+  <h4>Ends</h4>
+  <p><%%= new Date(end_date) %></p>
 
   <div class="tournament-actions" <%%= status == "active" || status == "finished" || (!is_in_tournament && status == "closed") ? 'style="display: none;"' : '' %> >
     <p>
