@@ -8,6 +8,7 @@ class Api::TournamentsController < ApplicationController
   before_action :find_tournament, only: %i[show destroy join leave open close begin finish]
   before_action :define_filters
   rescue_from ActiveRecord::RecordNotFound, :with => :tournament_not_found
+  rescue_from Date::Error, :with => :invalid_date
 
   def index
     render json: Tournament.all.as_json(
@@ -24,7 +25,9 @@ class Api::TournamentsController < ApplicationController
 
   # POST /api/tournaments/
   def create
-    @tournament = Tournament.new(start_date: params[:start_date], end_date: [:end_date])
+    startdate = DateTime.parse(params[:start_date])
+    enddate = DateTime.parse(params[:end_date])
+    @tournament = Tournament.new(start_date: startdate, end_date: enddate)
     if @tournament.save
       render json: @tournament.as_json(
         include: {users: {only: @filters}, winner: {only: @filters}}
@@ -137,5 +140,9 @@ class Api::TournamentsController < ApplicationController
       }
     end
     collection.to_json
+  end
+
+  def invalid_date
+    render json: {error: 'Invalid date'}, status: :unprocessable_entity
   end
 end

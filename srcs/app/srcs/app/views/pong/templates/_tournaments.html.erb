@@ -12,6 +12,9 @@
     <button type="button" class="button-sm button-refresh" id="refresh-button">
       <%= show_svg('refresh.svg') %>
     </button>
+    <button class="btn btn-outline-primary" id="create-button" style="display: none;">
+      Create match
+    </button>
   </h1>
   <table id="tournaments-table" border-spacing="20px" padding="0 2em 1em 0">
     <tr>
@@ -21,6 +24,34 @@
       <th>Registred</th>
     </tr>
   </table>
+</script>
+
+<script type="text/template" id="tournament-create-modal-template">
+  <div class="modal fade show" aria-modal="true" role="dialog" style="display: block;">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background: #090909">
+        <div class="modal-header" style="border-bottom-color: #111111;">
+          <h5 class="modal-title">New tournament</h5>
+          <button type="button" class="btn-close btn-close-white"></button>
+        </div>
+        <div class="modal-body">
+          <p>
+            <label for="start-date" style="font-weight: bold">Start date</label>
+            <input type="datetime-local" class="form-control" id="start-date" required>
+          </p>
+          <p>
+            <label for="end-date" style="font-weight: bold">End date</label>
+            <input type="datetime-local" class="form-control" id="end-date" required>
+          </p>
+        </div>
+        <div class="modal-footer" style="border-top-color: #111111;">
+          <button type="button" class="btn btn-dark btn-cancel">Cancel</button>
+          <button type="button" class="btn btn-success btn-confirm">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
 </script>
 
 <script type="text/template" id="tournamentpage-template">

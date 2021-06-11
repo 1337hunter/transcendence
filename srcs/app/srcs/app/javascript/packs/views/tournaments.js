@@ -7,6 +7,64 @@ import MainSPA from "../main_spa";
 const TournamentsView = {};
 
 $(function () {
+    TournamentsView.ModalCreateTournamentView = Backbone.View.extend({
+        template: _.template($('#tournament-create-modal-template').html()),
+        events: {
+            "click .btn-confirm"    : "confirm",
+            "click .btn-cancel"     : "close",
+            "click .btn-close"      : "close",
+            "click .modal"          : "clickOutside"
+        },
+        initialize: function (collection) {
+            this.collection = collection;
+            this.model = new collection.model();
+        },
+        confirm: function () {
+            const modal = this;
+            this.model.save(
+                {
+                    start_date: this.startdateinput.val().trim(),
+                    end_date: this.enddateinput.val().trim()
+                },
+                {
+                    patch: true,
+                    success: function () {
+                        modal.collection.fetch();
+                        modal.close();
+                    },
+                    error: function (model, response) {
+                        Utils.alertOnAjaxError(response);
+                        modal.close();
+                    }
+                }
+            );
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            $('body.modal-open').off('keydown', this.keylisten);
+            $('body').removeClass("modal-open");
+            let view = this;
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        keylisten: function (e) {
+            if (e.key === "Enter")
+                e.data.view.confirm();
+            if (e.key === "Escape")
+                e.data.view.close();
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            this.startdateinput = this.$("input#start-date");
+            this.enddateinput = this.$("input#end-date");
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
+            return this;
+        }
+    });
+
     TournamentsView.SingleTournamentView = Backbone.View.extend({
         template: _.template($('#singletournament-template').html()),
         events: {
@@ -33,7 +91,8 @@ $(function () {
     TournamentsView.View = Backbone.View.extend({
         template: _.template($('#tournaments-template').html()),
         events: {
-            "click #refresh-button" :   "refresh"
+            "click #refresh-button" :   "refresh",
+            "click #create-button"  :   "openmodal"
         },
         initialize: function () {
             this.collection = new Tournaments.Collection;
@@ -48,6 +107,11 @@ $(function () {
         addAll: function () {
             this.collection.each(this.addOne, this);
         },
+        openmodal: function () {
+            this.createmodal = new TournamentsView.ModalCreateTournamentView(this.collection);
+            document.body.appendChild(this.createmodal.render().el);
+            this.createmodal.startdateinput.focus();
+        },
         refresh: function () {
             this.collection.fetch({
                 success: function () {Utils.appAlert('success', {msg: 'Up to date'});},
@@ -59,6 +123,7 @@ $(function () {
         render: function () {
             this.$el.html(this.template());
             this.addAll();
+            this.$("#create-button").show();
             return this;
         }
     });

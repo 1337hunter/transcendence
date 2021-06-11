@@ -31,3 +31,7 @@ table#tournament-users-table td {
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
 }
+
+button.btn-nodisplay {
+  display: none;
+}
