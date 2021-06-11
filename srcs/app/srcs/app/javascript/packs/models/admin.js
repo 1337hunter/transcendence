@@ -11,10 +11,22 @@ Admin.UserModel = Backbone.Model.extend({
             success: function (model) {
                 if (model.get('banned'))
                     Utils.appAlert("success",
-                        {msg: "User " + model.get("nickname") + " has been banned"})
+                        {msg: "User " + model.get('nickname') + " has been banned"})
                 else
                     Utils.appAlert("success",
-                        {msg: "User " + model.get("nickname") + " has been unbanned"})
+                        {msg: "User " + model.get('nickname') + " has been unbanned"})
+            }});
+    },
+    toggleAdmin: function() {
+        this.save({admin: !this.get('admin')},
+            {patch: true,
+            success: function (model) {
+                if (model.get('admin'))
+                    Utils.appAlert("success",
+                        {msg: "User " + model.get('nickname') + " has been promoted to admin"})
+                else
+                    Utils.appAlert("success",
+                        {msg: "User " + model.get('nickname') + " has been demoted"})
             }});
     }
 });

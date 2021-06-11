@@ -11,11 +11,19 @@
   <td><input class="form-control displayname" value="<%%= displayname %>"
              style="text-align: center;width: 17ch;border: none; padding: 1px; margin-left: 10px; margin-right: 10px;"></td>
   <td>
-    <button type="button" title="Ban user" class="button-sm button-ban confirm-action"
-            <%%= banned ? 'style="display: none;"' : '' %>>
+    <button type="button" title="Admin user" class="button-sm button-admin confirm-admin"
+            <%%= current_owner && !admin ? '' : 'style="display: none;"' %>>
+      <%= show_svg('user-astronaut.svg') %>
+    </button>
+    <button type="button" title="Unadmin user" class="button-sm button-unadmin confirm-admin"
+            <%%= current_owner && admin ? '' : 'style="display: none;"' %>>
+      <%= show_svg('user-slash.svg') %>
+    </button>
+    <button type="button" title="Ban user" class="button-sm button-ban confirm-ban"
+            <%%= !banned ? '' : 'style="display: none;"' %>>
       <%= show_svg('ban.svg') %>
     </button>
-    <button type="button" title="Unban user" class="button-sm button-check confirm-action"
+    <button type="button" title="Unban user" class="button-sm button-check confirm-ban"
             <%%= banned ? '' : 'style="display: none;"' %>>
       <%= show_svg('check.svg') %>
     </button>
@@ -90,7 +98,7 @@
   </table>
 </script>
 
-<script type="text/template" id="admin-modal-confirm-template">
+<script type="text/template" id="admin-modal-ban-confirm-template">
   <div class="modal fade show" aria-modal="true" role="dialog" style="display: block;">
     <div class="modal-dialog">
       <div class="modal-content" style="background: #090909">
@@ -111,6 +119,29 @@
           <button type="button" class="btn btn-dark btn-cancel">Cancel</button>
           <button type="button" class="btn btn-<%%= banned ? 'success' : 'danger' %> btn-confirm">
             <%%= banned ? 'Revoke Ban' : 'Ban' %></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show"></div>
+</script>
+
+<script type="text/template" id="admin-modal-admin-confirm-template">
+  <div class="modal fade show" aria-modal="true" role="dialog" style="display: block;">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background: #090909">
+        <div class="modal-header" style="border-bottom-color: #111111;">
+          <h5 class="modal-title"><%%= admin ? 'Revoke' : 'Grant' %> admin rights</h5>
+          <button type="button" class="btn-close btn-close-white"></button>
+        </div>
+        <div class="modal-body">
+          <p>You are about to make <b>@<%%= nickname %></b> <%%= admin ? 'a common user' : 'an admin' %></p>
+          <p>Are you sure about that?</p>
+        </div>
+        <div class="modal-footer" style="border-top-color: #111111;">
+          <button type="button" class="btn btn-dark btn-cancel">Cancel</button>
+          <button type="button" class="btn btn-<%%= admin ? 'danger' : 'warning' %> btn-confirm">
+            <%%= admin ? 'Demote' : 'Promote' %></button>
         </div>
       </div>
     </div>

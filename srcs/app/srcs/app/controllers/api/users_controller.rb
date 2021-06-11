@@ -132,8 +132,8 @@ class Api::UsersController < ApplicationController
   end
   # DRY filters for json responses
   def define_filters
-    @filters = %i[id nickname displayname email admin banned online last_seen_at
-                  wins loses elo avatar_url avatar_default_url
+    @filters = %i[id nickname displayname email admin owner banned online
+                  last_seen_at wins loses elo avatar_url avatar_default_url
                   guild_id guild_accepted guild_master guild_officer]
     @guildfilters = %i[name anagram]
   end

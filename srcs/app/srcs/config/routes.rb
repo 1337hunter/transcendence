@@ -24,10 +24,10 @@ Rails.application.routes.draw do
     resources :direct_rooms, only: [:index, :create, :show, :update]
     resources :direct_messages, only: [:index, :create, :show]
 
-    get 'admin/users', to: 'admin#users'
-    patch 'admin/users/:id', to: 'admin#user_update'
-    get 'admin/chats', to: 'admin#chatlist'
-    delete 'admin/chats/:id', to: 'admin#chat_destroy'
+    get 'admin/users', to: 'administration#users'
+    patch 'admin/users/:id', to: 'administration#user_update'
+    get 'admin/chats', to: 'administration#chatlist'
+    delete 'admin/chats/:id', to: 'administration#chat_destroy'
 
     resources :tournaments
 

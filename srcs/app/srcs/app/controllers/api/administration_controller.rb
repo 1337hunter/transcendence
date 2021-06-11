@@ -1,4 +1,4 @@
-class Api::AdminController < ApplicationController
+class Api::AdministrationController < ApplicationController
   include ApplicationHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!
@@ -6,11 +6,12 @@ class Api::AdminController < ApplicationController
   before_action :check_2fa!
   before_action :check_admin
   before_action :define_filters
-  before_action :find_user, only: %i[user_update]
+  before_action :find_user, only: %i[user_update toggle_admin]
   before_action :find_chat, only: %i[chat_destroy]
 
   # GET /api/admin/users.json
   def users
+    set_current_user
     userselect = params[:filter]
     if userselect.nil? || userselect.empty?
       @users = User.all
@@ -21,7 +22,7 @@ class Api::AdminController < ApplicationController
       end
       @users = User.where("#{userselect}": true)
     end
-    render json: @users, only: @userfilters
+    render json: @users.as_json(only: @userfilters, methods: :current_owner)
   end
 
   # GET /api/admin/chats.json
@@ -32,20 +33,27 @@ class Api::AdminController < ApplicationController
 
   # PATCH /api/admin/users/id.json
   def user_update
+    if params.has_key?('admin')
+      unless current_user.owner?
+        render json: {error: "You have no permission"}, status: :forbidden
+        return
+      end
+    end
+
     if params.has_key?('banned')
       if params['banned'] == true && !(@user.banned?)
         if @user == current_user
           render json: {error: "You can't ban yourself"}, status: :forbidden
           return
         end
-        if @user.admin
+        if @user.owner? || @user.admin?
           render json: {error: "You can't ban another admin"}, status: :forbidden
           return
         end
       end
     end
 
-    if @user != current_user && @user.admin
+    if !current_user.owner? && @user != current_user && (@user.owner? || @user.admin?)
       render json: {error: "You can't udpate another admin"}, status: :forbidden
       return
     end
@@ -68,12 +76,14 @@ class Api::AdminController < ApplicationController
   private
 
   def check_admin
-    render json: {error: "You have no permission"}, status: :forbidden unless current_user.admin?
+    unless current_user.owner? || current_user.admin?
+      render json: {error: "You have no permission"}, status: :forbidden
+    end
   end
 
   def define_filters
-    @userfilters = %i[id nickname displayname email admin avatar_url avatar_default_url
-                      banned ban_reason online last_seen_at]
+    @userfilters = %i[id nickname displayname email admin owner banned ban_reason
+                      avatar_url avatar_default_url online last_seen_at]
     @roomfilters = %i[id name owner_name private password_present]
   end
 
@@ -86,10 +96,15 @@ class Api::AdminController < ApplicationController
   end
 
   def user_params
-    params.require(:admin).permit(%i[displayname avatar_url banned ban_reason])
+    return params.require(:administration).permit(%i[displayname avatar_url banned ban_reason admin]) if current_user.owner?
+    params.require(:administration).permit(%i[displayname avatar_url banned ban_reason])
   end
 
   def room_params
-    params.require(:admin).permit(%i[name private])
+    params.require(:administration).permit(%i[name private])
+  end
+
+  def set_current_user
+    User.current_user = current_user
   end
 end

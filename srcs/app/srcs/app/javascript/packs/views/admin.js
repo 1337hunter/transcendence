@@ -9,7 +9,7 @@ const AdminView = {};
 
 $(function () {
     AdminView.ModalConfirmBanView = Backbone.View.extend({
-        template: _.template($('#admin-modal-confirm-template').html()),
+        template: _.template($('#admin-modal-ban-confirm-template').html()),
         events: {
             "click .btn-confirm"    : "confirm",
             "click .btn-cancel"     : "close",
@@ -46,11 +46,49 @@ $(function () {
         }
     });
 
+    AdminView.ModalConfirmAdminView = Backbone.View.extend({
+        template: _.template($('#admin-modal-admin-confirm-template').html()),
+        events: {
+            "click .btn-confirm"    : "confirm",
+            "click .btn-cancel"     : "close",
+            "click .btn-close"      : "close",
+            "click .modal"          : "clickOutside"
+        },
+        confirm: function () {
+            this.model.toggleAdmin();
+            this.close();
+        },
+        clickOutside: function (e) {
+            if (e.target === e.currentTarget)
+                this.close();
+        },
+        close: function () {
+            $('body.modal-open').off('keydown', this.keylisten);
+            $('body').removeClass("modal-open");
+            let view = this;
+            this.$el.fadeOut(200, function () { view.remove(); });
+        },
+        keylisten: function (e) {
+            if (e.key === "Enter")
+                e.data.view.confirm();
+            if (e.key === "Escape")
+                e.data.view.close();
+        },
+        render: function(model) {
+            this.model = model;
+            this.$el.html(this.template(this.model.toJSON())).hide().fadeIn(200);
+            $('body').addClass("modal-open");
+            $('body.modal-open').on('keydown', {view: this}, this.keylisten);
+            return this;
+        }
+    });
+
 	AdminView.SingleUserView = Backbone.View.extend({
         template: _.template($('#admin-singleuser-template').html()),
         events: {
             "keypress .displayname" : "updateOnEnter",
-            "click .confirm-action" : "openConfirm"
+            "click .confirm-ban"    : "openBanConfirm",
+            "click .confirm-admin"  : "openAdminConfirm"
         },
         tagName: "tr",
         initialize: function () {
@@ -58,10 +96,14 @@ $(function () {
             this.listenTo(this.model, 'destroy', this.remove);
             this.listenTo(this.model, 'error', this.onerror);
         },
-        openConfirm: function () {
+        openBanConfirm: function () {
             this.confirmview = new AdminView.ModalConfirmBanView();
             document.body.appendChild(this.confirmview.render(this.model).el);
             this.confirmview.reasoninput.focus();
+        },
+        openAdminConfirm: function () {
+            this.confirmview = new AdminView.ModalConfirmAdminView();
+            document.body.appendChild(this.confirmview.render(this.model).el);
         },
         updateOnEnter: function (e) {
             if (e.key !== "Enter") return;
@@ -201,7 +243,7 @@ $(function () {
         },
         grab_admin_nickname: function (e) {
             if (e.keyCode !== 13) return ;
-            
+
             let regex =  /\d+/;
 			let id = String(e.currentTarget.id)
             id = id.match(regex);
