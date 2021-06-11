@@ -3,6 +3,8 @@ import _ from "underscore";
 import Tournaments from "../models/tournaments";
 import Utils from "../helpers/utils";
 import MainSPA from "../main_spa";
+import TournamentChannel from "../../channels/tournament_channel"
+import consumer from "../../channels/consumer"
 
 const TournamentsView = {};
 
@@ -73,13 +75,18 @@ $(function () {
             "click .close-tournament-button"    :   "close",
             "click .open-tournament-button"     :   "open",
             "click .finish-tournament-button"   :   "finish",
-            "click .destroy-tournament-button"  :   "destroy"
+            "click .destroy-tournament-button"  :   "destroy",
         },
         initialize: function (id) {
+            var $this = this;
+            this.cable = TournamentChannel.Subscribe({tournament_id: id})
             this.model = new Tournaments.ModelById({id: id})
             this.listenTo(this.model, 'change', this.render);
             this.listenTo(this.model, 'error', this.onerror);
             this.model.fetch({error: this.onerror});
+            window.addEventListener('popstate', function (e) {
+                $this.break_cable();
+            });
         },
         refresh: function () {
             this.model.fetch({
@@ -129,6 +136,14 @@ $(function () {
                 return;
             }
             Utils.alertOnAjaxError(response);
+        },
+        break_cable: function () {
+            console.log("page left")
+            consumer.subscriptions.subscriptions.forEach((subscription) => {
+                let found = subscription.identifier.search("\"channel\":\"TournamentChannel\"")
+                // if (found != -1)
+                    consumer.subscriptions.remove(subscription)
+            })
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));

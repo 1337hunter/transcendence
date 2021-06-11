@@ -51,6 +51,8 @@ class Api::TournamentsController < ApplicationController
       render json: { error: 'You are registered to another tournament' }, status: :forbidden
       return
     end
+    @tournament_user = TournamentUser.new(user_id: current_user.id, tournament_id: @tournament.id)
+    @tournament_user.save
     current_user.update(tournament_id: @tournament.id)
     render json: { msg: "Successfully joined tournament ##{@tournament.id}" }, status: :ok
   end
@@ -62,6 +64,7 @@ class Api::TournamentsController < ApplicationController
       return
     end
     if current_user.tournament_id == @tournament.id
+      TournamentUser.where(tournament_id: @tournament.id, user_id: current_user.id).destroy_all
       current_user.update(tournament_id: nil)
       render json: { msg: "Successfully left tournament ##{@tournament.id}" }, status: :ok
     end

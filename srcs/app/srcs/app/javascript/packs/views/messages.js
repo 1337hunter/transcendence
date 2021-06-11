@@ -133,7 +133,8 @@ $(function () {
 			msg.set("admin", show_admin)
 			msg.view = new MessagesView.MessageView({model: msg});
 			this.$("#messages").append(msg.view.render().el);
-			$("#messages").scrollTop($("#messages")[0].scrollHeight);
+			var element = document.getElementById("messages");
+          	element.scrollTop = element.scrollHeight;
 		},
 		addAll: function () {
 			this.collection.each(this.addOne, this);
