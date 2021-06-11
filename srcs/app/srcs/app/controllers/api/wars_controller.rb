@@ -67,6 +67,12 @@ class Api::WarsController < ApplicationController
       @opponent = Guild.find(@war.guild1_id)
       @war.update(accepted: true) if !check_opponent_fail && !not_enough_points
       WarJob.set(wait_until: @war.end).perform_later(@war)
+      #TEST IT
+      now = DateTime.now.new_offset(0)
+      time_to_start_unmatch_counter_reset = DateTime.new(@war.start.month, @war.start.month, 
+                                  @war.start.day, @war.wartime_end.hour,
+                                  @war.wartime_end.min, @war.wartime_end.sec, now.zone)
+      ResetUnunsweredMatchesCounterJob.set(wait_until: time_to_start_unmatch_counter_reset).perform_later(@war)
     end
   end
 
