@@ -25,6 +25,10 @@ class Api::TournamentsController < ApplicationController
 
   # POST /api/tournaments/
   def create
+    unless params.has_key?(:start_date) && params.has_key?(:end_date)
+      render json: {error: 'Dates not provided'}, status: :unprocessable_entity
+      return
+    end
     startdate = DateTime.parse(params[:start_date])
     enddate = DateTime.parse(params[:end_date])
     @tournament = Tournament.new(start_date: startdate, end_date: enddate)
