@@ -23,6 +23,7 @@ class Api::UsersController < ApplicationController
                                  guild: { only: @guildfilters }
                                })
                       .merge(:is_current => @user == current_user)
+                      .merge(:can_invite => current_user.guild_master? || current_user.guild_officer?)
   end
 
   # PATCH/PUT /api/users/id.json

@@ -52,6 +52,7 @@ class Api::WarsController < ApplicationController
     war = @guild_cur.war_requests.create(war_params)
     if war.save
       war.update(g1_name: @guild_cur.name, g2_name: @opponent.name)
+      WarJob.set(wait_until: war.end).perform_later(war)
       render json: war, status: :ok
     else
       render json: war.errors, status: :unprocessable_entity
@@ -66,7 +67,6 @@ class Api::WarsController < ApplicationController
     else
       @opponent = Guild.find(@war.guild1_id)
       @war.update(accepted: true) if !check_opponent_fail && !not_enough_points
-      WarJob.set(wait_until: @war.end).perform_later(@war)
       #TEST IT
       now = DateTime.now.new_offset(0)
       if @war.start < now
