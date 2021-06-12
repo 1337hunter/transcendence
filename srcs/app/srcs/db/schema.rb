@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 2021_06_12_121007) do
     t.bigint "users"
     t.datetime "start_date", null: false
     t.boolean "is_rating", default: false, null: false
+    t.integer "stage", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "winner_id"
@@ -210,12 +211,13 @@ ActiveRecord::Schema.define(version: 2021_06_12_121007) do
     t.integer "max_unanswered", default: 5
     t.integer "matches_total", default: 0
     t.integer "g1_matches_won", default: 0
+    t.integer "g1_unanswered_counter", default: 0
     t.integer "g1_matches_unanswered", default: 0
     t.integer "g2_matches_won", default: 0
     t.integer "g2_matches_unanswered", default: 0
+    t.integer "g2_unanswered_counter", default: 0
     t.boolean "ladder", default: false
     t.boolean "tournament", default: false
-    t.boolean "duel", default: false
     t.integer "winner"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

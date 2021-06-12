@@ -94,9 +94,11 @@ class Api::MatchesController < ApplicationController
   end
 
   def check_war
-    !@war.finished && @war.accepted && @war.start >= DateTime.now && check_wartime
+    !@war.finished && @war.accepted && @war.start >= DateTime.now && check_wartime && check_match_type
+  end
 
-      #TODO: check match type: @war.ladder / tournament / duel
+  def check_match_type
+    @match.type == 1 || (@match.type == 2 && @war.ladder) ||  (@match.type == 3 && @war.tournament)
   end
 
   def check_wartime
