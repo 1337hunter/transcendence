@@ -306,14 +306,14 @@ $(function () {
                 wartime_end = start
             }
             else {
+                if (wartime_end)
+                    wartime_end = wartime_start && parseInt(wartime_end) < parseInt(wartime_start) ? '2021-01-02 ' + wartime_end : '2021-01-01 ' + wartime_end;
+                else
+                    wartime_end = '2021-01-01 00:00:00.0'
                 if (wartime_start)
                     wartime_start = '2021-01-01 ' + wartime_start;
                 else
                     wartime_start = '2021-01-01 00:00:00.0'
-                if (wartime_end)
-                    wartime_end = parseInt(wartime_end) < parseInt(wartime_start) ? '2021-01-02 ' + wartime_end : '2021-01-01 ' + wartime_end;
-                else
-                    wartime_end = '2021-01-01 00:00:00.0'
             }
             let data = 'guild2_id='+ this.model.get('id') +
                 '&stake=' + $('#stake').val().trim() +
