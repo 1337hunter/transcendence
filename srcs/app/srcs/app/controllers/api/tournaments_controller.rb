@@ -108,6 +108,7 @@ class Api::TournamentsController < ApplicationController
       return
     end
     @tournament.active! unless @tournament.active?
+    TournamentMatchmakingJob.set(wait: 1.second).perform_later(@tournament)
     render json: { msg: "Tournament ##{@tournament.id} has begun" }, status: :ok
   end
 

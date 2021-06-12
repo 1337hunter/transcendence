@@ -19,13 +19,16 @@ var TournamentChannel =
         console.log("disconnected from Tournament id: " + this.tornament_id) // it work but don't print
         // Called when the subscription has been terminated by the server
       },
-
+      Disconnect: function () {
+        consumer.subscriptions.remove(this)
+      },
       received(data) {
         console.log(data)
-        // Called when there's incoming data on the websocket for this channel
       }
     });
+    return TournamentRoom;
   }
+
 }
 
 export default TournamentChannel

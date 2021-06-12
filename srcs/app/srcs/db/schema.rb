@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(version: 2021_06_11_214025) do
     t.bigint "users"
     t.datetime "start_date", null: false
     t.boolean "is_rating", default: false, null: false
+    t.integer "stage", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "winner_id"

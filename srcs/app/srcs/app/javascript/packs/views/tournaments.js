@@ -218,12 +218,7 @@ $(function () {
             Utils.alertOnAjaxError(response);
         },
         break_cable: function () {
-            console.log("page left")
-            consumer.subscriptions.subscriptions.forEach((subscription) => {
-                let found = subscription.identifier.search("\"channel\":\"TournamentChannel\"")
-                // if (found != -1)
-                    consumer.subscriptions.remove(subscription)
-            })
+            this.cable.Disconnect();
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
