@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_11_214025) do
+ActiveRecord::Schema.define(version: 2021_06_12_121007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 2021_06_11_214025) do
     t.integer "first_player_score"
     t.integer "second_player_score"
     t.bigint "war_id"
+    t.integer "type"
     t.index ["first_player_id"], name: "index_matches_on_first_player_id"
     t.index ["second_player_id"], name: "index_matches_on_second_player_id"
     t.index ["war_id"], name: "index_matches_on_war_id"
@@ -139,7 +140,6 @@ ActiveRecord::Schema.define(version: 2021_06_11_214025) do
     t.bigint "users"
     t.datetime "start_date", null: false
     t.boolean "is_rating", default: false, null: false
-    t.integer "stage", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "winner_id"
