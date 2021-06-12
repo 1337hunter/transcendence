@@ -11,15 +11,18 @@ class Api::TournamentsController < ApplicationController
 
   def index
     render json: Tournament.all.as_json(
-      include: {users: {only: @filters}, winner: {only: @filters}}
+      include: {tournament_users: {only: @filters}, winner: {only: @filters}}
     )
   end
 
   def show
     render json: @tournament
-                   .as_json(include: {users: {only: @filters}, winner: {only: @filters}})
+                   .as_json(include: {
+                     tournament_users: {include: {user: {only: @filters}}},
+                     winner: {only: @filters}
+                   })
                    .merge({:is_current_admin => current_user.owner? || current_user.admin?,
-                           :is_in_tournament => current_user.tournament_id == @tournament.id})
+                           :is_in_tournament => @tournament_users.exists?(user_id: current_user.id)})
   end
 
   # POST /api/tournaments/
@@ -58,13 +61,8 @@ class Api::TournamentsController < ApplicationController
       render json: { error: 'Registration to tournament is closed' }, status: :forbidden
       return
     end
-    unless current_user.tournament_id.nil?
-      render json: { error: 'You are registered to another tournament' }, status: :forbidden
-      return
-    end
     @tournament_user = TournamentUser.new(user_id: current_user.id, tournament_id: @tournament.id)
     @tournament_user.save
-    current_user.update(tournament_id: @tournament.id)
     render json: { msg: "Successfully joined tournament ##{@tournament.id}" }, status: :ok
   end
 
@@ -74,9 +72,8 @@ class Api::TournamentsController < ApplicationController
       render json: { error: 'You cant unregister from active tournament' }, status: :forbidden
       return
     end
-    if current_user.tournament_id == @tournament.id
+    if @tournament_users.exists?(user_id: current_user.id)
       TournamentUser.where(tournament_id: @tournament.id, user_id: current_user.id).destroy_all
-      current_user.update(tournament_id: nil)
       render json: { msg: "Successfully left tournament ##{@tournament.id}" }, status: :ok
     end
   end
@@ -126,6 +123,7 @@ class Api::TournamentsController < ApplicationController
 
   def find_tournament
     @tournament = Tournament.find(params[:id])
+    @tournament_users = TournamentUser.where(tournament_id: @tournament.id)
   end
 
   def tournament_not_found
@@ -138,7 +136,7 @@ class Api::TournamentsController < ApplicationController
 
   def define_filters
     @filters = %i[id displayname admin banned online last_seen_at
-                  nickname wins loses elo avatar_url avatar_default_url]
+                  nickname avatar_url avatar_default_url]
   end
 
   # this is for later

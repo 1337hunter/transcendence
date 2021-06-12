@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_11_214025) do
+ActiveRecord::Schema.define(version: 2021_06_12_130755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -127,16 +127,14 @@ ActiveRecord::Schema.define(version: 2021_06_11_214025) do
     t.bigint "user_id"
     t.integer "wins", default: 0
     t.integer "loses", default: 0
-    t.integer "raiting", default: 0
+    t.integer "rating", default: 0
     t.integer "stage", default: 0
     t.bigint "tournament_id"
-    t.boolean "winner", default: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "tournaments", force: :cascade do |t|
-    t.bigint "users"
     t.datetime "start_date", null: false
     t.boolean "is_rating", default: false, null: false
     t.integer "stage", default: 0
@@ -181,14 +179,12 @@ ActiveRecord::Schema.define(version: 2021_06_11_214025) do
     t.datetime "last_seen_at"
     t.boolean "guild_accepted", default: false
     t.bigint "guild_id"
-    t.bigint "tournament_id"
     t.boolean "first_login", default: true
     t.boolean "owner", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["tournament_id"], name: "index_users_on_tournament_id"
     t.index ["uid"], name: "index_users_on_uid"
   end
 

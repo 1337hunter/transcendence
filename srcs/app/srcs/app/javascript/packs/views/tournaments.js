@@ -225,7 +225,7 @@ $(function () {
             if (this.registredusersview == null)
                 this.registredusersview = new TournamentsView.UsersView();
             this.$("#registredusers").html(
-                this.registredusersview.render(this.model.attributes.users).el);
+                this.registredusersview.render(this.model.attributes.tournament_users).el);
             return this;
         }
     });
@@ -237,7 +237,7 @@ $(function () {
         },
         tagName: "tr",
         openprofile: function () {
-            MainSPA.SPA.router.navigate("#/users/" + this.model.get('id'));
+            MainSPA.SPA.router.navigate("#/users/" + this.model.attributes.user.id);
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));

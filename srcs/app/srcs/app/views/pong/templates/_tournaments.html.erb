@@ -5,7 +5,7 @@
   <td><label><%%= status %></label></td>
   <td><label><%%= new Date(start_date).toLocaleString() %></label></td>
   <td><label><%%= new Date(end_date).toLocaleString() %></label></td>
-  <td><label><%%= users.length %></label></td>
+  <td><label><%%= tournament_users.length %></label></td>
 </script>
 
 <script type="text/template" id="tournaments-template">
@@ -111,19 +111,19 @@
 
 <script type="text/template" id="single-tournament-user-template">
   <td>
-    <div class="admin-icon" <%%= admin ? '' : 'style="display:none"' %>>
+    <div class="admin-icon" <%%= user.admin ? '' : 'style="display:none"' %>>
       <%= show_svg('user-astronaut.svg') %>
     </div>
   </td>
   <td>
-    <img class="user_icon<%%= online ? ' user_icon_online' : '' %>"
-         width="30px" height="30px" src="<%%= avatar_url %>">
+    <img class="user_icon<%%= user.online ? ' user_icon_online' : '' %>"
+         width="30px" height="30px" src="<%%= user.avatar_url %>">
   </td>
-  <td class="users-displayname"><label><%%= displayname %></label></td>
+  <td class="users-displayname"><label><%%= user.displayname %></label></td>
   <td><label><%%= wins %></label></td>
   <td><label><%%= loses %></label></td>
-  <td><label><%%= elo %></label></td>
-  <td><label><%%= nickname %></label></td>
+  <td><label><%%= rating %></label></td>
+  <td><label><%%= stage %></label></td>
 </script>
 
 <script type="text/template" id="tournament-users-template">
@@ -135,7 +135,7 @@
       <th>Wins</th>
       <th>Loses</th>
       <th>Rating</th>
-      <th>Intra nickname</th>
+      <th>Stage</th>
     </tr>
   </table>
 </script>
