@@ -17,7 +17,7 @@ Guild.create([{
                 score: 12
               }])
 
-War.create(guild1_id:1, guild2_id:2, g1_name:"Cats", g2_name:"Dogs", finished:true, winner:1, accepted:true, stake:10, duel:true,
+War.create(guild1_id:1, guild2_id:2, g1_name:"Cats", g2_name:"Dogs", finished:false, winner:1, accepted:true, stake:10,
            matches_total:10, g1_matches_won: 7, g2_matches_won:3, g1_score: 12, g2_score:8,
            start:'2021-06-14 00:00:00.0 +0000', end:'2021-07-25 00:00:00.0 +0000', wartime_start:'00:00:00.0', wartime_end:'07:00:00.0')
 

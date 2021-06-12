@@ -40,6 +40,7 @@ class Api::WarsController < ApplicationController
       render json: { error: 'Start date must be in future' }, status: :unprocessable_entity
       return
     end
+    # TODO:uncomment
     #if params[:end].to_time < (params[:start].to_time + 1.0 / 48.0)
     #  render json: { error: 'The gap between start and date must be not less then 30 minutes' }, status: :unprocessable_entity
     #  return
@@ -58,7 +59,6 @@ class Api::WarsController < ApplicationController
   end
 
   def accept
-    # TODO: check end time from now?
     if @guild_cur.id != params[:guild_id].to_i
       render json: { error: 'No permission' }, status: :forbidden
     elsif @war.accepted
@@ -69,9 +69,16 @@ class Api::WarsController < ApplicationController
       WarJob.set(wait_until: @war.end).perform_later(@war)
       #TEST IT
       now = DateTime.now.new_offset(0)
-      time_to_start_unmatch_counter_reset = DateTime.new(@war.start.month, @war.start.month,
-                                  @war.start.day, @war.wartime_end.hour,
-                                  @war.wartime_end.min, @war.wartime_end.sec, now.zone)
+      if @war.start < now
+        year = now.year
+        month = now.month
+        day = now.day
+      else
+        year = @war.start.year
+        month =  @war.start.month
+        day =  @war.start.day
+      end
+      time_to_start_unmatch_counter_reset = DateTime.new(year, month, day,  @war.wartime_start.hour, @war.wartime_start.min, @war.wartime_start.sec, now.zone)
       ResetUnunsweredMatchesCounterJob.set(wait_until: time_to_start_unmatch_counter_reset).perform_later(@war)
     end
   end

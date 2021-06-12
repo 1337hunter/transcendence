@@ -50,6 +50,11 @@ class Api::MatchesController < ApplicationController
     render json: [], status: :ok
   end
 
+  # match types: 
+  #   1 -- duel
+  #   2 -- ladder
+  #   3 -- tournament
+
   def create
     if find_invitation(params[:user_id], params[:invited_user_id], 1) or find_invitation(params[:invited_user_id], params[:user_id], 1)
       render json: {error: 'Invitation already exists'}, status: :unprocessable_entity
@@ -63,7 +68,7 @@ class Api::MatchesController < ApplicationController
 
       @match = Match.create(player_one: User.find(params["user_id"]),
                           player_two: User.find(params["invited_user_id"]),
-                          status: 1)
+                          status: 1, type: params[:type])
       if @war && check_war
         another_match = Match.find_by_war_id(@war.id)
         if another_match.status != 3
@@ -89,9 +94,11 @@ class Api::MatchesController < ApplicationController
   end
 
   def check_war
-    !@war.finished && @war.accepted && @war.start >= DateTime.now && check_wartime
+    !@war.finished && @war.accepted && @war.start >= DateTime.now && check_wartime && check_match_type
+  end
 
-      #TODO: check match type: @war.ladder / tournament / duel
+  def check_match_type
+    @match.type == 1 || (@match.type == 2 && @war.ladder) ||  (@match.type == 3 && @war.tournament)
   end
 
   def check_wartime
