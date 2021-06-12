@@ -1,5 +1,8 @@
 import consumer from "./consumer"
 import MainSPA from "../packs/main_spa";
+import Pong from "../packs/models/pong"
+import Users from "../packs/models/users"
+
 
 var MatchmakingInit = 
 {
@@ -8,7 +11,7 @@ var MatchmakingInit =
       connected() {
         // Called when the subscription is ready for use on the server
         console.log("Connected to the matchmaking channel");
-        this.send({action: "start", id: MainSPA.SPA.router.currentuser.get('id')});
+        this.send({action: "find", id: MainSPA.SPA.router.currentuser.get('id')});
       },
     
       disconnected() {
@@ -19,11 +22,25 @@ var MatchmakingInit =
       received(data) {
         // Called when there's incoming data on the websocket for this channel
         console.log("recieved data from matchmaking channel: ", data);
-        if (data.action == "start")
+        if (data.action == 'find')
         {
-          if (data.id == MainSPA.SPA.router.currentuser.get('id'))
+          if (data.id != MainSPA.SPA.router.currentuser.get('id'))
           {
-            console.log("it's me");
+            this.send({action: "confirm", id: MainSPA.SPA.router.currentuser.get('id')});
+          }
+        }
+        if (data.action == 'confirm')
+        {
+          if (data.id != MainSPA.SPA.router.currentuser.get('id'))
+          {
+            let $this = this;
+            this.match = new Pong.MatchModel();
+            this.match.save({success: function (model) {
+              console.log(model)
+           //   $this.match.fetch({success: function () {
+           //     console.log($this.match.attributes.id);
+           //   }});
+            }});
           }
         }
       }
