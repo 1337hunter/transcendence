@@ -37,7 +37,7 @@ class Api::WarsController < ApplicationController
     return if check_opponent_fail || not_enough_points
 
     if params[:start].to_time < DateTime.now
-      render json: { error: 'Start date must be in future' }, status: :unprocessable_entity
+      render json: { error: 'Start date must be in the future' }, status: :unprocessable_entity
       return
     end
     # TODO:uncomment
