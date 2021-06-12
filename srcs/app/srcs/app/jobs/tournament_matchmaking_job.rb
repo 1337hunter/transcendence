@@ -31,8 +31,10 @@ class TournamentMatchmakingJob < ApplicationJob
       {
         matches: make_matches
       })
+      TournamentMatchmakingJob.set(wait: 60.second).perform_later(@tournament)
     else
+      @tournament.update(status: "closed")
     end
-    TournamentMatchmakingJob.set(wait: 60.second).perform_later(@tournament)
+    
   end
 end

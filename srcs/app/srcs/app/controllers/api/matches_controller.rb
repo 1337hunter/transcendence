@@ -16,7 +16,7 @@ class Api::MatchesController < ApplicationController
     @match = Match.find(params[:id])
     if (params.has_key?(:winner) and params.has_key?(:first_player_score) and params.has_key?(:second_player_score))
       @player_winner = User.find(params[:winner])
-      @player_loser = params[:winner] == params[:second_player_id] ? User.find(params[:ç]) : User.find(params[:second_player_id])
+      @player_loser = params[:winner] == params[:second_player_id] ? User.find(params[:first_player_id]) : User.find(params[:second_player_id])
       @player_loser.update(loses: @player_loser.loses + 1)
       @player_winner.update(wins: @player_winner.wins + 1)
       @player_winner.update(elo: @player_winner.elo + 25)
@@ -27,13 +27,15 @@ class Api::MatchesController < ApplicationController
       end
     end
 
-    # if params[:tournament_id] != 0
-    #   @tournament = Tournament.find(params[:tournament_id])
-    #   puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-    #   @tournament.as_json
-    #   puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-
-    # end
+    if @match.tournament_id != 0 && (params.has_key?(:winner) and params.has_key?(:first_player_score) and params.has_key?(:second_player_score))
+      @tournament_user_winner = TournamentUser.where(tournament_id: @match.tournament_id, user_id: params[:winner]).first
+      @tournament_user_loser = params[:winner] == params[:second_player_id] ?
+          TournamentUser.where(tournament_id: @match.tournament_id, user_id: params[:first_player_id]).first : TournamentUser.where(tournament_id: @match.tournament_id, user_id: params[:second_player_id]).first
+      @tournament = Tournament.find(@match.tournament_id);
+      rating = (@player_winner.elo - @player_loser.elo).abs
+      @tournament_user_winner.update(wins: @tournament_user_winner.wins + 1, stage: @tournament_user_winner.stage + 1, rating: @tournament_user_winner.rating + rating)
+      @tournament_user_loser.update(loses: @tournament_user_loser.loses + 1)
+    end
 
     @match.update(status: params[:status]) if (params.has_key?(:status))
     if (params.has_key?(:winner))

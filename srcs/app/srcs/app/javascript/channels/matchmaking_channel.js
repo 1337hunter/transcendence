@@ -53,6 +53,7 @@ var MatchmakingInit =
           {
             this.cable = GameRoomInit.createGameRoom({match_id: data.match_id});
           }
+          consumer.subscriptions.remove(this)
         }
       }
     });

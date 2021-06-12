@@ -45,7 +45,6 @@ var TournamentChannel =
           for (var i = 0; i < data.matches.length; ++i)
           {
             if (data.matches[i][0].user_id == this.current_user_id || data.matches[i][1].user_id == this.current_user_id) {
-              console.log(data.matches[i][0].user_id, data.matches[i][1].user_id )
               self.other_id = this.current_user_id == data.matches[i][1].user_id ? data.matches[i][0].user_id : data.matches[i][1].user_id
               this.Match = new Users.TournamentMatchModel({
                 first_player_id: data.matches[i][0].user_id,
@@ -55,7 +54,7 @@ var TournamentChannel =
                 success: function () {
                   self.match_id = self.Match.attributes.id
                   self.Match.set({type: 3})
-                  self.Match.set(self.Match, {game_room: GameRoomInit.createGameRoom({type: 3, tournament_id: self.tornament_id, user_id: self.current_user_id, match_id: self.Match.attributes.id})});
+                  self.Match.set(self.Match, {game_room: GameRoomInit.createGameRoom({match_type: 3, tournament_id: self.tornament_id, user_id: self.current_user_id, match_id: self.Match.attributes.id})});
                   self.me_ready = true;
                   self.send({ready: true, user_id: self.current_user_id})
                 }

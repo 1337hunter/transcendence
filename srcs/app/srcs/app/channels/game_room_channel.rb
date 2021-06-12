@@ -1,8 +1,8 @@
 class GameRoomChannel < ApplicationCable::Channel
   def subscribed
-    @match = Match.find(params[:match_id])
+    #@match_found = Match.find(params[:match_id])
     stream_from "game_room_channel_#{params[:match_id]}"
-    if current_user.id == Match.find(params[:match_id]).second_player_id && @match.match_type != 3
+    if current_user.id == Match.find(params[:match_id]).second_player_id && Match.find(params[:match_id]).match_type != 3
       start_match
     end
   end
