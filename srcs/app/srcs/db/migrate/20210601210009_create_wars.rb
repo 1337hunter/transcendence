@@ -18,12 +18,13 @@ class CreateWars < ActiveRecord::Migration[6.1]
       t.integer :max_unanswered, default: 5
       t.integer :matches_total, default: 0
       t.integer :g1_matches_won, default: 0
+      t.integer :g1_unanswered_counter, default: 0
       t.integer :g1_matches_unanswered, default: 0
       t.integer :g2_matches_won, default: 0
       t.integer :g2_matches_unanswered, default: 0
+      t.integer :g2_unanswered_counter, default: 0
       t.boolean :ladder, default: false
       t.boolean :tournament, default: false
-      t.boolean :duel, default: false
       t.integer :winner # numbers 1 or 2
 
       t.timestamps

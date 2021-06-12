@@ -1,6 +1,7 @@
 class War < ApplicationRecord
   belongs_to :guild1, class_name: 'Guild'
   belongs_to :guild2, class_name: 'Guild'
+  has_many :matches,  dependent: :nullify, class_name: 'Match'
 
   include ActiveModel::Validations
   validates_with WarValidator

@@ -58,6 +58,7 @@ class Api::TwoFactorController < ApplicationController
       @user.otp_validated = true
       @user.save
       flash[:info] = 'You are an admin.' if @user.admin
+      flash[:info] = 'You are server owner.' if @user.owner
     else
       flash[:danger] = 'Bad OTP'
     end

@@ -9,8 +9,6 @@ class Guild < ApplicationRecord
   has_many :war_invites, -> { where(accepted: false) }, dependent: :destroy,   class_name: "War", foreign_key: "guild2_id"
   has_many :wars_started, -> { where(accepted: true) },  dependent: :nullify, class_name: "War", foreign_key: "guild1_id"
   has_many :wars_accepted, -> { where(accepted: true) },  dependent: :nullify, class_name: "War", foreign_key: "guild2_id"
-  #has_one :war_active_started, -> { where(accepted: true, finished:false) },  class_name: "War", foreign_key: "guild1_id"
-  #has_one :wars_active_accepted, -> { where(accepted: true, finished:false) },  class_name: "War", foreign_key: "guild2_id"
 
   include ActiveModel::Validations
   validates :name, uniqueness: { case_sensitive: false }, presence: true

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_12_121007) do
+ActiveRecord::Schema.define(version: 2021_06_12_130755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 2021_06_12_121007) do
     t.integer "first_player_score"
     t.integer "second_player_score"
     t.bigint "war_id"
-    t.integer "type"
+    t.integer "match_type"
     t.index ["first_player_id"], name: "index_matches_on_first_player_id"
     t.index ["second_player_id"], name: "index_matches_on_second_player_id"
     t.index ["war_id"], name: "index_matches_on_war_id"
@@ -128,18 +128,17 @@ ActiveRecord::Schema.define(version: 2021_06_12_121007) do
     t.bigint "user_id"
     t.integer "wins", default: 0
     t.integer "loses", default: 0
-    t.integer "raiting", default: 0
+    t.integer "rating", default: 0
     t.integer "stage", default: 0
     t.bigint "tournament_id"
-    t.boolean "winner", default: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "tournaments", force: :cascade do |t|
-    t.bigint "users"
     t.datetime "start_date", null: false
     t.boolean "is_rating", default: false, null: false
+    t.integer "stage", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "winner_id"
@@ -181,14 +180,12 @@ ActiveRecord::Schema.define(version: 2021_06_12_121007) do
     t.datetime "last_seen_at"
     t.boolean "guild_accepted", default: false
     t.bigint "guild_id"
-    t.bigint "tournament_id"
     t.boolean "first_login", default: true
     t.boolean "owner", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["provider"], name: "index_users_on_provider"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["tournament_id"], name: "index_users_on_tournament_id"
     t.index ["uid"], name: "index_users_on_uid"
   end
 
@@ -210,12 +207,13 @@ ActiveRecord::Schema.define(version: 2021_06_12_121007) do
     t.integer "max_unanswered", default: 5
     t.integer "matches_total", default: 0
     t.integer "g1_matches_won", default: 0
+    t.integer "g1_unanswered_counter", default: 0
     t.integer "g1_matches_unanswered", default: 0
     t.integer "g2_matches_won", default: 0
     t.integer "g2_matches_unanswered", default: 0
+    t.integer "g2_unanswered_counter", default: 0
     t.boolean "ladder", default: false
     t.boolean "tournament", default: false
-    t.boolean "duel", default: false
     t.integer "winner"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

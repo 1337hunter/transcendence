@@ -4,7 +4,7 @@
     <div class="col-1"><%%= score %></div>
     <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
     <div class="col-3">
-      <span <%%=active_war ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/wars/${active_war[0]}">`%>current</a>: with <%%= active_war[1] == name ? active_war[1] : active_war[2] %>,</span>
+      <span <%%=active_war ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/wars/${active_war[0]}">`%>current</a>: with <%%= active_war[1] == name ? active_war[2] : active_war[1] %>,</span>
       <span <%%=active_war ? 'style="display:none"' : '' %>>current: none, </span>
       <%%=`<a class="link-light" href="#/guilds/${id}/wars">`%>all</a>: <%%=wars_counter %>
     </div>
@@ -136,7 +136,7 @@
   <div class="row">
     <div>
       <%%=`<a class="link-light" href="#/guilds/${id}/wars">War history</a>`%>:
-      <span <%%=active_war ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/wars/${active_war[0]}">`%>current</a>: with <%%= active_war[1] == name ? active_war[1] : active_war[2] %>,</span>
+      <span <%%=active_war ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/wars/${active_war[0]}">`%>current</a>: with <%%= active_war[1] == name ? active_war[2] : active_war[1] %>,</span>
       <span <%%=active_war ? 'style="display:none"' : '' %>>current: none, </span>
       all: <%%=wars_counter %>
     </div>
