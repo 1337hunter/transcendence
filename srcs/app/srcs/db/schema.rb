@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 2021_06_12_130755) do
     t.integer "first_player_score"
     t.integer "second_player_score"
     t.bigint "war_id"
-    t.integer "type"
+    t.integer "match_type"
     t.index ["first_player_id"], name: "index_matches_on_first_player_id"
     t.index ["second_player_id"], name: "index_matches_on_second_player_id"
     t.index ["war_id"], name: "index_matches_on_war_id"

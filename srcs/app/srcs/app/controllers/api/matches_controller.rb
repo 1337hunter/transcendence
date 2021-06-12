@@ -68,10 +68,11 @@ class Api::MatchesController < ApplicationController
 
       @match = Match.create(player_one: User.find(params["user_id"]),
                           player_two: User.find(params["invited_user_id"]),
-                          status: 1, type: params[:type])
+                          status: 1, match_type: params[:type])
+      c = check_war
       if @war && check_war
         another_match = Match.find_by_war_id(@war.id)
-        if another_match.status != 3
+        if !another_match || another_match.status != 3
           @match.update(war_id: @war.id)
           WarMatchJob.set(wait_until: DateTime.now + @war.wait_minutes.minutes).perform_later(@match)
         end
@@ -94,11 +95,15 @@ class Api::MatchesController < ApplicationController
   end
 
   def check_war
-    !@war.finished && @war.accepted && @war.start >= DateTime.now && check_wartime && check_match_type
+    b =  !@war.finished
+    a = @war.start <= DateTime.now
+    c = check_wartime
+    m = check_match_type
+    !@war.finished && @war.accepted && @war.start <= DateTime.now && check_wartime && check_match_type
   end
 
   def check_match_type
-    @match.type == 1 || (@match.type == 2 && @war.ladder) ||  (@match.type == 3 && @war.tournament)
+    @match.match_type == 1 || (@match.match_type == 2 && @war.ladder) ||  (@match.match_type == 3 && @war.tournament)
   end
 
   def check_wartime
