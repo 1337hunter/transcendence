@@ -6,7 +6,7 @@ const Pong = {};
 Pong.MatchModel = Backbone.Model.extend({
     idAttribute: "id",
     url: function () {
-        return '/api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/matches/'
+        return '/api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/matches'
     }
 });
 
