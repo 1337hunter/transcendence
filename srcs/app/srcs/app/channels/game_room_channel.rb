@@ -1,9 +1,16 @@
 class GameRoomChannel < ApplicationCable::Channel
+  @@connections = 0
+
   def subscribed
     puts params
-    
+    @@connections += 1
     stream_from "game_room_channel_#{params[:match_id]}"
-    if current_user.id == Match.find(params[:match_id]).second_player_id
+      # if current_user.id == Match.find(params[:match_id]).second_player_id
+      #   start_match
+      # end
+
+    if @@connections >= 2
+      @@connections = 0
       start_match
     end
   end
@@ -15,7 +22,7 @@ class GameRoomChannel < ApplicationCable::Channel
       ActionCable.server.remote_connections.where(current_user: User.find(@match.first_player_id)).disconnect
       ActionCable.server.remote_connections.where(current_user: User.find(@match.second_player_id)).disconnect
     end
-  end
+end
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed

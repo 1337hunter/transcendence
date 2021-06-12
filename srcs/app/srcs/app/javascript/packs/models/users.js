@@ -32,6 +32,16 @@ Users.MatchModel = Backbone.Model.extend({
     }
 });
 
+Users.TournamentMatchModel = Backbone.Model.extend({
+    initialize: function(params) {
+        this.id1 = params.first_player_id;
+        this.id2 = params.second_player_id;
+    },
+    url: function () {
+        return '/api/users/' + this.id1 + '/matches/' + this.id2;
+    }
+});
+
 Users.MatchesCollection = Backbone.Collection.extend({
     initialize: function(model, options) {
         this.id = options.id;
