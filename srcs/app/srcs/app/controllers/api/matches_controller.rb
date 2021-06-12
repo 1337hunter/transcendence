@@ -8,11 +8,7 @@ class Api::MatchesController < ApplicationController
   end
 
   def show
-    if params.has_key?(:user_id) and params.has_key?(:id)
-      @match = Match.where("(first_player_id = ? OR second_player_id = ?) AND status = ?", params[:user_id], params[:id], 1).first
-    else
-      @match = Match.find(params[:id])
-    end
+    @match = Match.find(params[:id])
     render json: @match, status: :ok
   end
 

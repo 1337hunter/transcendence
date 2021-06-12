@@ -119,6 +119,11 @@ class Api::UsersController < ApplicationController
     render json: {}, status: :ok
   end
 
+  def tournament_users
+    @match = Match.where("(first_player_id = ? OR second_player_id = ?) AND status = ?", params[:user_id], params[:id], 1).first
+    render json: @match, status: :ok
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     post 'settings/2fa', to: 'two_factor#enable'
     patch 'settings/2fa', to: 'two_factor#disable'
     resources :users do
+      get 'matches/:id/tournament', to: 'users#tournament_users'
       resources :matches
       resources :guild_invitations
     #  post 'matches/invite_user', to: 'matches#invite_user'
