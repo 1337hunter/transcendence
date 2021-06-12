@@ -31,13 +31,13 @@ class Api::MatchesController < ApplicationController
       end
     end
 
-    if params[:tournament_id] != 0
-      @tournament = Tournament.find(params[:tournament_id])
-      puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-      @tournament.as_json
-      puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    # if params[:tournament_id] != 0
+    #   @tournament = Tournament.find(params[:tournament_id])
+    #   puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    #   @tournament.as_json
+    #   puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 
-    end
+    # end
 
     @match.update(status: params[:status]) if (params.has_key?(:status))
     if (params.has_key?(:winner))
