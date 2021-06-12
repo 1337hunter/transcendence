@@ -40,11 +40,10 @@ class Api::WarsController < ApplicationController
       render json: { error: 'Start date must be in the future' }, status: :unprocessable_entity
       return
     end
-    # TODO:uncomment
-    #if params[:end].to_time < (params[:start].to_time + 1.0 / 48.0)
-    #  render json: { error: 'The gap between start and date must be not less then 30 minutes' }, status: :unprocessable_entity
-    #  return
-    #end
+    if params[:end].to_time < (params[:start].to_time + 1.0 / 96.0)
+      render json: { error: 'The gap between start and date must be not less then 15 minutes' }, status: :unprocessable_entity
+      return
+    end
     if params[:end].to_time >= (params[:start].to_time + 1.0) && (params[:wartime_end].to_time < (params[:wartime_start].to_time + 1.0 / 24.0) && params[:wartime_start].to_time != params[:wartime_end].to_time)
       render json: { error: 'War time must be at least 1 hour long' }, status: :unprocessable_entity
       return

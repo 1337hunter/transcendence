@@ -143,7 +143,7 @@
                   <button class="btn btn-outline-warning btn-profile-actions invite-to-battle">
                     Invite to Battle
                   </button>
-                  <button class="btn btn-outline-light btn-profile-actions invite-to-guild" <%%= can_invite ? '' : 'style="display:none"' %>>
+                  <button class="btn btn-outline-light btn-profile-actions invite-to-guild" <%%= can_invite && !guild_accepted ? '' : 'style="display:none"' %>>
                     Invite to Guild
                   </button>
                 </p>
@@ -227,6 +227,16 @@
               <table id="friends-table" border-spacing="20px" padding="0 2em 1em 0">
               <tr><th></th><th></th>
             </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" <%%=is_current && !guild_accepted ? '' : 'style="display:none"' %>>
+        <div class="card" style="max-height: 550px;">
+          <div class="card-body overflow-auto">
+            <h5 class="card-header card-title" >
+            <%%=`<a class="link-light" href="#/users/${id}/guild_invitations">Guild invitations</a>`%>
+             (<%%= guild_invites_counter %>)
+            </h5>
           </div>
         </div>
       </div>

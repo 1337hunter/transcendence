@@ -249,8 +249,7 @@ $(function () {
 
 
     GuildsView.GuildInvitationView = Backbone.View.extend({
-        //cur_user: new Users.CurrentUserModel,
-        template: _.template($('#guild-template').html()),
+        template: _.template($('#guild-invite-template').html()),
         events: {
             "click #accept-button": "accept",
             "click #decline-button": "decline"
@@ -285,7 +284,7 @@ $(function () {
     });
 
     GuildsView.GuildInvitationsView = Backbone.View.extend({
-        template: _.template($('#guilds-template').html()),
+        template: _.template($('#guild-invites-template').html()),
         events: {
             "click #refresh-button" :   "refresh"
         },
@@ -297,7 +296,7 @@ $(function () {
             this.collection.fetch({reset: true, error: this.onerror});
         },
         addOne: function (guild) {
-            guild.view = new GuildsView.GuildInvitationView({model: guild/*, id: this.u_id*/});
+            guild.view = new GuildsView.GuildInvitationView({model: guild});
             this.el.append(guild.view.render().el);
         },
         addAll: function () {

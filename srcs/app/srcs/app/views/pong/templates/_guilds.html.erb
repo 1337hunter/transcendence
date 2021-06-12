@@ -60,6 +60,41 @@
     </div>
 </script>
 
+<script type="text/template" id="guild-invite-template">
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3"><%%=`<a class="link-light" href="#/guilds/${id}">`%><%%= name %></a> [<%%=anagram %>]</div>
+    <div class="col-1"><%%= score %></div>
+    <div class="col-2"><%%=`<a class="link-light" href="#/users/${master_id}">`%><%%= master_name %></a></div>
+    <div class="col-3">
+      <span <%%=active_war ? '' : 'style="display:none"' %>><%%=`<a class="link-light" href="#/wars/${active_war[0]}">`%>current</a>: with <%%= active_war[1] == name ? active_war[2] : active_war[1] %>,</span>
+      <span <%%=active_war ? 'style="display:none"' : '' %>>current: none, </span>
+      <%%=`<a class="link-light" href="#/guilds/${id}/wars">`%>all</a>: <%%=wars_counter %>
+    </div>
+  <div class="col-3">
+  <button type="button" class="btn btn-light options-button join" id="accept-button">
+    accept invite
+  </button>
+  <button type="button" class="btn btn-danger options-button" id="decline-button">
+    decline
+  </button>
+  </div>
+  </div>
+</script>
+
+<script type="text/template" id="guild-invites-template">
+  <h1>Guild invitations
+    <button type="button" class="button-sm" id="refresh-button">
+      <%= show_svg('refresh.svg') %></button>
+  </h1>
+  <div class="row" style="max-width: 1000px; min-width: 300px">
+    <div class="col-3">Guild name</div>
+    <div class="col-1">Score</div>
+    <div class="col-2">Master</div>
+    <div class="col-3">Wars</div>
+  </div>
+</script>
+
+
 <script type="text/template" id="guilds-template-create">
     <button class="open-button" onclick="openForm()">Create Guild</button>
     <div class="form-popup" id="newGuildForm">

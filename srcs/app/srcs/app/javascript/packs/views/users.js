@@ -203,6 +203,7 @@ $(function () {
             "click #message_btn"            :   "message_to_user",
             "click .remove-friend-button"   :   "removeFriend",
             "click .invite-to-battle"       :   "inviteToBattle",
+            "click .invite-to-guild"        :   "inviteToGuild"
         },
         initialize: function (id) {
             this.id = id;
@@ -241,6 +242,9 @@ $(function () {
                     }})
                 }
             }));
+        },
+        inviteToGuild: function () {
+            Utils.invite_to_guild(this);
         },
         addFriend: function () {
             return Backbone.ajax(_.extend({
@@ -356,19 +360,7 @@ $(function () {
         invite: function(e) {
             e.preventDefault();
             e.stopPropagation();
-            $.ajax({
-                url: 'api/users/' + this.model.get('id') + '/guild_invitations/',
-                type: 'POST',
-                data: `user_id=${this.model.get('id')}`,
-                success: () => {
-                    Utils.appAlert('success', {msg: 'Invitation to ' + this.model.get('displayname') + ' sent'});
-                    this.render();
-                },
-                error: (response) => {
-                    Utils.alertOnAjaxError(response);
-                }
-            });
-            this.render();
+            Utils.invite_to_guild(this);
         },
         cancelInvite: function () {
             let view = this;

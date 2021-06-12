@@ -3,7 +3,10 @@
     <table>
         <tr style="vertical-align:top;">
           <th><img class="user_icon" width="35px" height="35px" src="<%%= avatar %>" style="margin-bottom: 10px"></th>
-          <th id="user-name"><%%= displayname %>:</th>
+          <th><span <%%=user_guild_anagram ? 'style="color:gray"' : 'style="display:none"'%>> &nbsp;[<%%=user_guild_anagram%>]</span></th>
+          <th id="user-name">
+            <%%= displayname %>:
+          </th>
           <th id="message-content"> <%%= content %> </th>
           <th <%%= admin ? '' : 'style="display:none"' %>>
             <div id="make_adm">⠀ADM</div>
