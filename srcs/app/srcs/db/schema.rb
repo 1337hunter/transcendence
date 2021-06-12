@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 2021_06_12_130755) do
     t.integer "first_player_id"
     t.integer "second_player_id"
     t.integer "status"
+    t.bigint "tournament_id", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "winner"

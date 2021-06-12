@@ -34,7 +34,6 @@ var TournamentChannel =
       },
       received(data) {
         var self = this
-        console.log(data)
         if (data.ready && data.user_id == self.other_id)
         {
           if (window.location.href != ("#/play/" + this.match_id))
@@ -42,7 +41,7 @@ var TournamentChannel =
           MainSPA.SPA.router.navigate("#/play/" + this.match_id);
           return ;
         }
-          else if (data.matches) {
+        else if (data.matches) {
           for (var i = 0; i < data.matches.length; ++i)
           {
             if (data.matches[i][0].user_id == this.current_user_id || data.matches[i][1].user_id == this.current_user_id) {

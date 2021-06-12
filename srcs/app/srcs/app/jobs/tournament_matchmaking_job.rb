@@ -14,7 +14,7 @@ class TournamentMatchmakingJob < ApplicationJob
         @war = War.find_by_guild1_id_and_guild2_id(user1.guild_id, user2.guild_id)
         @war = War.find_by_guild1_id_and_guild2_id(user2.guild_id, user1.guild_id) if !@war
       end
-      Match.create(first_player_id: @users[i].user_id, second_player_id: @users[i + 1].user_id, status: 1, war_id: @war == nil ? nil : @war.id)
+      Match.create(first_player_id: @users[i].user_id, second_player_id: @users[i + 1].user_id, status: 1, tournament_id: @tournament.id, war_id: @war == nil ? nil : @war.id)
       i += 2
     end
     if @users.length % 2 == 1

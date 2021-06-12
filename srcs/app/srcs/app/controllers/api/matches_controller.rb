@@ -8,9 +8,6 @@ class Api::MatchesController < ApplicationController
   end
 
   def show
-    puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-    puts params
-    puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
     if params.has_key?(:user_id) and params.has_key?(:id)
       @match = Match.where("(first_player_id = ? OR second_player_id = ?) AND status = ?", params[:user_id], params[:id], 1).first
     else
@@ -33,6 +30,15 @@ class Api::MatchesController < ApplicationController
         @player_loser.update(elo: @player_loser.elo - 25)
       end
     end
+
+    if params[:tournament_id] != 0
+      @tournament = Tournament.find(params[:tournament_id])
+      puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+      @tournament.as_json
+      puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+
+    end
+
     @match.update(status: params[:status]) if (params.has_key?(:status))
     if (params.has_key?(:winner))
       @match.update(winner: params[:winner])
@@ -47,8 +53,10 @@ class Api::MatchesController < ApplicationController
         end
         @war.save
       else
-        @player_winner.guild.score += 1;
-        @player_winner.guild.save
+        if @player_winner.guild != nil && @player_winner.guild_accepted
+          @player_winner.guild.score += 1;
+          @player_winner.guild.save
+        end
       end
     end
     if (params.has_key?(:first_player_score) and params.has_key?(:second_player_score))
