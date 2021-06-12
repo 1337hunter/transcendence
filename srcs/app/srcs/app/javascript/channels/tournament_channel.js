@@ -11,18 +11,22 @@ var TournamentChannel =
     const TournamentRoom = consumer.subscriptions.create({channel: "TournamentChannel", tournament_id: params.tournament_id}, {
       initialized() {
         var $this = this
-        $(document).ready(function(){
-          $this.tornament_id = params.tournament_id;
-          $this.current_user_id = MainSPA.SPA.router.currentuser.get('id');
-        });
+        var current = new Users.CurrentUserModel();
+        current.fetch({
+          success: function () {
+            $this.tornament_id = params.tournament_id;
+            $this.current_user_id = current.get("id")
+            $this.me_ready = false;
+            $this.other_ready = false;
+          }
+        })
+          
       },
       connected() {
-        console.log("connected to Tournament id: " + this.tornament_id)
         // Called when the subscription is ready for use on the server
       },
 
       disconnected() {
-        console.log("disconnected from Tournament id: " + this.tornament_id) // it work but don't print
         // Called when the subscription has been terminated by the server
       },
       Disconnect: function () {
@@ -31,22 +35,33 @@ var TournamentChannel =
       received(data) {
         var self = this
         console.log(data)
-        if (data == "start") {
-            MainSPA.SPA.router.navigate("#/play/" + this.match_id);
-        }
-        for (var i = 0; i < data.matches.length; ++i)
+        if (data.ready && data.user_id == self.other_id)
         {
-          if (data.matches[i][0].user_id == this.current_user_id || data.matches[i][1].user_id == this.current_user_id) { /*DELETE SECOND CONDITION! */
-            this.Match = new Users.TournamentMatchModel({
-              first_player_id: data.matches[i][0].user_id,
-              second_player_id: data.matches[i][1].user_id,
-            })
-            this.Match.fetch({
-              success: function () {
-                self.Match.set(self.Match, {game_room: GameRoomInit.createGameRoom({match_id: self.Match.attributes.id})});
+          if (window.location.href != ("#/play/" + this.match_id))
+            self.send({ready: true, user_id: self.current_user_id})
+          MainSPA.SPA.router.navigate("#/play/" + this.match_id);
+          return ;
+        }
+          else if (data.matches) {
+          for (var i = 0; i < data.matches.length; ++i)
+          {
+            if (data.matches[i][0].user_id == this.current_user_id || data.matches[i][1].user_id == this.current_user_id) { /*DELETE SECOND CONDITION! */
+              console.log(data.matches[i][0].user_id, data.matches[i][1].user_id )
+              self.other_id = this.current_user_id == data.matches[i][1].user_id ? data.matches[i][0].user_id : data.matches[i][1].user_id
+              this.Match = new Users.TournamentMatchModel({
+                first_player_id: data.matches[i][0].user_id,
+                second_player_id: data.matches[i][1].user_id,
+              })
+              this.Match.fetch({
+                success: function () {
                   self.match_id = self.Match.attributes.id
-              }
-            })
+                  Match.set({tournament: true})
+                  self.Match.set(self.Match, {game_room: GameRoomInit.createGameRoom({user_id: self.current_user_id, match_id: self.Match.attributes.id})});
+                  self.me_ready = true;
+                  self.send({ready: true, user_id: self.current_user_id})
+                }
+              })
+            }
           }
         }
       }
