@@ -109,7 +109,7 @@ class Api::MatchesController < ApplicationController
   end
 
   def check_wartime
-    return if @war.wartime_start == @war.wartime_end
+    return true if @war.wartime_start == @war.wartime_end
 
     now = DateTime.now.new_offset(0)
     end_day = @war.wartime_end.day == @war.wartime_start.day ? now.day : now.day + 1
