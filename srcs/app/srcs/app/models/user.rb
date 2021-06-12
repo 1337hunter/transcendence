@@ -74,6 +74,10 @@ class User < ApplicationRecord
     puts "friendship ended"
   end
 
+  def guild_invites_counter
+    guild_invitations.length
+  end
+
   class << self
     def current_user=(user)
       Thread.current[:current_user] = user

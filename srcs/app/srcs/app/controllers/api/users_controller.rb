@@ -21,7 +21,9 @@ class Api::UsersController < ApplicationController
                                  friends: { only: @filters },
                                  requested_friends: { only: @filters },
                                  guild: { only: @guildfilters }
-                               })
+                               },
+                               methods: [:guild_invites_counter]
+                               )
                       .merge(:is_current => @user == current_user)
                       .merge(:can_invite => current_user.guild_master? || current_user.guild_officer?)
   end

@@ -40,7 +40,7 @@ class Api::MessagesController < ApplicationController
                    User.arel_table[:displayname],
                    User.arel_table[:avatar_url].as("avatar"),
                    User.arel_table[:avatar_default_url]
-                 ]).as_json
+                 ]).as_json(methods: [:user_guild_anagram])
         render json: @messages
     end
 

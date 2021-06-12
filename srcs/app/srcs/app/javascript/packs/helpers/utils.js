@@ -234,6 +234,21 @@ export default class Utils {
         });
     }
 
+    static invite_to_guild(view) {
+        $.ajax({
+            url: 'api/users/' + view.model.get('id') + '/guild_invitations/',
+            type: 'POST',
+            data: `user_id=${view.model.get('id')}`,
+            success: () => {
+                Utils.appAlert('success', {msg: 'Invitation to ' + view.model.get('displayname') + ' sent'});
+                view.render();
+            },
+            error: (response) => {
+                Utils.alertOnAjaxError(response);
+            }
+        });
+    }
+
     static view_rerender(view) {
         view.model.fetch({
             success: function () {
