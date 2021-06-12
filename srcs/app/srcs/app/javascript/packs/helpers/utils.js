@@ -247,7 +247,7 @@ export default class Utils {
             url: 'api/guilds/' + view.model.get('guild2_id') + '/war_invites/' + view.model.get('id'),
             type: 'PUT',
             success: () => {
-                Utils.appAlert('success', {msg: 'Get ready to the war!'}); //TODO:start time?
+                Utils.appAlert('success', {msg: 'Get ready to the war!'});
                 remove ? view.remove() : view.render();
             },
             error: (response) => {

@@ -8,6 +8,7 @@ import MessagesView from "./messages";
 import Rooms from "../models/rooms"
 // game stuff
 import GameRoomInit from "../../channels/game_room_channel";
+import MatchmakingInit from "../../channels/matchmaking_channel";
 import {obtainedValues} from "../../channels/game_room_channel";
 import AdminView from "./admin";
 
@@ -176,6 +177,8 @@ $(function () {
         },
         findMatch: function () {
             console.log("find match action");
+            this.matchmaking_channel = MatchmakingInit.connectToChannel();
+        //    this.matchmaking_channel.send({action: "start", id: MainSPA.SPA.router.currentuser.get('id')});
         },
         refresh: function () {
             this.collection.fetch({
@@ -228,7 +231,7 @@ $(function () {
             return Backbone.ajax(_.extend({
                 url: 'api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/matches/',
                 method: "POST",
-                data: {invited_user_id: this.model.attributes.id},
+                data: {invited_user_id: this.model.attributes.id, type: 1},
                 dataType: "json",
                 error: Utils.alertOnAjaxError,
                 success: function () {
