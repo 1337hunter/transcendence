@@ -18,7 +18,7 @@ class Api::GuildInvitationsController < ApplicationController
                  User.arel_table[:displayname].as('master_name'),
                  User.arel_table[:id].as('master_id')
                ])
-      render json: @guilds.as_json(methods: %i[active_war wars_counter current_user_role])
+      render json: @guilds.as_json(methods: %i[active_war wars_counter])
     #end
   end
 
