@@ -143,7 +143,7 @@
                   <button class="btn btn-outline-warning btn-profile-actions invite-to-battle">
                     Invite to Battle
                   </button>
-                  <button class="btn btn-outline-light btn-profile-actions invite-to-guild" <%%= can_invite ? '' : 'style="display:none"' %>>
+                  <button class="btn btn-outline-light btn-profile-actions invite-to-guild" <%%= can_invite && !guild_accepted ? '' : 'style="display:none"' %>>
                     Invite to Guild
                   </button>
                 </p>
