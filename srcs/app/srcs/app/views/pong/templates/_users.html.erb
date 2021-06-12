@@ -133,18 +133,20 @@
                 <p class="text-muted font-size-sm">
                   <%%= guild_accepted ? `<a href="#/guilds/${guild_id}" style="text-decoration: inherit; color: inherit;">[${guild.anagram}] ${guild.name}</a>` : ''%>
                 </p>
-                <button class="btn btn-outline-success btn-profile-actions add-friend-button" <%%= banned || is_current ? 'disabled' : '' %>>
-                  Add Friend
-                </button>
-                <button id="message_btn" class="btn btn-outline-primary btn-profile-actions" <%%= banned || is_current ? 'disabled' : '' %>>
-                  Message
-                </button>
-                <button class="btn btn-outline-warning btn-profile-actions invite-to-battle" <%%= banned || is_current ? 'disabled' : '' %>>
-                  Invite to Battle
-                </button>
-                <button class="btn btn-outline-light btn-profile-actions invite-to-guild" <%%= can_invite && !is_current ? '' : 'style="display:none"' %>>
-                  Invite to Guild
-                </button>
+                <p <%%= banned || is_current ? 'style="display:none"' : '' %>>
+                  <button class="btn btn-outline-success btn-profile-actions add-friend-button">
+                    Add Friend
+                  </button>
+                  <button id="message_btn" class="btn btn-outline-primary btn-profile-actions">
+                    Message
+                  </button>
+                  <button class="btn btn-outline-warning btn-profile-actions invite-to-battle">
+                    Invite to Battle
+                  </button>
+                  <button class="btn btn-outline-light btn-profile-actions invite-to-guild" <%%= can_invite ? '' : 'style="display:none"' %>>
+                    Invite to Guild
+                  </button>
+                </p>
               </div>
             </div>
           </div>
@@ -166,6 +168,9 @@
             <div class="profile-badges">
               <span class="badge rounded-pill bg-primary" <%%= is_current ? '' : 'style="display:none"' %>>
                 You
+              </span>
+              <span class="badge rounded-pill bg-owner text-dark" <%%= owner ? '' : 'style="display:none"' %>>
+                Server owner
               </span>
               <span class="badge rounded-pill bg-admin text-dark" <%%= admin ? '' : 'style="display:none"' %>>
                 Admin
