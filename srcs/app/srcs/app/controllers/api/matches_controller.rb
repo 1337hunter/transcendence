@@ -8,7 +8,14 @@ class Api::MatchesController < ApplicationController
   end
 
   def show
-    @match = Match.find(params[:id])
+    puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    puts params
+    puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    if params.has_key?(:user_id) and params.has_key?(:id)
+      @match = Match.where("(first_player_id = ? OR second_player_id = ?) AND status = ?", params[:user_id], params[:id], 1).first
+    else
+      @match = Match.find(params[:id])
+    end
     render json: @match, status: :ok
   end
 
@@ -71,7 +78,7 @@ class Api::MatchesController < ApplicationController
                           status: 1, match_type: params[:type])
       if @war && check_war
         another_match = Match.find_by_war_id(@war.id)
-        if !another_match || another_match.status == 3
+        if !another_match || another_match.status != 2
           @match.update(war_id: @war.id)
           WarMatchJob.set(wait_until: DateTime.now + @war.wait_minutes.minutes).perform_later(@match)
         end
@@ -102,7 +109,7 @@ class Api::MatchesController < ApplicationController
   end
 
   def check_wartime
-    return if @war.wartime_start == @war.wartime_end
+    return true if @war.wartime_start == @war.wartime_end
 
     now = DateTime.now.new_offset(0)
     end_day = @war.wartime_end.day == @war.wartime_start.day ? now.day : now.day + 1
