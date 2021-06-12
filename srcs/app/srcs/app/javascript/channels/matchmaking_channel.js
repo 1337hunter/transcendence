@@ -2,6 +2,7 @@ import consumer from "./consumer"
 import MainSPA from "../packs/main_spa";
 import Pong from "../packs/models/pong"
 import Users from "../packs/models/users"
+import GameRoomInit from "./game_room_channel";
 
 
 var MatchmakingInit = 
@@ -34,13 +35,23 @@ var MatchmakingInit =
           if (data.id != MainSPA.SPA.router.currentuser.get('id'))
           {
             let $this = this;
-            this.match = new Pong.MatchModel();
+            this.match = new Pong.MatchesModel();
             this.match.save({invited_user_id: data.id, type: 2}, {success: function (model) {
-              console.log(model)
+              console.log(model);
+              $this.match = model;
+              $this.cable = GameRoomInit.createGameRoom({match_id: $this.match.attributes.id});
+              $this.send({action: "start", match_id: $this.match.attributes.id, user_id: MainSPA.SPA.router.currentuser.get('id')});
            //   $this.match.fetch({success: function () {
            //     console.log($this.match.attributes.id);
            //   }});
             }});
+          }
+        }
+        if (data.action == 'start')
+        {
+          if (data.user_id != MainSPA.SPA.router.currentuser.get('id'))
+          {
+            this.cable = GameRoomInit.createGameRoom({match_id: data.match_id});
           }
         }
       }

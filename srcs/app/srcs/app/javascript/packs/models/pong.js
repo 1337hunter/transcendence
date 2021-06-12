@@ -13,4 +13,11 @@ Pong.MatchModel = Backbone.Model.extend({
     }
 });
 
+Pong.MatchesModel = Backbone.Model.extend({
+    idAttribute: "id",
+    url: function () {
+        return '/api/users/' + MainSPA.SPA.router.currentuser.get('id') + '/matches/'
+    }
+});
+
 export default Pong;

@@ -63,7 +63,7 @@ class Api::MatchesController < ApplicationController
   #   3 -- tournament
 
   def create
-    if find_invitation(params[:user_id], params[:invited_user_id], 1) or find_invitation(params[:invited_user_id], params[:user_id], 1)
+    if find_invitation(params[:user_id], params[:invited_user_id], 1, 1) or find_invitation(params[:invited_user_id], params[:user_id], 1, 1)
       render json: {error: 'Invitation already exists'}, status: :unprocessable_entity
     else
       user1 = User.find(params[:user_id])
@@ -95,9 +95,9 @@ class Api::MatchesController < ApplicationController
 
     private
 
-  def find_invitation(first_player_id, second_player_id, status)
+  def find_invitation(first_player_id, second_player_id, status, type)
     first_player_id = current_user.id if first_player_id == 'current'
-    return Match.find_by_first_player_id_and_second_player_id_and_status(first_player_id, second_player_id, status)
+    return Match.find_by_first_player_id_and_second_player_id_and_status_and_match_type(first_player_id, second_player_id, status, type)
   end
 
   def check_war
