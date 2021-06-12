@@ -130,8 +130,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputWager">Wager Points:</span>
             </div>
-            <input id="stake" type="number" min="0" class="form-control" placeholder="1 point or more" required/>
-            <!-- change min to 1 -->
+            <input id="stake" type="number" min="1" class="form-control" placeholder="1 point or more" required/>
           </div>
           <p style="font-size: small">Both sides must have enough points to bet!</p>
 
@@ -158,14 +157,14 @@
             <div class="to-div">War ends</div>
             <input id="war-start" class="from-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="from" type="datetime-local" required/>
             <input id="war-end" class="to-div" data-format="dd/MM/yyyy hh:mm:ss" placeholder="to" type="datetime-local" required/>
-            <p style="font-size: small">(start must be in the future) </p>
+            <p style="font-size: small">(start must be in the future, end - 15 min or more from start) </p>
           </div>
 
           <div style="margin-top: 20px">
             Select War hours<br>
             <input type="time" data-format="hh:mm:ss" id="wartime-start" class="from-div" placeholder="from">
             <input type="time" data-format="hh:mm:ss" id="wartime-end" class="to-div" placeholder="to">
-            <p style="font-size: small">(for wars 24 h or longer: the period of day when guilds can ask for a fight, if empty there would be now limitations; must not be less then 1 hour) </p>
+            <p style="font-size: small">(for wars 24 h or longer: the period of day (1 h or more) when guilds can ask for a fight, default: 00:00; if both are empty there would be now limitations </p>
           </div>
 
           <label for="timezone">Select timezone</label>
