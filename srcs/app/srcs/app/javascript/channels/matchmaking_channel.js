@@ -35,7 +35,7 @@ var MatchmakingInit =
           {
             let $this = this;
             this.match = new Pong.MatchModel();
-            this.match.save({success: function (model) {
+            this.match.save({invited_user_id: data.id, type: 2}, {success: function (model) {
               console.log(model)
            //   $this.match.fetch({success: function () {
            //     console.log($this.match.attributes.id);
