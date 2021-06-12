@@ -72,7 +72,7 @@ class Api::MatchesController < ApplicationController
       c = check_war
       if @war && check_war
         another_match = Match.find_by_war_id(@war.id)
-        if !another_match || another_match.status != 3
+        if !another_match || another_match.status == 3
           @match.update(war_id: @war.id)
           WarMatchJob.set(wait_until: DateTime.now + @war.wait_minutes.minutes).perform_later(@match)
         end
