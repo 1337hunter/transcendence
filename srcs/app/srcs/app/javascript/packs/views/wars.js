@@ -319,7 +319,7 @@ $(function () {
                 '&stake=' + $('#stake').val().trim() +
                 '&start=' + start + ':59' + tz +
                 '&end=' + end + ':59' + tz +
-                '&wartime_start=' + wartime_start + ':59' + tz
+                '&wartime_start=' + wartime_start + ':59' + tz +
                 '&wartime_end=' + wartime_end + ':59' + tz;
             let max_unanswered = $('#max-unanswered').val().trim();
             if (max_unanswered)
