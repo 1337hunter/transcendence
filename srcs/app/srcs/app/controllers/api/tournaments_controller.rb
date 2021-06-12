@@ -41,7 +41,7 @@ class Api::TournamentsController < ApplicationController
     @tournament = Tournament.new(start_date: startdate, end_date: enddate)
     if @tournament.save
       render json: @tournament.as_json(
-        include: {users: {only: @filters}, winner: {only: @filters}}
+        include: {tournament_users: {}, winner: {only: @filters}}
       )
     else
       render json: @tournament.errors, status: :unprocessable_entity
@@ -50,7 +50,7 @@ class Api::TournamentsController < ApplicationController
 
   # DELETE /api/tournaments/id/
   def destroy
-    @tournament.users.each { |user| user.update(tournament_id: nil) }
+    @tournament.tournament_users.destroy_all
     @tournament.destroy
     render json: { error: 'Tournament has been destroyed' }, status: :ok
   end
@@ -135,8 +135,7 @@ class Api::TournamentsController < ApplicationController
   end
 
   def define_filters
-    @filters = %i[id displayname admin banned online last_seen_at
-                  nickname avatar_url avatar_default_url]
+    @filters = %i[id displayname admin online avatar_url avatar_default_url]
   end
 
   # this is for later

@@ -32,6 +32,7 @@ en:
       success: "Successfully authenticated from %{kind} account."
       otp_required: "2FA OTP required."
       admin: "You are an admin."
+      owner: "You are server owner."
       banned: "You are banned."
       banned_with_reason: "You are banned. Reason: %{reason}"
     passwords:

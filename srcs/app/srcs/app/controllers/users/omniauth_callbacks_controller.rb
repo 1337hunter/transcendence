@@ -26,6 +26,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         set_flash_message(:warning, :otp_required) if is_navigational_format?
       else
         set_flash_message(:info, :admin) if is_navigational_format? && @user.admin
+        set_flash_message(:info, :owner) if is_navigational_format? && @user.owner
       end
     else
       session['devise.marvin_data'] = request.env['omniauth.auth']
