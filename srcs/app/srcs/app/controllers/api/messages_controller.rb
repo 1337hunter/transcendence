@@ -14,6 +14,8 @@ class Api::MessagesController < ApplicationController
             @message = Message.create(room_id: params["room_id"],
                                     content: params["content"],
                                     user: current_user)
+            user = User.find(@message.user_id)
+            guild_anagram = current_user.guild_id && current_user.guild_accepted ? Guild.find(user.guild_id).anagram : ""
             ActionCable.server.broadcast("room_#{@message.room_id}", 
             {
                 user_id: @message.user_id,
@@ -22,6 +24,7 @@ class Api::MessagesController < ApplicationController
                 avatar: current_user.avatar_url,
                 displayname: current_user.displayname,
                 content: params['content'],
+                user_guild_anagram: guild_anagram,
                 block_svg: File.join(Rails.root, 'app', 'assets', 'images', 'block.svg'),
                 blocks: @blocks,
                 admins: @admins

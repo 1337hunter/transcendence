@@ -62,6 +62,7 @@ let SubToChannel = {
             admin: is_admin,
             displayname: data.displayname,
             content: data.content,
+            user_guild_anagram: data.user_guild_anagram,
           })
           var msg = new MessagesView.MessageView({model: msg_model});
           $("#messages").append(msg.render().el);
