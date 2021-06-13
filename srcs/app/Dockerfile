@@ -1,32 +1,30 @@
-from	ruby:3.0.0
+FROM	ruby:3.0.0
 
-run		apt-get update -qq && apt-get install -y  postgresql-client curl vim
-run		curl -sL https://deb.nodesource.com/setup_12.x | bash -
-run 	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-run		echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN		apt-get update -qq && apt-get install -y  postgresql-client curl vim
+RUN		curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN 	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN		echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
-run		apt-get update
-run		apt-get install -y nodejs
-run     apt-get install -y yarn
+RUN		apt-get update
+RUN		apt-get install -y nodejs
+RUN     apt-get install -y yarn
 
-workdir	/app
-run		gem install bundler
-run     gem install rails
+WORKDIR	/app
+RUN		gem install bundler
+RUN     gem install rails
 
-copy    ./srcs/ /app/
-env		BUNDLE_GEMFILE="/app/Gemfile"
-run		bundle install
-# run	yarn add bootstrap jquery popper.js
-# run	yarn add underscore
-# run	yarn add backbone
+COPY    ./srcs/ /app/
+ENV		BUNDLE_GEMFILE="/app/Gemfile"
+RUN		bundle install
+# RUN	yarn add bootstrap jquery popper.js
+# RUN	yarn add underscore
+# RUN	yarn add backbone
 # this all can be replaced with yarn install which will all packages from package.json
-run		yarn install
+RUN		yarn install
+RUN     bundle exec rake assets:precompile
 
 # Add a script to be executed every time the container starts.
-copy	entrypoint.sh /usr/bin/
-run		chmod +x /usr/bin/entrypoint.sh
-expose	3000
-entrypoint ["entrypoint.sh"]
-
-# Start the main process.
-# cmd		["rails", "server", "-b", "0.0.0.0"]
+COPY	entrypoint.sh /usr/bin/
+RUN		chmod +x /usr/bin/entrypoint.sh
+EXPOSE	3000
+ENTRYPOINT ["entrypoint.sh"]
