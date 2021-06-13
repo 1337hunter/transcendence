@@ -53,6 +53,7 @@ class Api::DirectRoomsController < ApplicationController
             @user_id = @room.receiver_id
         end
         @user = User.find(@user_id)
+        @guild_anagram = @user.guild_id && @user.guild_accepted ? Guild.find(@user.guild_id).anagram : ""
         render json: show_room
     end
 
@@ -85,7 +86,8 @@ class Api::DirectRoomsController < ApplicationController
             id: @room.id,
             receiver_id: @room.receiver_id,
             sender_id: @room.sender_id,
-            receiver_name: @user.displayname
+            receiver_name: @user.displayname,
+            anagram: @guild_anagram
         }
     end
 

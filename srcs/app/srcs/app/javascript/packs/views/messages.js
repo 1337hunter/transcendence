@@ -233,7 +233,10 @@ $(function () {
 
 			this.room_model.fetch({
 				success: function () {
-					$this.$("#receiver_name").html("@" + $this.room_model.attributes.receiver_name)
+					if ($this.room_model.attributes.anagram == "")
+						$this.$("#receiver_name").html("@" + $this.room_model.attributes.receiver_name)
+					else
+						$this.$("#receiver_name").html("[" + $this.room_model.attributes.anagram + "]" + $this.room_model.attributes.receiver_name)
 				}
 			});
 			this.$el.html(this.template(this.room_model.toJSON()));
