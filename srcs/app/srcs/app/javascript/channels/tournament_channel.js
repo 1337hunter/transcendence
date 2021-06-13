@@ -53,9 +53,7 @@ var TournamentChannel =
               this.Match.fetch({
                 success: function () {
                   self.match_id = self.Match.attributes.id
-                  self.Match.set({type: 3})
-                  self.Match.set(self.Match, {game_room: GameRoomInit.createGameRoom({match_type: 3, tournament_id: self.tornament_id, user_id: self.current_user_id, match_id: self.Match.attributes.id})});
-                  self.me_ready = true;
+                  self.Match.set(self.Match, {game_room: GameRoomInit.createGameRoom({match_id: self.Match.attributes.id})});
                   self.send({ready: true, user_id: self.current_user_id})
                 }
               })

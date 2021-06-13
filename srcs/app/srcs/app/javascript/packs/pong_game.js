@@ -44,6 +44,8 @@ export default function pong_game(view) {
     else {
         is_spectator = 1;
     }
+    console.log(is_player_left, is_player_right, is_spectator)
+    console.log(view)
     const  delay = (callback, wait = 1000) => {
         setTimeout(callback, wait)
     }

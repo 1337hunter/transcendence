@@ -25,7 +25,7 @@ class TournamentMatchmakingJob < ApplicationJob
 
   def perform(*args)
     @tournament = args.first
-    @users = TournamentUser.where(stage: @tournament.stage)
+    @users = TournamentUser.where(tournament_id: @tournament.id, stage: @tournament.stage)
     if @users.length > 1
       ActionCable.server.broadcast("tournament_#{@tournament.id}", 
       {
