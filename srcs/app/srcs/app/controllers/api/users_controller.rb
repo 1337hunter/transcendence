@@ -16,16 +16,26 @@ class Api::UsersController < ApplicationController
 
   # GET /api/users/id.json
   def show
+    duels_winner = Match.where("first_player_id = ? OR second_player_id = ?", @user.id, @user.id).where(match_type: 1).group(:winner).count[@user.id]
+    duels_winner = duels_winner == nil ? 0 : duels_winner
+    duels_total =  Match.where("first_player_id = ? OR second_player_id = ?", @user.id, @user.id).where(match_type: 1).length
+    tournament_winner = Match.where("first_player_id = ? OR second_player_id = ?", @user.id, @user.id).where(match_type: 3).group(:winner).count[@user.id]
+    tournament_winner = tournament_winner == nil ? 0 : tournament_winner
+    tournament_total =  Match.where("first_player_id = ? OR second_player_id = ?", @user.id, @user.id).where(match_type: 3).length
     render json: @user.as_json(only: @filters,
                                include: {
                                  friends: { only: @filters },
                                  requested_friends: { only: @filters },
-                                 guild: { only: @guildfilters }
+                                 guild: { only: @guildfilters },
                                },
                                methods: [:guild_invites_counter]
                                )
                       .merge(:is_current => @user == current_user)
                       .merge(:can_invite => current_user.guild_master? || current_user.guild_officer?)
+                      .merge(:duels_winner => duels_winner)
+                      .merge(:duels_total => duels_total)
+                      .merge(:tournament_winner => tournament_winner)
+                      .merge(:tournament_total => tournament_total)
   end
 
   # PATCH/PUT /api/users/id.json
