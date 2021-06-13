@@ -40,9 +40,9 @@ class Api::MatchesController < ApplicationController
     @match.update(status: params[:status]) if (params.has_key?(:status))
     if (params.has_key?(:winner))
       @match.update(winner: params[:winner])
-      if @match.war_id && !(war = War.find(@match.war_id)).finished
+      if @match.war_id && !((@war = War.find(@match.war_id)).finished)
         @war.matches_total += 1
-        if @player_winner.guild_id == war.guild1_id
+        if @player_winner.guild_id == @war.guild1_id
           @war.g1_score += 1
           @war.g1_matches_won += 1
         else
@@ -75,8 +75,8 @@ class Api::MatchesController < ApplicationController
       user1 = User.find(params[:user_id])
       user2 = User.find(params[:invited_user_id])
       if user1.guild_accepted && user2.guild_accepted
-        @war = War.find_by_guild1_id_and_guild2_id(user1.guild_id, user2.guild_id)
-        @war = War.find_by_guild1_id_and_guild2_id(user2.guild_id, user1.guild_id) if !@war
+        @war = War.find_by_guild1_id_and_guild2_id_and_finished_and_accepted(user1.guild_id, user2.guild_id, false, true)
+        @war = War.find_by_guild1_id_and_guild2_id_and_finished_and_accepted(user2.guild_id, user1.guild_id, false, true) if !@war
       end
 
       @match = Match.create(player_one: User.find(params["user_id"]),
