@@ -2,7 +2,7 @@
 
 ### To start in docker
 ```
-docker-compose up
+docker-compose up --build
 ```
 
 ### To run local development environment
