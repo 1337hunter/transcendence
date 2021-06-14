@@ -38,7 +38,7 @@ class Api::RoomsController < ApplicationController
     end
 
     def update
-        if (params.has_key?(:verify_password)) #check password
+        if params.has_key?(:verify_password) #check password
             @room = Room.find(params[:id])
             if @room.present? && @room.authenticate(params[:password])
                 render json: @room, status: :ok
@@ -46,12 +46,11 @@ class Api::RoomsController < ApplicationController
                 render json: {error: "Wrong password", status: 400},  status: 400
             end
         else #save new room
-            @check_exist = Room.where(name: params[:name])
-            if @check_exist != nil
+            if Room.exists?(name: params[:name])
                 render json: {error: "Room with name #{params[:name]} is already exist", status: 400},  status: 400
             else
                 @room = Room.new
-                if (params.has_key?(:name))
+                if params.has_key?(:name)
                     @room.name = params[:name]
                     if params.has_key?(:password) && params[:password] != ""
                         @room.password_present = true
