@@ -1,27 +1,25 @@
 FROM	ruby:3.0.0
 
-RUN		apt-get update -qq && apt-get install -y  postgresql-client curl vim
-RUN		curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN		apt-get update && apt-get -y upgrade
+RUN		apt-get update && apt-get -y install curl vim gnupg2
+RUN		curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN 	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN		echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
+# add psql 12 repos
+RUN		wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN		echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
+
 RUN		apt-get update
-RUN		apt-get install -y nodejs
-RUN     apt-get install -y yarn
+RUN		apt-get install -y nodejs yarn postgresql-client-12
 
 WORKDIR	/app
 RUN		gem install bundler
-RUN     gem install rails
 
 COPY    ./srcs/ /app/
-ENV		BUNDLE_GEMFILE="/app/Gemfile"
-RUN		bundle install
-# RUN	yarn add bootstrap jquery popper.js
-# RUN	yarn add underscore
-# RUN	yarn add backbone
-# this all can be replaced with yarn install which will all packages from package.json
+RUN		BUNDLE_GEMFILE="/app/Gemfile" bundle install
 RUN		yarn install
-RUN     bundle exec rake assets:precompile
+RUN     bin/rails assets:precompile
 
 # Add a script to be executed every time the container starts.
 COPY	entrypoint.sh /usr/bin/

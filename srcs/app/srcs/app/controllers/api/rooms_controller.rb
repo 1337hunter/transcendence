@@ -15,6 +15,7 @@ class Api::RoomsController < ApplicationController
         @rooms = Room.where.not(id: @block_array)
         render json: @rooms
     end
+
     #change password
     def create
         @room = Room.find(params[:id])
